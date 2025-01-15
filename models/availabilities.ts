@@ -28,6 +28,11 @@ const availabilitySchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
+    status: {
+        type: String,
+        enum: ['Available', 'Booked'],
+        default: 'Available',
+    },
     createdAt: {
         type: Date,
         default: Date.now,
