@@ -1,3 +1,4 @@
+import Doctor from "@/models/doctor"
 import { connectDB } from "@/libs/dbConnection"
 import Availability from "@/models/availabilities"
 import { NextRequest, NextResponse } from "next/server"
@@ -14,8 +15,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ doct
 
 
     connectDB()
-    let data
+    let data, data2
     try {
+        data2 = await Doctor.findById(doctorId, 'name specialization contact')
         data = await Availability.find({ doctorId: doctorId, dayOfWeek: day[dateOb.getUTCDay()] }, 'dayOfWeek startTime endTime status')
         console.log(data)
         // console.log(day[dateOb.getUTCDay()], dateOb.getUTCDay(), dateOb.toISOString(), doctorId);
@@ -23,5 +25,5 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ doct
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
     }
 
-    return NextResponse.json({ data })
+    return NextResponse.json({ availableList: data, doctor: data2 })
 }

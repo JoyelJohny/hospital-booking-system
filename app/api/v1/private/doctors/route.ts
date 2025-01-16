@@ -8,7 +8,7 @@ import { NextRequest, NextResponse } from "next/server"
 export async function GET() {
 
     connectDB();
-    let data = [];
+    let data
     data = await Doctor.find()
     if (data.length == 0) {
         return NextResponse.json({ message: "No doctors available" }, { status: 404 })
