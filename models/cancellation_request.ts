@@ -29,7 +29,7 @@ const cancellationRequestSchema = new mongoose.Schema({
     }
 });
 
-export default mongoose.models.Cancelled || mongoose.model('BookingRequest', cancellationRequestSchema);
+export default mongoose.models.Cancelled || mongoose.model('Cancellation_Request', cancellationRequestSchema);
 
 
 
