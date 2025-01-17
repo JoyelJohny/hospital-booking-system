@@ -21,8 +21,9 @@ export default function Cancellation() {
     const [confirmModal, setConfirmModal] = useState(false)
 
     useEffect(() => {
+        const token = localStorage.getItem('token')
         async function getData() {
-            const res = await fetch("http://localhost:3000/api/v1/private/cancellations-requests", { method: "GET" })
+            const res = await fetch("http://localhost:3000/api/v1/private/cancellations-requests", { method: "GET", headers: { auth: `Bearer ${token}` } })
             const result = await res.json()
             setCancellations(result)
         }

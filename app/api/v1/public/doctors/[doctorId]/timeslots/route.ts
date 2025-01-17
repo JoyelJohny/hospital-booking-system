@@ -15,15 +15,15 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ doct
 
 
     connectDB()
-    let data, data2
+    let data
     try {
-        data2 = await Doctor.findById(doctorId, 'name specialization contact')
+
         data = await Availability.find({ doctorId: doctorId, dayOfWeek: day[dateOb.getUTCDay()] }, 'dayOfWeek startTime endTime status')
         console.log(data)
-        // console.log(day[dateOb.getUTCDay()], dateOb.getUTCDay(), dateOb.toISOString(), doctorId);
+
     } catch (error) {
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
     }
 
-    return NextResponse.json({ availableList: data, doctor: data2 })
+    return NextResponse.json({ availableList: data })
 }
