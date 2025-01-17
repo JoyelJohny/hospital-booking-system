@@ -6,7 +6,6 @@ import { useEffect, useState } from "react"
 interface Treatments {
     _id: string,
     name: string,
-    description: string
 }
 
 export default function Treatment() {

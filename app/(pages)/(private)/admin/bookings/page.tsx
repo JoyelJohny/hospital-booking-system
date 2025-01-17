@@ -25,13 +25,15 @@ interface Bookings {
 }
 
 export default function Booking() {
+
     const [bookings, setBookings] = useState<Bookings[]>([])
     const [selectedAppointment, setSelectedAppointment] = useState<Bookings | undefined>()
     const [appointmentModal, setAppointmentModal] = useState(false)
     useEffect(() => {
+        const token = localStorage.getItem('token');
         async function getData() {
             try {
-                const res = await fetch("http://localhost:3000//api/v1/private/bookings", { method: "GET" })
+                const res = await fetch("http://localhost:3000//api/v1/private/bookings", { method: "GET", headers: { auth: `Bearer ${token}` } })
                 const result = await res.json()
                 console.log(result)
                 setBookings(result)

@@ -1,6 +1,8 @@
 "use client"
 import DateComponent from "@/app/(components)/DateComponent";
 import DividerComponent from "@/app/(components)/DividerComponent";
+import Cookies from 'js-cookie'
+
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -27,23 +29,44 @@ export default function Availability() {
     const [doctordetail, setDoctor] = useState<Doctor>()
     const [date, setDate] = useState<Date | null>(null)
 
-    useEffect(() => { setDate(new Date()) }, [])
+    useEffect(() => {
+        setDate(new Date())
+        async function getDoctorDetail() {
+            try {
+                const res = await fetch(`http://localhost:3000//api/v1/public/doctors/${doctorId}`, { method: "GET" })
+                const result = await res.json()
+                console.log(result)
+                setDoctor(result)
+            } catch (error) {
+
+            }
+        }
+        getDoctorDetail()
+    }, [])
 
     const getAvailable = async () => {
         try {
             const res = await fetch(`http://localhost:3000/api/v1/public/doctors/${doctorId}/timeslots?date=${date}`)
-            const { availableList, doctor } = await res.json()
+            const { availableList } = await res.json()
 
             setAvailable(availableList)
-            setDoctor(doctor)
+
         } catch (error) {
 
         }
 
     }
 
-    const handleClick = (e: React.MouseEvent, isBooked: boolean) => {
+    const handleClick = (e: React.MouseEvent, isBooked: boolean, slot: Available) => {
         if (isBooked) { e.preventDefault() }
+        else {
+            if (Cookies.get("book-detail")) {
+                Cookies.remove("book-detail")
+            }
+            Cookies.set("book-detail", JSON.stringify({ doctor: doctordetail, availability: slot, date: date?.toLocaleDateString() }), { expires: 1 })
+        }
+
+
 
     }
 
@@ -94,7 +117,7 @@ export default function Availability() {
                             <td>{slot.startTime}</td>
                             <td>{slot.endTime}</td>
                             <td className={`${slot.status == "Booked" ? "bg-red-400" : "bg-green-400"}`}>{slot.status}</td>
-                            <td className="p-4 rounded-tr-2xl rounded-br-2xl"><Link href="/bookings/new" className={`py-1 px-3 rounded-md ${slot.status == "Booked" ? "bg-gray-400 hover:cursor-not-allowed" : "bg-green-400 hover:scale-105"}`} onClick={(e) => handleClick(e, slot.status == "Booked")}>BooK</Link></td>
+                            <td className="p-4 rounded-tr-2xl rounded-br-2xl"><Link href="/bookings/new" className={`py-1 px-3 rounded-md ${slot.status == "Booked" ? "bg-gray-400 hover:cursor-not-allowed" : "bg-green-400 hover:scale-105"}`} onClick={(e) => handleClick(e, slot.status == "Booked", slot)}>BooK</Link></td>
                         </tr>
                     ))}
 
@@ -102,22 +125,6 @@ export default function Availability() {
             </table>
 
 
-            {/* <div className="flex justify-around px-6 py-4 text-black border-2">
-                <div>Date</div>
-                <div>Day</div>
-                <div>startTime</div>
-                <div>endTime</div>
-                <div>status</div>
-                <button>Book</button>
-            </div>
-            <div className="flex justify-between rounded-xl px-6 py-4 bg-[#086788] border-2">
-                <div>{date?.toLocaleDateString()}</div>
-                <div>Day</div>
-                <div>startTime</div>
-                <div>endTime</div>
-                <div>status</div>
-                <button>Book</button>
-            </div> */}
         </div>
     </>)
 }

@@ -1,10 +1,40 @@
+"use client"
 import DividerComponent from "@/app/(components)/DividerComponent";
 import Form from "next/form";
+import Cookies from 'js-cookie'
+import { useEffect, useState } from "react";
+import { getTimings } from "@/libs/time";
+
+interface Data {
+    doctor: {
+        _id: string,
+        name: string,
+        specialization: string,
+        contact: string
+    },
+    availability: {
+        _id: string,
+        dayOfWeek: string,
+        startTime: string,
+        endTime: string,
+        status: string
+    },
+    date: string
+}
 export async function hello() {
-    "use server"
     console.log("hello")
 }
 export default function AppointmentBooking() {
+    const cdata = Cookies.get('book-detail')
+
+    const [data, setData] = useState<Data | undefined>(undefined)
+    const Timings = getTimings(data ? data.availability.startTime : "", data ? data.availability.endTime : "")
+    useEffect(() => {
+        const b = cdata ? cdata : ""
+        setData(JSON.parse(b))
+
+    }, [])
+    console.log(data)
     return (<>
         <div className="px-24 py-6 bg-gray-100">
             <Form action={hello} className="flex flex-col bg-[#086788] px-6 py-4 w-fit h-fit shadow-2xl rounded-lg justify-self-center justify-between">
@@ -12,10 +42,10 @@ export default function AppointmentBooking() {
                 <h2 className="font-semibold text-lg">Appointment Details</h2>
                 <DividerComponent />
                 <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-                    <div className=" flex gap-4 "><div className=" font-semibold text-sm">Consultation By</div><div className="text-sm">: Dr John Doe</div></div>
-                    <div className=" flex gap-4 "><div className=" font-semibold text-sm">Treatment</div><div className="text-sm">: Cardiology</div></div>
-                    <div className=" flex gap-4 "><div className=" font-semibold text-sm">Date</div><div className="text-sm">: 22-12-2024</div></div>
-                    <div className=" flex gap-4 "><div className=" font-semibold text-sm">Timings</div><div className="text-sm">: 10:00 am - 12:00 pm</div></div>
+                    <div className=" flex gap-4 "><div className=" font-semibold text-sm">Consultation By</div><div className="text-sm" >: {data ? data.doctor.name : ""}</div></div>
+                    <div className=" flex gap-4 "><div className=" font-semibold text-sm">Treatment</div><div className="text-sm">: {data ? data.doctor.specialization : ""}</div></div>
+                    <div className=" flex gap-4 "><div className=" font-semibold text-sm">Date</div><div className="text-sm">: {data ? data.date : ""}</div></div>
+                    <div className=" flex gap-4 "><div className=" font-semibold text-sm">Timings</div><div className="text-sm">: {Timings}</div></div>
                 </div>
                 <h2 className="mt-8 font-semibold text-lg">Patient Details</h2>
                 <DividerComponent />

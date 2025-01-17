@@ -11,7 +11,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ trea
     try {
         console.log(treatmentId)
         data = await Doctor.find({ treatmentId: treatmentId })
-        data1 = await Treatment.findById(treatmentId)
+        data1 = await Treatment.findById(treatmentId, 'name description')
     } catch (error) {
 
         return NextResponse.json({ error: "Internal Server Error" },

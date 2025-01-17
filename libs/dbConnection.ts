@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import initializeAdminCollection from './initializeAdmin';
 
 const { MONGODB_URI } = process.env;
 
@@ -15,6 +16,8 @@ export const connectDB = async () => {
     console.log(MONGODB_URI)
 
     cached.conn = await mongoose.connect(MONGODB_URI, { dbName: "hospital-booking-system" });
+
+    initializeAdminCollection()
 
     return cached.conn;
 };
