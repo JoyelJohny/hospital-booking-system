@@ -3,6 +3,8 @@ import Image from "next/image"
 import reject from "@/public/reject.png"
 import { useEffect, useState } from "react"
 import DividerComponent from "@/app/(components)/DividerComponent"
+import { useRouter } from "next/navigation"
+import Logout from "@/app/(components)/LogoutComponent"
 
 
 interface Bookings {
@@ -25,7 +27,7 @@ interface Bookings {
 }
 
 export default function Booking() {
-
+    const router = useRouter()
     const [bookings, setBookings] = useState<Bookings[]>([])
     const [selectedAppointment, setSelectedAppointment] = useState<Bookings | undefined>()
     const [appointmentModal, setAppointmentModal] = useState(false)
@@ -33,10 +35,16 @@ export default function Booking() {
         const token = localStorage.getItem('token');
         async function getData() {
             try {
-                const res = await fetch("http://localhost:3000//api/v1/private/bookings", { method: "GET", headers: { auth: `Bearer ${token}` } })
+                const res = await fetch("http://localhost:3000/api/v1/private/bookings", { method: "GET", headers: { auth: `Bearer ${token}` } })
                 const result = await res.json()
-                console.log(result)
-                setBookings(result)
+                if (!res.ok) {
+
+                    router.back()
+
+                } else {
+
+                    setBookings(result)
+                }
             } catch (error) {
 
             }
@@ -102,7 +110,7 @@ export default function Booking() {
 
             )}
 
-
+            <Logout />
         </div>
     </>)
 }

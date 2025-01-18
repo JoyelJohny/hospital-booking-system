@@ -8,6 +8,8 @@ import reject from "@/public/reject.png"
 import Form from "next/form"
 import DividerComponent from "@/app/(components)/DividerComponent"
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import Logout from "@/app/(components)/LogoutComponent"
 
 
 interface Doctor {
@@ -17,8 +19,15 @@ interface Doctor {
     contact: string
 }
 
+type treatment = { _id: string, name: string }
+
 export default function Doctor() {
+    const router = useRouter()
+    const [token, setToken] = useState<string | null>(null)
+
     const [doctors, setDoctors] = useState<Doctor[]>([])
+    const [treatments, setTreatments] = useState<treatment[]>([])
+    const [selectedDoctorDetail, setSelectedDoctorDetail] = useState<Doctor>({ _id: '', name: '', specialization: '', contact: '' })
     const [createDoctorModal, setCreateDoctorModal] = useState(false)
     const [updateDoctorModal, setUpdateDoctorModal] = useState(false)
     const [availabilityModal, setAvailibilityModal] = useState(false)
@@ -28,19 +37,41 @@ export default function Doctor() {
 
 
     useEffect(() => {
-        const token = localStorage.getItem('token')
-        async function getData() {
-            try {
-                const res = await fetch("http://localhost:3000/api/v1/private/doctors", { method: "GET", headers: { auth: `Bearer ${token}` } })
-                const result = await res.json()
-
-                setDoctors(result)
-            } catch (error) {
-
-            }
+        // Fetch token directly from localStorage and set it
+        const storedToken = localStorage.getItem('token');
+        if (!storedToken) {
+            // Redirect to login if no token exists
+            router.push('/login');
+        } else {
+            setToken(storedToken); // Set the token
         }
-        getData()
-    }, [])
+    }, [router]); // Run only once on component mount
+
+    useEffect(() => {
+        if (token) {
+            getDoctorsData();
+        }
+    }, [token]);
+
+    const getDoctorsData = async () => {
+        try {
+            const res = await fetch("http://localhost:3000/api/v1/private/doctors", { method: "GET", headers: { auth: `Bearer ${token}` } })
+            const { doctors, treatments } = await res.json()
+            if (!res.ok) {
+                console.log(res)
+                // router.back()
+
+            } else {
+                setTreatments(treatments)
+                setDoctors(doctors)
+                console.log(treatments, doctors)
+            }
+
+
+        } catch (error) {
+
+        }
+    }
 
     const handleDayButton = (e: React.MouseEvent<HTMLButtonElement>) => {
         const val = e.currentTarget.value
@@ -50,20 +81,55 @@ export default function Doctor() {
     const han = () => {
         console.log("hello")
     }
+    const handleCreateButton = async (formdata: FormData) => {
+        setCreateDoctorModal(!createDoctorModal)
+        const data = JSON.stringify(Object.fromEntries(formdata))
+        try {
+            const res = await fetch('http://localhost:3000/api/v1/private/doctors', { method: "POST", body: data, headers: { auth: `Bearer ${token}` } })
+            const result = await res.json()
+            console.log(result)
+            getDoctorsData()
+        } catch (error) {
 
-    const num = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        }
+    }
+
+    const num = [1, 2, 3, 4, 5, 6]
+    const handleEdit = (d: Doctor) => {
+        setUpdateDoctorModal(!updateDoctorModal)
+        setSelectedDoctorDetail(d)
+    }
+
+    const handleEditChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.currentTarget
+        setSelectedDoctorDetail((prev) => ({ ...prev, [name]: value }))
+    }
+
+    const handleDeleteButton = async (id: string) => {
+        try {
+            console.log(id)
+            const res = await fetch(`http://localhost:3000/api/v1/private/doctors/${id}`, { method: "DELETE", headers: { auth: `Bearer ${token}` } })
+            const result = await res.json()
+            console.log(result)
+            getDoctorsData()
+        } catch (error) {
+
+        }
+    }
+
 
     return (<>
-        <div className="px-40 py-10 border-2">
+        <div className="px-40 py-10 ">
+            {!doctors && (<div className="text-black text-center">No doctor created</div>)}
             <div className="grid grid-cols-3 gap-10 w-full h-full place-content-center ">
 
-                {doctors.map((doctor) => (
+                {Array.isArray(doctors) && doctors.map((doctor) => (
                     <div key={doctor._id} className="flex flex-col bg-[#086788] p-5 justify-center rounded-3xl ">
                         <div className="flex justify-between">
                             <h2 className="text-2xl py-1 font-semibold">{doctor.name}</h2>
                             <div className="flex gap-2">
-                                <button className="w-10 h-10 hover:bg-green-400 p-2 rounded-xl" onClick={() => setUpdateDoctorModal(!updateDoctorModal)}><Image src={edit} width={24} height={24} alt="edit button image" /></button>
-                                <button className="w-10 h-10 hover:bg-red-400 p-2 rounded-xl"><Image src={bin} width={24} height={24} alt="delete button image" /></button>
+                                <button className="w-10 h-10 hover:bg-green-400 p-2 rounded-xl" onClick={() => handleEdit(doctor)}><Image src={edit} width={24} height={24} alt="edit button image" /></button>
+                                <button className="w-10 h-10 hover:bg-red-400 p-2 rounded-xl" onClick={() => handleDeleteButton(doctor._id)}><Image src={bin} width={24} height={24} alt="delete button image" /></button>
                             </div>
                         </div>
                         <div className="flex justify-between py-1">
@@ -87,15 +153,21 @@ export default function Doctor() {
             {updateDoctorModal && (<Form action={han} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 justify-center bg-black p-6 rounded-lg space-y-5">
                 <div className="flex justify-between gap-2">
                     <label htmlFor="" className="py-2 font-semibold text-sm">Dr Name</label>
-                    <input type="text" className="text-black p-2 rounded-md focus:outline-slate-500" />
+                    <input type="text" name="name" value={selectedDoctorDetail.name} onChange={handleEditChange} className="text-black p-2 rounded-md focus:outline-slate-500" />
                 </div>
                 <div className="flex justify-between gap-2">
-                    <label htmlFor="" className="py-2 font-semibold text-sm">Treatment</label>
-                    <input type="text" className="text-black p-2 rounded-md focus:outline-slate-500" />
+                    <label htmlFor="" className="py-2 font-semibold text-sm">Specialization</label>
+                    <input type="text" name="contact" value={selectedDoctorDetail.specialization} onChange={handleEditChange} className="text-black p-2 rounded-md focus:outline-slate-500" />
+                </div>
+                <div className="flex justify-between gap-2">
+                    <label htmlFor="" className="py-2 font-semibold text-sm text-nowrap">Treatment Name</label>
+                    <select name="treatmentId" id="" className="w-full text-black p-2 rounded-md focus:outline-slate-500">
+                        {treatments && treatments.map((treatment) => (<option key={treatment._id} className="text-black" value={treatment.name} >{treatment.name}</option>))}
+                    </select>
                 </div>
                 <div className="flex justify-between gap-2">
                     <label htmlFor="" className="py-2 font-semibold text-sm">Contact</label>
-                    <input type="text" className="text-black p-2 rounded-md focus:outline-slate-500" />
+                    <input type="text" name="contact" value={selectedDoctorDetail.contact} onChange={handleEditChange} className="text-black p-2 rounded-md focus:outline-slate-500" />
                 </div>
                 <div className="flex justify-around gap-2">
                     <button className=" border-2 border-transparent box-border p-2 rounded-lg font-semibold  border-white hover:bg-green-400 hover:border-transparent">Update</button>
@@ -106,25 +178,27 @@ export default function Doctor() {
 
             {/* Doctor creation Form*/}
 
-            {createDoctorModal && (<Form action={han} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 justify-center bg-black p-6 rounded-lg space-y-5">
+            {createDoctorModal && (<Form action={handleCreateButton} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 justify-center bg-black p-6 rounded-lg space-y-5">
                 <div className="flex justify-between gap-2">
                     <label htmlFor="" className="py-2 font-semibold text-sm">Dr Name</label>
-                    <input type="text" className="text-black p-2 rounded-md focus:outline-slate-500" />
+                    <input type="text" name="name" className="text-black p-2 rounded-md focus:outline-slate-500" />
                 </div>
                 <div className="flex justify-between gap-2">
-                    <label htmlFor="" className="py-2 font-semibold text-sm">Treatment</label>
-                    <input type="text" className="text-black p-2 rounded-md focus:outline-slate-500" />
+                    <label htmlFor="" className="py-2 font-semibold text-sm">Specialization</label>
+                    <input type="text" name="specialization" className="text-black p-2 rounded-md focus:outline-slate-500" />
                 </div>
                 <div className="flex justify-between gap-2">
-                    <label htmlFor="" className="py-2 font-semibold text-sm">Treatment ID</label>
-                    <input type="text" className="text-black p-2 rounded-md focus:outline-slate-500" />
+                    <label htmlFor="" className="py-2 font-semibold text-sm text-nowrap">Treatment Name</label>
+                    <select name="treatmentId" id="" className="w-full text-black p-2 rounded-md focus:outline-slate-500">
+                        {treatments && treatments.map((treatment) => (<option key={treatment._id} className="text-black" value={treatment._id} >{treatment.name}</option>))}
+                    </select>
                 </div>
                 <div className="flex justify-between gap-2">
                     <label htmlFor="" className="py-2 font-semibold text-sm">Contact</label>
-                    <input type="text" className="text-black p-2 rounded-md focus:outline-slate-500" />
+                    <input type="text" name="contact" className="text-black p-2 rounded-md focus:outline-slate-500" />
                 </div>
                 <div className="flex justify-around gap-2">
-                    <button className=" border-2 border-transparent box-border p-2 rounded-lg font-semibold  border-white hover:bg-green-400 hover:border-transparent">Create</button>
+                    <button type="submit" className=" border-2 border-transparent box-border p-2 rounded-lg font-semibold  border-white hover:bg-green-400 hover:border-transparent">Create</button>
                     <button className=" border-2 border-transparent box-border p-2 rounded-lg font-semibold  border-white hover:bg-red-400 hover:border-transparent" onClick={() => setCreateDoctorModal(!createDoctorModal)}>Cancel</button>
                 </div>
             </Form>)}
@@ -253,6 +327,8 @@ export default function Doctor() {
             <button className="bg-white w-20 h-20 fixed bottom-20 right-20 rounded-full p-5 shadow-md shadow-black" onClick={() => setCreateDoctorModal(!createDoctorModal)}>
                 <Image src={create} width={64} height={64} className="text-white" alt="create button image" />
             </button>
+
+            <Logout />
         </div>
     </>)
 }

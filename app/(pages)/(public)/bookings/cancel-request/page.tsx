@@ -12,15 +12,10 @@ export default function CancellationRequest() {
 
     const sendData = async (formData: FormData) => {
 
-        const data = {
-            bookingId: formData.get('bookingId'),
-            patientName: formData.get('patientName'),
-            patientPhone: formData.get('patientPhone'),
-            patientDOB: formData.get('patientDOB')
-        }
+        const data = JSON.stringify(Object.fromEntries(formData))
 
         try {
-            const res = await fetch("http://localhost:3000/api/v1/public/bookings/cancel-request", { method: "POST", body: JSON.stringify(data) })
+            const res = await fetch("http://localhost:3000/api/v1/public/bookings/cancel-request", { method: "POST", body: data })
             const result = await res.json()
             console.log(result)
         } catch (error) {

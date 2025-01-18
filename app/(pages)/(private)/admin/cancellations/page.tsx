@@ -1,6 +1,8 @@
 "use client"
 
 import ConfirmationComponent from "@/app/(components)/ConfirmationComponent"
+import Logout from "@/app/(components)/LogoutComponent"
+import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
 interface Cancellations {
@@ -15,6 +17,7 @@ interface Cancellations {
 }
 
 export default function Cancellation() {
+    const router = useRouter()
     const [cancellations, setCancellations] = useState<Cancellations[]>()
     const [selectedCancellation, setSelectedCancellation] = useState<Cancellations>()
     const [requestModal, setRequestModal] = useState(false)
@@ -25,7 +28,14 @@ export default function Cancellation() {
         async function getData() {
             const res = await fetch("http://localhost:3000/api/v1/private/cancellations-requests", { method: "GET", headers: { auth: `Bearer ${token}` } })
             const result = await res.json()
-            setCancellations(result)
+            if (!res.ok) {
+
+                router.back()
+
+            } else {
+                setCancellations(result)
+            }
+
         }
         getData()
     }, [])
@@ -55,7 +65,7 @@ export default function Cancellation() {
         <div className=" px-40 py-10 space-y-5">
             <h1 className="text-black text-5xl font-semibold w-full text-center">Cancellation Requests</h1>
             <div className="grid grid-cols-3 gap-5">
-                {cancellations?.map((cancellation) => (<button key={cancellation._id} onClick={() => handleClick(cancellation)} className={`flex py-2 px-4 rounded-lg text-lg text-start hover:bg-green-400 hover:scale-105 drop-shadow-xl ${setRequestCompColor(cancellation.status)}`}> {cancellation.bookingId}</button>
+                {Array.isArray(cancellations) && cancellations?.map((cancellation) => (<button key={cancellation._id} onClick={() => handleClick(cancellation)} className={`flex py-2 px-4 rounded-lg text-lg text-start hover:bg-green-400 hover:scale-105 drop-shadow-xl ${setRequestCompColor(cancellation.status)}`}> {cancellation.bookingId}</button>
                 ))}
 
             </div>
@@ -86,6 +96,7 @@ export default function Cancellation() {
 
             )}
             {confirmModal && <ConfirmationComponent falseOption={setConfirmModal} trueOption={sendData} />}
+            <Logout />
         </div>
     </>)
 }

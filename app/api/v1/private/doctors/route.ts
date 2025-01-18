@@ -6,26 +6,30 @@ import { NextRequest, NextResponse } from "next/server"
 
 
 export async function GET() {
-
-    connectDB();
-    let data
-    data = await Doctor.find()
-    if (data.length == 0) {
-        return NextResponse.json({ message: "No doctors available" }, { status: 404 })
+    try {
+        connectDB();
+        const doctors = await Doctor.find()
+        const treatments = await Treatment.find({}, 'name')
+        if (doctors.length == 0) {
+            return NextResponse.json({ message: "No doctors available", treatments })
+        }
+        return NextResponse.json({ message: "Data fetched successfully", doctors, treatments })
+    } catch (error) {
+        throw new Error('Error with fetching data')
     }
-    return NextResponse.json(data)
+
+
 }
 
 export async function POST(req: NextRequest) {
-    let data
-
     try {
-        data = await req.json();
+        const data = await req.json();
         const isTreatmentIdValid = await Treatment.exists({ _id: data.treatmentId })
         if (!isTreatmentIdValid) {
             return NextResponse.json({ error: "Associated treatment not found" }, { status: 404 })
         }
         await Doctor.create(data)
+        return NextResponse.json({ message: "Doctor created successfully" }, { status: 201 })
     } catch (error) {
         if (error instanceof Error) {
 
@@ -33,5 +37,4 @@ export async function POST(req: NextRequest) {
         }
     }
 
-    return NextResponse.json(data)
 }
