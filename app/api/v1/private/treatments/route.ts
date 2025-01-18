@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
     connectDB()
     let data
     try {
-        data = await Treatment.find();
+        data = await Treatment.find().sort({ createdAt: -1 });
     } catch (error) {
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
     }
@@ -25,9 +25,10 @@ export async function POST(req: NextRequest) {
     connectDB();
 
     const data = await req.json();
-    let treatment
+
     try {
-        treatment = await Treatment.create(data)
+        const { name, description } = await Treatment.create(data)
+        return NextResponse.json({ message: "Treatment created successfully", treatment: { name: name, description: description } }, { status: 201 })
     } catch (error) {
         if (error instanceof Error) {
             if (error.name == "ValidationError") return NextResponse.json({ message: "One field is Empty" }, { status: 409 })
@@ -36,6 +37,6 @@ export async function POST(req: NextRequest) {
 
     }
 
-    return NextResponse.json({ message: "Treatment created successfully", treatment }, { status: 201 })
+
 
 }
