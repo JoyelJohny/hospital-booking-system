@@ -10,13 +10,25 @@ import DividerComponent from "@/app/(components)/DividerComponent"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Logout from "@/app/(components)/LogoutComponent"
+import { getTimings } from "@/libs/time"
 
 
-interface Doctor {
+type Doctor = {
     _id: string,
     name: string,
     specialization: string,
+    treatmentId: string
     contact: string
+}
+
+type Availability = {
+    _id: string,
+    doctorId: string
+    dayOfWeek: string,
+    startTime: string,
+    endTime: string,
+    slotDuration: Number,
+    bufferTime: Number,
 }
 
 type treatment = { _id: string, name: string }
@@ -27,10 +39,12 @@ export default function Doctor() {
 
     const [doctors, setDoctors] = useState<Doctor[]>([])
     const [treatments, setTreatments] = useState<treatment[]>([])
-    const [selectedDoctorDetail, setSelectedDoctorDetail] = useState<Doctor>({ _id: '', name: '', specialization: '', contact: '' })
+    const [availabilities, setAvailabilities] = useState<Availability[]>()
+    const [selectedDoctorDetail, setSelectedDoctorDetail] = useState<Doctor>({ _id: '', name: '', specialization: '', treatmentId: '', contact: '' })
+    const [selectedAvailabilityDetail, setSelectedAvailibilityDetail] = useState<Availability>({ _id: '', dayOfWeek: '', doctorId: '', slotDuration: 30, bufferTime: 10, startTime: '', endTime: '' })
     const [createDoctorModal, setCreateDoctorModal] = useState(false)
     const [updateDoctorModal, setUpdateDoctorModal] = useState(false)
-    const [availabilityModal, setAvailibilityModal] = useState(false)
+    const [availabilityModal, setAvailabilityModal] = useState(false)
     const [createAvailabilityModal, setCreateAvailabilityModal] = useState(false)
     const [updateAvailabilityModal, setUpdateAvailabilityModal] = useState(false)
     const [selectedDay, setSelectedDay] = useState("")
@@ -73,17 +87,33 @@ export default function Doctor() {
         }
     }
 
+    const getAvailabilitiesData = async (id: string) => {
+        try {
+            const res = await fetch(`http://localhost:3000/api/v1/private/doctors/${id}/availabilities`, { method: "GET", headers: { auth: `Bearer ${token}` } })
+            const result = await res.json()
+            setAvailabilities(result)
+        } catch (error) {
+
+        }
+    }
+
     const handleDayButton = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault()
         const val = e.currentTarget.value
         setSelectedDay(val)
     }
 
-    const han = () => {
-        console.log("hello")
+    const handleCloseAvailabilityModal = () => {
+        if (createAvailabilityModal) setCreateAvailabilityModal(!createAvailabilityModal)
+        setAvailabilityModal(!availabilityModal)
     }
     const handleCreateButton = async (formdata: FormData) => {
         setCreateDoctorModal(!createDoctorModal)
+        const treatment = treatments.find((item) => item._id == formdata.get('treatmentId'))
+        const specialization = treatment?.name || ''
+        formdata.append('specialization', specialization)
         const data = JSON.stringify(Object.fromEntries(formdata))
+        console.log(data)
         try {
             const res = await fetch('http://localhost:3000/api/v1/private/doctors', { method: "POST", body: data, headers: { auth: `Bearer ${token}` } })
             const result = await res.json()
@@ -94,16 +124,16 @@ export default function Doctor() {
         }
     }
 
-    const num = [1, 2, 3, 4, 5, 6]
     const handleEdit = (d: Doctor) => {
         setUpdateDoctorModal(!updateDoctorModal)
         setSelectedDoctorDetail(d)
     }
 
-    const handleEditChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.currentTarget
-        setSelectedDoctorDetail((prev) => ({ ...prev, [name]: value }))
-    }
+    const
+        handleEditChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+            const { name, value } = e.currentTarget
+            setSelectedDoctorDetail((prev) => ({ ...prev, [name]: value }))
+        }
 
     const handleDeleteButton = async (id: string) => {
         try {
@@ -117,6 +147,84 @@ export default function Doctor() {
         }
     }
 
+    const handleUpdateButton = async (formdata: FormData, id: string) => {
+        try {
+            setUpdateDoctorModal(!updateDoctorModal)
+            const treatment = treatments.find((item) => item._id == formdata.get('treatmentId'))
+            const specialization = treatment?.name || ''
+            formdata.append('specialization', specialization)
+            const data = JSON.stringify(Object.fromEntries(formdata))
+            const res = await fetch(`http://localhost:3000/api/v1/private/doctors/${id}`, { method: "PATCH", body: data, headers: { auth: `Bearer ${token}` } })
+            const result = await res.json()
+            getDoctorsData()
+        } catch (error) {
+
+        }
+    }
+
+    const handleOpenAvailabilityModal = (d: Doctor) => {
+        setAvailabilityModal(!availabilityModal)
+        setSelectedDoctorDetail(d)
+        getAvailabilitiesData(d._id)
+    }
+
+    const handleCreateAvailabilityButton = async (formdata: FormData) => {
+        try {
+            setCreateAvailabilityModal(!createAvailabilityModal)
+            formdata.append('dayOfWeek', selectedDay)
+            const data = JSON.stringify(Object.fromEntries(formdata))
+            const res = await fetch(`http://localhost:3000/api/v1/private/doctors/${selectedDoctorDetail._id}/availabilities`, { method: "POST", body: data, headers: { auth: `Bearer ${token}` } })
+            const result = await res.json()
+            getAvailabilitiesData(selectedDoctorDetail._id)
+            console.log(result)
+
+        } catch (error) {
+
+        }
+
+    }
+
+    const handleOpenUpdateAvailabilityButton = (slot: Availability) => {
+        setUpdateAvailabilityModal(!updateAvailabilityModal)
+        setSelectedAvailibilityDetail(slot)
+        setSelectedDay(slot.dayOfWeek)
+    }
+
+    const handleUpdateAvaialabilityButton = async (formdata: FormData, id: string) => {
+        try {
+            setUpdateAvailabilityModal(!updateAvailabilityModal)
+            formdata.append('dayOfWeek', selectedDay)
+            const data = JSON.stringify(Object.fromEntries(formdata))
+            console.log(id)
+            const res = await fetch(`http://localhost:3000/api/v1/private/doctors/${selectedDoctorDetail._id}/availabilities/${id}`, { method: "PATCH", body: data, headers: { auth: `Bearer ${token}` } })
+            const result = await res.json()
+            getAvailabilitiesData(selectedDoctorDetail._id)
+            console.log(result)
+        } catch (error) {
+
+        }
+
+    }
+
+    const handleUpdateAvailabilityDeleteButton = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        try {
+            e.preventDefault()
+            setUpdateAvailabilityModal(!updateAvailabilityModal)
+            const id = selectedAvailabilityDetail._id
+            console.log(selectedDoctorDetail._id)
+            const res = await fetch(`http://localhost:3000/api/v1/private/doctors/${selectedDoctorDetail._id}/availabilities/${id}`, { method: "DELETE", headers: { auth: `Bearer ${token}` } })
+            const result = await res.json()
+            getAvailabilitiesData(selectedDoctorDetail._id)
+            console.log(result)
+        } catch (error) {
+
+        }
+    }
+
+    const handleAvailabilityUpdateInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.currentTarget
+        setSelectedAvailibilityDetail((prev) => ({ ...prev, [name]: value }))
+    }
 
     return (<>
         <div className="px-40 py-10 ">
@@ -138,7 +246,7 @@ export default function Doctor() {
                                 <p className="text-xs">{doctor.contact}</p>
                             </div>
 
-                            <button className=" border-2 border-transparent box-border p-2 rounded-lg font-semibold  border-white hover:bg-green-400 hover:border-transparent" onClick={() => setAvailibilityModal(!availabilityModal)}>Set availability</button>
+                            <button className=" border-2 border-transparent box-border p-2 rounded-lg font-semibold  border-white hover:bg-green-400 hover:border-transparent" onClick={() => handleOpenAvailabilityModal(doctor)}>Set availability</button>
                         </div>
 
 
@@ -150,19 +258,15 @@ export default function Doctor() {
 
             {/* Doctor updation Form*/}
 
-            {updateDoctorModal && (<Form action={han} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 justify-center bg-black p-6 rounded-lg space-y-5">
+            {updateDoctorModal && (<Form action={(e) => handleUpdateButton(e, selectedDoctorDetail._id)} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 justify-center bg-black p-6 rounded-lg space-y-5">
                 <div className="flex justify-between gap-2">
                     <label htmlFor="" className="py-2 font-semibold text-sm">Dr Name</label>
                     <input type="text" name="name" value={selectedDoctorDetail.name} onChange={handleEditChange} className="text-black p-2 rounded-md focus:outline-slate-500" />
                 </div>
                 <div className="flex justify-between gap-2">
-                    <label htmlFor="" className="py-2 font-semibold text-sm">Specialization</label>
-                    <input type="text" name="contact" value={selectedDoctorDetail.specialization} onChange={handleEditChange} className="text-black p-2 rounded-md focus:outline-slate-500" />
-                </div>
-                <div className="flex justify-between gap-2">
                     <label htmlFor="" className="py-2 font-semibold text-sm text-nowrap">Treatment Name</label>
-                    <select name="treatmentId" id="" className="w-full text-black p-2 rounded-md focus:outline-slate-500">
-                        {treatments && treatments.map((treatment) => (<option key={treatment._id} className="text-black" value={treatment.name} >{treatment.name}</option>))}
+                    <select name="treatmentId" defaultValue={selectedDoctorDetail.treatmentId} className="w-full text-black p-2 rounded-md focus:outline-slate-500">
+                        {treatments && treatments.map((treatment) => (<option key={treatment._id} className="text-black" value={treatment._id} >{treatment.name}</option>))}
                     </select>
                 </div>
                 <div className="flex justify-between gap-2">
@@ -183,13 +287,10 @@ export default function Doctor() {
                     <label htmlFor="" className="py-2 font-semibold text-sm">Dr Name</label>
                     <input type="text" name="name" className="text-black p-2 rounded-md focus:outline-slate-500" />
                 </div>
+
                 <div className="flex justify-between gap-2">
-                    <label htmlFor="" className="py-2 font-semibold text-sm">Specialization</label>
-                    <input type="text" name="specialization" className="text-black p-2 rounded-md focus:outline-slate-500" />
-                </div>
-                <div className="flex justify-between gap-2">
-                    <label htmlFor="" className="py-2 font-semibold text-sm text-nowrap">Treatment Name</label>
-                    <select name="treatmentId" id="" className="w-full text-black p-2 rounded-md focus:outline-slate-500">
+                    <label htmlFor="" className="py-2 font-semibold text-sm text-nowrap">Specialization</label>
+                    <select name="treatmentId" className="w-full text-black p-2 rounded-md focus:outline-slate-500">
                         {treatments && treatments.map((treatment) => (<option key={treatment._id} className="text-black" value={treatment._id} >{treatment.name}</option>))}
                     </select>
                 </div>
@@ -205,72 +306,65 @@ export default function Doctor() {
 
 
             {availabilityModal && (
-                <Form action={han} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-100 p-3 text-[#086788] border-4 border-[#086788] rounded-xl w-2/3">
-                    <button className="flex justify-self-end p-1 mb-2 rounded-lg text-white bg-[#086788] hover:bg-red-400" onClick={() => setAvailibilityModal(!availabilityModal)}><Image src={reject} width={24} height={24} alt="close the availability modal" /></button>
-                    <div><div className="rounded-xl px-5 py-3 bg-[#086788] border-2 text-gray-100">
-                        <p className="text-xl font-bold">Dr John Doe </p>
-                        <div className="flex justify-between">
-                            <div>
-                                <p className="text-xs">Cardiology</p>
-                                <p className="text-xs">johndoe@gmail.com</p>
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-100 p-3 text-[#086788] border-4 border-[#086788] rounded-xl w-2/3">
+                    <button className="flex justify-self-end p-1 mb-2 rounded-lg text-white bg-[#086788] hover:bg-red-400" onClick={handleCloseAvailabilityModal}>
+                        <Image src={reject} width={24} height={24} alt="close the availability modal" />
+                    </button>
+                    <div>
+                        <div className="rounded-xl px-5 py-3 bg-[#086788] border-2 text-gray-100">
+                            <p className="text-xl font-bold">{selectedDoctorDetail.name}</p>
+                            <div className="flex justify-between">
+                                <div>
+                                    <p className="text-xs">{selectedDoctorDetail.specialization}</p>
+                                    <p className="text-xs">{selectedDoctorDetail.contact}</p>
+                                </div>
                             </div>
-
                         </div>
-                    </div>
-
                         <DividerComponent />
-
-
-
-                        <div className="flex mb-4 justify-between"><h1 className="px-4  text-2xl font-semibold">Schedule</h1><button className="hover:bg-green-400 hover:text-white rounded-md  px-2 border-2 border-[#086788]" onClick={() => setCreateAvailabilityModal(!createAvailabilityModal)}>Add New</button></div>
-
+                        <div className="flex mb-4 justify-between">
+                            <h1 className="px-4  text-2xl font-semibold">Schedule</h1>
+                            <button className="hover:bg-green-400 hover:text-white rounded-md  px-2 border-2 border-[#086788]" onClick={() => setCreateAvailabilityModal(!createAvailabilityModal)}>Add New</button>
+                        </div>
                         <div className="flex overflow-x-scroll border-2  rounded-xl border-[#086788]">
-
-
                             <table className="border-collapse border-1 ">
-
                                 <tbody>
                                     <tr className="text-center">
                                         <th className="border p-2 border-[#086788] ">Sunday</th>
-                                        {num.map((i) => (<td className="border p-2 border-[#086788] text-sm font-semibold"><button title="Click to edit" className="hover:bg-green-400 hover:text-white rounded-md p-1 text-nowrap" onClick={() => setUpdateAvailabilityModal(!updateAvailabilityModal)}>10:00 am - 09:00 pm</button></td>))}
-
+                                        {Array.isArray(availabilities) && availabilities.filter((slot) => slot.dayOfWeek == 'Sunday').sort((a, b) => (a.startTime.localeCompare(b.startTime))).map((slot) => (<td key={slot.startTime} className="border p-2 border-[#086788] text-sm font-semibold"><button title="Click to edit" className="hover:bg-green-400 hover:text-white rounded-md p-1 text-nowrap" onClick={() => handleOpenUpdateAvailabilityButton(slot)}>{getTimings(slot.startTime, slot.endTime)}</button></td>))}
                                     </tr>
                                     <tr>
-                                        <th className="border border-[#086788]">Monday</th>
-                                        <td className="border p-2 border-[#086788] text-sm font-semibold"><button title="Click to edit" className="hover:bg-green-400 hover:text-white rounded-md p-1">10:00 am - 09:00 pm</button></td>
+                                        <th className="border p-2 border-[#086788]">Monday</th>
+                                        {Array.isArray(availabilities) && availabilities.filter((slot) => slot.dayOfWeek == 'Monday').sort((a, b) => (a.startTime.localeCompare(b.startTime))).map((slot) => (<td key={slot.startTime} className="border p-2 border-[#086788] text-sm font-semibold"><button title="Click to edit" className="hover:bg-green-400 hover:text-white rounded-md p-1 text-nowrap" onClick={() => handleOpenUpdateAvailabilityButton(slot)}>{getTimings(slot.startTime, slot.endTime)}</button></td>))}
                                     </tr>
                                     <tr>
-                                        <th className="border border-[#086788]">Tuesday</th>
-                                        <td className="border p-2 border-[#086788] text-sm font-semibold"><button title="Click to edit" className="hover:bg-green-400 hover:text-white rounded-md p-1">10:00 am - 09:00 pm</button></td>
+                                        <th className="border p-2 border-[#086788]">Tuesday</th>
+                                        {Array.isArray(availabilities) && availabilities.filter((slot) => slot.dayOfWeek == 'Tuesday').sort((a, b) => (a.startTime.localeCompare(b.startTime))).map((slot) => (<td key={slot.startTime} className="border p-2 border-[#086788] text-sm font-semibold"><button title="Click to edit" className="hover:bg-green-400 hover:text-white rounded-md p-1 text-nowrap" onClick={() => handleOpenUpdateAvailabilityButton(slot)}>{getTimings(slot.startTime, slot.endTime)}</button></td>))}
                                     </tr>
                                     <tr>
                                         <th className="p-2 border border-[#086788]">Wednesday</th>
-                                        <td className="border p-2 border-[#086788] text-sm font-semibold"><button title="Click to edit" className="hover:bg-green-400 hover:text-white rounded-md p-1">10:00 am - 09:00 pm</button></td>
+                                        {Array.isArray(availabilities) && availabilities.filter((slot) => slot.dayOfWeek == 'Wednesday').sort((a, b) => (a.startTime.localeCompare(b.startTime))).map((slot) => (<td key={slot.startTime} className="border p-2 border-[#086788] text-sm font-semibold"><button title="Click to edit" className="hover:bg-green-400 hover:text-white rounded-md p-1 text-nowrap" onClick={() => handleOpenUpdateAvailabilityButton(slot)}>{getTimings(slot.startTime, slot.endTime)}</button></td>))}
                                     </tr>
                                     <tr>
-                                        <th className="border border-[#086788]">Thursday</th>
-                                        <td className="border p-2 border-[#086788] text-sm font-semibold"><button title="Click to edit" className="hover:bg-green-400 hover:text-white rounded-md p-1">10:00 am - 09:00 pm</button></td>
+                                        <th className="border p-2 border-[#086788]">Thursday</th>
+                                        {Array.isArray(availabilities) && availabilities.filter((slot) => slot.dayOfWeek == 'Thursday').sort((a, b) => (a.startTime.localeCompare(b.startTime))).map((slot) => (<td key={slot.startTime} className="border p-2 border-[#086788] text-sm font-semibold"><button title="Click to edit" className="hover:bg-green-400 hover:text-white rounded-md p-1 text-nowrap" onClick={() => handleOpenUpdateAvailabilityButton(slot)}>{getTimings(slot.startTime, slot.endTime)}</button></td>))}
                                     </tr>
                                     <tr>
-                                        <th className=" border border-[#086788]">Friday</th>
-                                        <td className="border p-2 border-[#086788] text-sm font-semibold"><button title="Click to edit" className="hover:bg-green-400 hover:text-white rounded-md p-1">10:00 am - 09:00 pm</button></td>
+                                        <th className=" border p-2 border-[#086788]">Friday</th>
+                                        {Array.isArray(availabilities) && availabilities.filter((slot) => slot.dayOfWeek == 'Friday').sort((a, b) => (a.startTime.localeCompare(b.startTime))).map((slot) => (<td key={slot.startTime} className="border p-2 border-[#086788] text-sm font-semibold"><button title="Click to edit" className="hover:bg-green-400 hover:text-white rounded-md p-1 text-nowrap" onClick={() => handleOpenUpdateAvailabilityButton(slot)}>{getTimings(slot.startTime, slot.endTime)}</button></td>))}
                                     </tr>
 
                                     <tr className="">
-                                        <th className=" border border-[#086788]">Saturday</th>
-                                        <td className="border p-2 border-[#086788] text-sm font-semibold"><button title="Click to edit" className="hover:bg-green-400 hover:text-white rounded-md p-1">10:00 am - 09:00 pm</button></td>
+                                        <th className=" border p-2 border-[#086788]">Saturday</th>
+                                        {Array.isArray(availabilities) && availabilities.filter((slot) => slot.dayOfWeek == 'Saturday').sort((a, b) => (a.startTime.localeCompare(b.startTime))).map((slot) => (<td key={slot.startTime} className="border p-2 border-[#086788] text-sm font-semibold"><button title="Click to edit" className="hover:bg-green-400 hover:text-white rounded-md p-1 text-nowrap" onClick={() => handleOpenUpdateAvailabilityButton(slot)}>{getTimings(slot.startTime, slot.endTime)}</button></td>))}
                                     </tr>
-
                                 </tbody>
                             </table>
-                        </div></div>
+                        </div>
+                    </div>
+                </div>)}
 
 
-
-                </Form>)}
-
-
-            {createAvailabilityModal && (<div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-100 border-2 rounded-xl border-[#086788] text-[#086788] p-4">
+            {createAvailabilityModal && (<Form action={handleCreateAvailabilityButton} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-100 border-2 rounded-xl border-[#086788] text-[#086788] p-4">
                 <div className="flex justify-between">
                     <p className="font-semibold">Select the day</p>
                     <button className={`rounded-md  border-2 px-2 py-1 text-xs font-semibold  ${selectedDay == "Sunday" ? "border-[#086788] bg-green-400 text-white" : "border-[#086788] hover:bg-green-400 hover:text-white hover:border-transparent"} `} name="dayOfWeek" value="Sunday" onClick={handleDayButton}>Sunday</button>
@@ -284,20 +378,20 @@ export default function Doctor() {
                 </div>
 
                 <div className="grid grid-cols-4 gap-4 py-6">
-                    <label htmlFor="" className="py-1 font-semibold">Start time</label><input type="time" className=" border-2 border-[#086788] rounded-md p-1" />
-                    <label htmlFor="" className="py-1 font-semibold">End time</label><input type="time" className=" border-2 border-[#086788] rounded-md p-1" />
-                    <label htmlFor="" className="py-1 font-semibold">Slot Duration (in Min)</label><input type="Number" min="5" max="90" className=" border-2 border-[#086788] rounded-md p-1" />
-                    <label htmlFor="" className="py-1 font-semibold">Buffer Time (in Min)</label><input type="Number" min="5" max="30" className=" border-2 border-[#086788] rounded-md p-1" />
+                    <label htmlFor="" className="py-1 font-semibold">Start time</label><input type="time" name="startTime" className=" border-2 border-[#086788] rounded-md p-1" />
+                    <label htmlFor="" className="py-1 font-semibold">End time</label><input type="time" name="endTime" className=" border-2 border-[#086788] rounded-md p-1" />
+                    <label htmlFor="" className="py-1 font-semibold">Slot Duration (in Min)</label><input type="Number" name="slotDuration" min="5" max="90" className=" border-2 border-[#086788] rounded-md p-1" />
+                    <label htmlFor="" className="py-1 font-semibold">Buffer Time (in Min)</label><input type="Number" name="bufferTime" min="5" max="30" className=" border-2 border-[#086788] rounded-md p-1" />
                 </div>
                 <div className="flex justify-around">
                     <button type="submit" className="rounded-md  px-4 py-2  border-2 border-[#086788] text-2xl font-semibold hover:bg-green-400 hover:border-transparent hover:text-white">Create</button>
-                    <button type="submit" className="rounded-md  px-4 py-2  border-2 border-[#086788] text-2xl font-semibold hover:bg-red-400 hover:border-transparent hover:text-white" onClick={() => { setCreateAvailabilityModal(!createAvailabilityModal) }}>Discard</button>
+                    <button className="rounded-md  px-4 py-2  border-2 border-[#086788] text-2xl font-semibold hover:bg-red-400 hover:border-transparent hover:text-white" onClick={() => setCreateAvailabilityModal(!createAvailabilityModal)}>Discard</button>
                 </div>
 
 
-            </div>)}
+            </Form>)}
 
-            {updateAvailabilityModal && (<div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-100 border-2 rounded-xl border-[#086788] text-[#086788] p-4">
+            {updateAvailabilityModal && (<Form action={(e) => handleUpdateAvaialabilityButton(e, selectedAvailabilityDetail._id)} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-100 border-2 rounded-xl border-[#086788] text-[#086788] p-4">
                 <div className="flex justify-between">
                     <p className="font-semibold">Select the day</p>
                     <button className={`rounded-md  border-2 px-2 py-1 text-xs font-semibold  ${selectedDay == "Sunday" ? "border-[#086788] bg-green-400 text-white" : "border-[#086788] hover:bg-green-400 hover:text-white hover:border-transparent"} `} name="dayOfWeek" value="Sunday" onClick={handleDayButton}>Sunday</button>
@@ -307,22 +401,19 @@ export default function Doctor() {
                     <button className={`rounded-md  border-2 px-2 py-1 text-xs font-semibold  ${selectedDay == "Thursday" ? "border-[#086788] bg-green-400 text-white" : "border-[#086788] hover:bg-green-400 hover:text-white hover:border-transparent"} `} name="dayOfWeek" value="Thursday" onClick={handleDayButton}>Thursday</button>
                     <button className={`rounded-md  border-2 px-2 py-1 text-xs font-semibold  ${selectedDay == "Friday" ? "border-[#086788] bg-green-400 text-white" : "border-[#086788] hover:bg-green-400 hover:text-white hover:border-transparent"} `} name="dayOfWeek" value="Friday" onClick={handleDayButton}>Friday</button>
                     <button className={`rounded-md  border-2 px-2 py-1 text-xs font-semibold  ${selectedDay == "Saturday" ? "border-[#086788] bg-green-400 text-white" : "border-[#086788] hover:bg-green-400 hover:text-white hover:border-transparent"} `} name="dayOfWeek" value="Saturday" onClick={handleDayButton}>Saturday</button>
-
                 </div>
-
                 <div className="grid grid-cols-4 gap-4 py-6">
-                    <label htmlFor="" className="py-1 font-semibold">Start time</label><input type="time" className=" border-2 border-[#086788] rounded-md p-1" />
-                    <label htmlFor="" className="py-1 font-semibold">End time</label><input type="time" className=" border-2 border-[#086788] rounded-md p-1" />
-                    <label htmlFor="" className="py-1 font-semibold">Slot Duration (in Min)</label><input type="Number" min="5" max="90" className=" border-2 border-[#086788] rounded-md p-1" />
-                    <label htmlFor="" className="py-1 font-semibold">Buffer Time (in Min)</label><input type="Number" min="5" max="30" className=" border-2 border-[#086788] rounded-md p-1" />
+                    <label htmlFor="" className="py-1 font-semibold">Start time</label><input type="time" name="startTime" value={selectedAvailabilityDetail.startTime} className=" border-2 border-[#086788] rounded-md p-1" onChange={handleAvailabilityUpdateInputChange} />
+                    <label htmlFor="" className="py-1 font-semibold">End time</label><input type="time" name="endTime" value={selectedAvailabilityDetail.endTime} className=" border-2 border-[#086788] rounded-md p-1" onChange={handleAvailabilityUpdateInputChange} />
+                    <label htmlFor="" className="py-1 font-semibold">Slot Duration (in Min)</label><input name="slotDuration" type="Number" value={(selectedAvailabilityDetail.slotDuration).toString()} min="5" max="90" className=" border-2 border-[#086788] rounded-md p-1" onChange={handleAvailabilityUpdateInputChange} />
+                    <label htmlFor="" className="py-1 font-semibold">Buffer Time (in Min)</label><input name="bufferTime" type="Number" value={(selectedAvailabilityDetail.bufferTime).toString()} min="5" max="30" className=" border-2 border-[#086788] rounded-md p-1" onChange={handleAvailabilityUpdateInputChange} />
                 </div>
                 <div className="flex justify-around">
                     <button type="submit" className="rounded-md  px-4 py-2  border-2 border-[#086788] text-2xl font-semibold hover:bg-green-400 hover:border-transparent hover:text-white">Update</button>
-                    <button type="submit" className="rounded-md  px-4 py-2  border-2 border-[#086788] text-2xl font-semibold hover:bg-red-400 hover:border-transparent hover:text-white" onClick={() => { setUpdateAvailabilityModal(!updateAvailabilityModal) }}>Discard</button>
+                    <button className="rounded-md  px-4 py-2  border-2 border-[#086788] text-2xl font-semibold hover:bg-red-400 hover:border-transparent hover:text-white" onClick={handleUpdateAvailabilityDeleteButton}>Delete</button>
+                    <button className="rounded-md  px-4 py-2  border-2 border-[#086788] text-2xl font-semibold hover:bg-red-400 hover:border-transparent hover:text-white" onClick={() => { setUpdateAvailabilityModal(!updateAvailabilityModal) }}>Discard</button>
                 </div>
-
-
-            </div>)}
+            </Form>)}
 
             <button className="bg-white w-20 h-20 fixed bottom-20 right-20 rounded-full p-5 shadow-md shadow-black" onClick={() => setCreateDoctorModal(!createDoctorModal)}>
                 <Image src={create} width={64} height={64} className="text-white" alt="create button image" />

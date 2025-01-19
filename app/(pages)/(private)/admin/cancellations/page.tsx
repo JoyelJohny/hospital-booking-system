@@ -19,7 +19,7 @@ interface Cancellations {
 export default function Cancellation() {
     const router = useRouter()
     const [cancellations, setCancellations] = useState<Cancellations[]>()
-    const [selectedCancellation, setSelectedCancellation] = useState<Cancellations>()
+    const [selectedCancellation, setSelectedCancellation] = useState<Cancellations>({ _id: '', bookingId: '', patientName: '', patientPhone: '', patientDOB: '', requestDate: '', status: '' })
     const [requestModal, setRequestModal] = useState(false)
     const [confirmModal, setConfirmModal] = useState(false)
 
@@ -57,7 +57,7 @@ export default function Cancellation() {
         else return "bg-[#086788]"
     }
 
-    const handleClick = (d: Cancellations | undefined) => {
+    const handleClick = (d: Cancellations) => {
         setRequestModal(!requestModal)
         setSelectedCancellation(d)
     }
@@ -74,12 +74,12 @@ export default function Cancellation() {
                     <h1 className=" text-4xl font-semibold mb-6 text-center">Cancellation Request</h1>
 
                     <div className="grid grid-cols-2 gap-x-2 gap-y-2">
-                        <div className=" flex gap-4 "><div className=" font-semibold text-sm w-24 text-nowrap ">Booking ID</div><div className="text-sm">: {selectedCancellation?.bookingId}</div></div>
-                        <div className=" flex gap-4 "><div className=" font-semibold text-sm w-24">Status</div><div className={`text-sm ${statusColourSetter(selectedCancellation?.status)}`}>: {selectedCancellation?.status}</div></div>
-                        <div className=" flex gap-4 "><div className=" font-semibold text-sm w-24">Patient Name</div><div className="text-sm">: {selectedCancellation?.patientName}</div></div>
-                        <div className=" flex gap-4 "><div className=" font-semibold text-sm w-24">Patient Phone</div><div className="text-sm">: {selectedCancellation?.patientPhone}</div></div>
-                        <div className=" flex gap-4 "><div className=" font-semibold text-sm w-24">Patient DOB</div><div className="text-sm">: {selectedCancellation?.patientDOB}</div></div>
-                        <div className=" flex gap-4 "><div className=" font-semibold text-sm w-24">Request Date</div><div className="text-sm">: {selectedCancellation?.requestDate}</div></div>
+                        <div className=" flex gap-4 "><div className=" font-semibold text-sm w-24 text-nowrap ">Booking ID</div><div className="text-sm">: {selectedCancellation.bookingId}</div></div>
+                        <div className=" flex gap-4 "><div className=" font-semibold text-sm w-24">Status</div><div className={`text-sm ${statusColourSetter(selectedCancellation.status)}`}>: {selectedCancellation?.status}</div></div>
+                        <div className=" flex gap-4 "><div className=" font-semibold text-sm w-24">Patient Name</div><div className="text-sm">: {selectedCancellation.patientName}</div></div>
+                        <div className=" flex gap-4 "><div className=" font-semibold text-sm w-24">Patient Phone</div><div className="text-sm">: {selectedCancellation.patientPhone}</div></div>
+                        <div className=" flex gap-4 "><div className=" font-semibold text-sm w-24">Patient DOB</div><div className="text-sm">: {selectedCancellation.patientDOB}</div></div>
+                        <div className=" flex gap-4 "><div className=" font-semibold text-sm w-24">Request Date</div><div className="text-sm">: {selectedCancellation.requestDate}</div></div>
 
 
                     </div>

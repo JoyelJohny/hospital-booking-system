@@ -4,6 +4,7 @@ import { connectDB } from "@/libs/dbConnection";
 import Availability from "@/models/availabilities";
 import Doctor from "@/models/doctor";
 import { createBookingId } from "@/libs/bookIdGenerator";
+import Treatment from "@/models/treatments";
 
 type dataFormat = {
     name: string,
@@ -19,24 +20,24 @@ type dataFormat = {
 }
 export async function POST(req: NextRequest) {
     const data: dataFormat = await req.json()
-    const bookingId = createBookingId(data.name, data.phone, data.dob)
     connectDB()
-    const slot = await Availability.findById(data.slotId).select('-_id startTime endTime').lean()
-    const doctor = await Doctor.findById(data.drId, 'treatmentId')
+    const slot = await Availability.findById(data.slotId).select('startTime endTime')
+    const doctor = await Doctor.findById(data.drId, 'treatmentId name')
+    const treatment = await Treatment.findById(doctor.treatmentId, 'name')
+    const bookingId = createBookingId(data.name, data.phone, data.dob, doctor.treatmentId, data.drId)
     const booked = await Booking.create({
         bookingId: bookingId,
         patientName: data.name,
-        patientAge: data.age,
+        patientAge: Number(data.age),
         patientGender: data.gender,
         patientEmail: data.email,
         patientPhone: data.phone,
         patientDOB: data.dob,
-        treatmentId: doctor.treatmentId,
-        doctorId: data.drId,
+        treatment: { name: treatment.name, Id: doctor.treatmentId },
+        doctor: { name: doctor.name, Id: data.drId },
+        available: { Id: slot._id, startTime: slot.startTime, endTime: slot.endTime },
         date: data.date,
         additionalNotes: data.description,
-        ...slot,
     })
-
     return NextResponse.json(data)
 }
