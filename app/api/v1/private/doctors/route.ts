@@ -9,7 +9,9 @@ export async function GET() {
     try {
         connectDB();
         const doctors = await Doctor.find()
+        doctors.forEach((doctor) => (doctor.name = `Dr ${doctor.name}`))
         const treatments = await Treatment.find({}, 'name')
+        console.log(doctors)
         if (doctors.length == 0) {
             return NextResponse.json({ message: "No doctors available", treatments })
         }
@@ -23,12 +25,12 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
     try {
-        const data = await req.json();
-        const isTreatmentIdValid = await Treatment.exists({ _id: data.treatmentId })
+        const { name, treatmentId, contact, specialization } = await req.json();
+        const isTreatmentIdValid = await Treatment.exists({ _id: treatmentId })
         if (!isTreatmentIdValid) {
             return NextResponse.json({ error: "Associated treatment not found" }, { status: 404 })
         }
-        await Doctor.create(data)
+        await Doctor.create({ name: name, treatmentId, contact, specialization })
         return NextResponse.json({ message: "Doctor created successfully" }, { status: 201 })
     } catch (error) {
         if (error instanceof Error) {

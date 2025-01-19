@@ -1,6 +1,7 @@
 "use client"
 import DateComponent from "@/app/(components)/DateComponent";
 import DividerComponent from "@/app/(components)/DividerComponent";
+import { getTimings } from "@/libs/time";
 import Cookies from 'js-cookie'
 
 import Link from "next/link";
@@ -63,7 +64,7 @@ export default function Availability() {
             if (Cookies.get("book-detail")) {
                 Cookies.remove("book-detail")
             }
-            Cookies.set("book-detail", JSON.stringify({ doctor: doctordetail, availability: slot, date: date?.toLocaleDateString() }), { expires: 1 })
+            Cookies.set("book-detail", JSON.stringify({ doctor: doctordetail, availability: slot, date: date?.toLocaleDateString('en-CA') }), { expires: 1 })
         }
 
 
@@ -103,19 +104,17 @@ export default function Availability() {
                     <tr>
                         <th className=" p-4 ">Date</th>
                         <th>Day</th>
-                        <th>Start Time</th>
-                        <th>End Time</th>
+                        <th>Timings</th>
                         <th>Status</th>
                         <th>Option</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {available.map((slot) => (
+                    {available.sort((a, b) => ((a.startTime).localeCompare(b.startTime))).map((slot) => (
                         <tr key={slot._id} className="bg-[#086788] text-center font-semibold ">
-                            <td className="p-4 rounded-tl-2xl rounded-bl-2xl ">{date?.toLocaleDateString()}</td>
+                            <td className="p-4 rounded-tl-2xl rounded-bl-2xl ">{date?.toLocaleDateString('en-CA')}</td>
                             <td>{slot.dayOfWeek}</td>
-                            <td>{slot.startTime}</td>
-                            <td>{slot.endTime}</td>
+                            <td>{getTimings(slot.startTime, slot.endTime)}</td>
                             <td className={`${slot.status == "Booked" ? "bg-red-400" : "bg-green-400"}`}>{slot.status}</td>
                             <td className="p-4 rounded-tr-2xl rounded-br-2xl"><Link href="/bookings/new" className={`py-1 px-3 rounded-md ${slot.status == "Booked" ? "bg-gray-400 hover:cursor-not-allowed" : "bg-green-400 hover:scale-105"}`} onClick={(e) => handleClick(e, slot.status == "Booked", slot)}>BooK</Link></td>
                         </tr>

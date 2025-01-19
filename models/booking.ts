@@ -33,28 +33,45 @@ const bookingSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
-    treatmentId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: Treatment,
-        required: true,
+    treatment: {
+        name: { type: String, required: true },
+        Id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: Treatment,
+            required: true,
+        }
+
     },
-    doctorId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: Doctor,
-        required: true,
+    doctor: {
+        name: { type: String, required: true },
+        Id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: Doctor,
+            required: true,
+        },
     },
+
     date: {
         type: String,
         required: true,
     },
-    startTime: {
-        type: String,
-        required: true,
+
+    available: {
+        Id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: Doctor,
+            required: true,
+        },
+        startTime: {
+            type: String,
+            required: true,
+        },
+        endTime: {
+            type: String,
+            required: true,
+        }
     },
-    endTime: {
-        type: String,
-        required: true,
-    },
+
     additionalNotes: {
         type: String,
         required: false,

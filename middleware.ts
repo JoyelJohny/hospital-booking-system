@@ -8,7 +8,7 @@ export default async function middleware(req: NextRequest) {
     const authHeader = req.headers.get('auth')
 
     const token = authHeader && authHeader.startsWith('Bearer') ? authHeader.split(' ')[1] : 'null'
-    console.log(authHeader)
+
     if (token == "null" || null) {
         return NextResponse.json({ error: "Authorization revoked" }, { status: 401 })
     }
@@ -17,7 +17,7 @@ export default async function middleware(req: NextRequest) {
 
             // Verify the token
             const decoded = await verify(token)
-            console.log(decoded)
+
 
             return NextResponse.next(); // Proceed to the requested route
 

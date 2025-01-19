@@ -5,7 +5,11 @@ import { NextRequest, NextResponse } from 'next/server'
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ doctorId: string }> }) {
 
     const doctorId = (await params).doctorId
-    const data1 = await req.json();
+    const { name,
+        treatmentId,
+        contact,
+        specialization } = await req.json();
+
     let data
     connectDB()
     try {
@@ -13,7 +17,12 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ do
         if (!isDoctorIdValid) {
             return NextResponse.json({ error: "Doctor not Found" }, { status: 404 })
         }
-        data = await Doctor.findByIdAndUpdate(doctorId, data1, { new: true })
+        data = await Doctor.findByIdAndUpdate(doctorId, {
+            name: name.split(' ')[1],
+            treatmentId,
+            contact,
+            specialization
+        }, { new: true })
     } catch (error) {
         return NextResponse.json({ error: "Invalid update data" }, { status: 400 })
     }
