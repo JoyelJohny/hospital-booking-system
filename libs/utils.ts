@@ -1,27 +1,14 @@
-import { SignJWT, jwtVerify } from 'jose';
+export function getTimings(sTime: string, eTime: string) {
+    let [sHour, sMin] = sTime.split(":")
+    let [eHour, eMin] = eTime.split(":")
 
-const secretkey = new TextEncoder().encode(process.env.JWT_SECRET)
+    const sHourNum = Number(sHour)
+    const eHourNum = Number(eHour)
+    const sPeriod = sHourNum > 12 ? "pm" : "am"
+    const ePeriod = eHourNum > 12 ? "pm" : "am"
 
-export async function sign(data: {}) {
-    try {
-        const jwt = await new SignJWT(data)
-            .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
-            .setIssuedAt()
-            .setExpirationTime('8h')
-            .sign(secretkey)
+    const sHour12 = (sHourNum % 12 || 12).toString().padStart(2, '0')
+    const eHour12 = (eHourNum % 12 || 12).toString().padStart(2, '0')
 
-        return jwt
-    } catch (error) {
-        console.log(error)
-
-    }
-}
-
-export async function verify(token: string): Promise<any> {
-    try {
-        const { payload } = await jwtVerify(token, secretkey);
-        return payload;
-    } catch (error) {
-        console.log(error)
-    }
+    return `${sHour12}:${sMin} ${sPeriod} - ${eHour12}:${eMin} ${ePeriod}`
 }

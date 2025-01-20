@@ -10,8 +10,7 @@ import DividerComponent from "@/app/(components)/DividerComponent"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Logout from "@/app/(components)/LogoutComponent"
-import { getTimings } from "@/libs/time"
-
+import { getTimings } from "@/libs/utils"
 
 type Doctor = {
     _id: string,
@@ -36,7 +35,6 @@ type treatment = { _id: string, name: string }
 export default function Doctor() {
     const router = useRouter()
     const [token, setToken] = useState<string | null>(null)
-
     const [doctors, setDoctors] = useState<Doctor[]>([])
     const [treatments, setTreatments] = useState<treatment[]>([])
     const [availabilities, setAvailabilities] = useState<Availability[]>()
@@ -51,15 +49,14 @@ export default function Doctor() {
 
 
     useEffect(() => {
-        // Fetch token directly from localStorage and set it
         const storedToken = localStorage.getItem('token');
         if (!storedToken) {
-            // Redirect to login if no token exists
+
             router.push('/login');
         } else {
-            setToken(storedToken); // Set the token
+            setToken(storedToken);
         }
-    }, [router]); // Run only once on component mount
+    }, [router]);
 
     useEffect(() => {
         if (token) {
@@ -67,23 +64,21 @@ export default function Doctor() {
         }
     }, [token]);
 
+
     const getDoctorsData = async () => {
         try {
             const res = await fetch("http://localhost:3000/api/v1/private/doctors", { method: "GET", headers: { auth: `Bearer ${token}` } })
             const { doctors, treatments } = await res.json()
             if (!res.ok) {
-                console.log(res)
-                // router.back()
-
-            } else {
+                router.back()
+            }
+            else {
                 setTreatments(treatments)
                 setDoctors(doctors)
-                console.log(treatments, doctors)
+
             }
-
-
         } catch (error) {
-
+            console.error(error)
         }
     }
 
@@ -93,7 +88,7 @@ export default function Doctor() {
             const result = await res.json()
             setAvailabilities(result)
         } catch (error) {
-
+            console.error(error)
         }
     }
 
@@ -113,7 +108,6 @@ export default function Doctor() {
         const specialization = treatment?.name || ''
         formdata.append('specialization', specialization)
         const data = JSON.stringify(Object.fromEntries(formdata))
-        console.log(data)
         try {
             const res = await fetch('http://localhost:3000/api/v1/private/doctors', { method: "POST", body: data, headers: { auth: `Bearer ${token}` } })
             const result = await res.json()
@@ -208,7 +202,6 @@ export default function Doctor() {
 
     const handleUpdateAvailabilityDeleteButton = async (e: React.MouseEvent<HTMLButtonElement>) => {
         try {
-            e.preventDefault()
             setUpdateAvailabilityModal(!updateAvailabilityModal)
             const id = selectedAvailabilityDetail._id
             console.log(selectedDoctorDetail._id)
@@ -258,20 +251,20 @@ export default function Doctor() {
 
             {/* Doctor updation Form*/}
 
-            {updateDoctorModal && (<Form action={(e) => handleUpdateButton(e, selectedDoctorDetail._id)} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 justify-center bg-black p-6 rounded-lg space-y-5">
+            {updateDoctorModal && (<Form action={(e) => handleUpdateButton(e, selectedDoctorDetail._id)} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 justify-center bg-[#086788] border-4 border-gray-100 w-1/3 p-6 rounded-lg space-y-5">
                 <div className="flex justify-between gap-2">
-                    <label htmlFor="" className="py-2 font-semibold text-sm">Dr Name</label>
-                    <input type="text" name="name" value={selectedDoctorDetail.name} onChange={handleEditChange} className="text-black p-2 rounded-md focus:outline-slate-500" />
+                    <label htmlFor="" className="py-2 font-semibold text-sm w-28">Dr Name</label>
+                    <input type="text" name="name" value={selectedDoctorDetail.name} onChange={handleEditChange} className="text-black p-2 rounded-md focus:outline-slate-500 w-full" />
                 </div>
                 <div className="flex justify-between gap-2">
-                    <label htmlFor="" className="py-2 font-semibold text-sm text-nowrap">Treatment Name</label>
+                    <label htmlFor="" className="py-2 font-semibold text-sm text-nowrap">Specialization</label>
                     <select name="treatmentId" defaultValue={selectedDoctorDetail.treatmentId} className="w-full text-black p-2 rounded-md focus:outline-slate-500">
                         {treatments && treatments.map((treatment) => (<option key={treatment._id} className="text-black" value={treatment._id} >{treatment.name}</option>))}
                     </select>
                 </div>
                 <div className="flex justify-between gap-2">
-                    <label htmlFor="" className="py-2 font-semibold text-sm">Contact</label>
-                    <input type="text" name="contact" value={selectedDoctorDetail.contact} onChange={handleEditChange} className="text-black p-2 rounded-md focus:outline-slate-500" />
+                    <label htmlFor="" className="py-2 font-semibold text-sm w-28">Contact</label>
+                    <input type="text" name="contact" value={selectedDoctorDetail.contact} onChange={handleEditChange} className="text-black p-2 rounded-md focus:outline-slate-500 w-full" />
                 </div>
                 <div className="flex justify-around gap-2">
                     <button className=" border-2 border-transparent box-border p-2 rounded-lg font-semibold  border-white hover:bg-green-400 hover:border-transparent">Update</button>
@@ -282,10 +275,10 @@ export default function Doctor() {
 
             {/* Doctor creation Form*/}
 
-            {createDoctorModal && (<Form action={handleCreateButton} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 justify-center bg-black p-6 rounded-lg space-y-5">
+            {createDoctorModal && (<Form action={handleCreateButton} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 justify-center border-4 border-gray-100 bg-[#086788] w-1/3 p-6 rounded-lg space-y-5">
                 <div className="flex justify-between gap-2">
-                    <label htmlFor="" className="py-2 font-semibold text-sm">Dr Name</label>
-                    <input type="text" name="name" className="text-black p-2 rounded-md focus:outline-slate-500" />
+                    <label htmlFor="" className="py-2 font-semibold text-sm w-28">Dr Name</label>
+                    <input type="text" name="name" className="text-black p-2 rounded-md focus:outline-slate-500 w-full" />
                 </div>
 
                 <div className="flex justify-between gap-2">
@@ -295,8 +288,8 @@ export default function Doctor() {
                     </select>
                 </div>
                 <div className="flex justify-between gap-2">
-                    <label htmlFor="" className="py-2 font-semibold text-sm">Contact</label>
-                    <input type="text" name="contact" className="text-black p-2 rounded-md focus:outline-slate-500" />
+                    <label htmlFor="" className="py-2 font-semibold text-sm w-28">Contact</label>
+                    <input type="text" name="contact" className="text-black p-2 rounded-md focus:outline-slate-500 w-full" />
                 </div>
                 <div className="flex justify-around gap-2">
                     <button type="submit" className=" border-2 border-transparent box-border p-2 rounded-lg font-semibold  border-white hover:bg-green-400 hover:border-transparent">Create</button>
@@ -415,7 +408,7 @@ export default function Doctor() {
                 </div>
             </Form>)}
 
-            <button className="bg-white w-20 h-20 fixed bottom-20 right-20 rounded-full p-5 shadow-md shadow-black" onClick={() => setCreateDoctorModal(!createDoctorModal)}>
+            <button className="bg-[#086788] w-20 h-20 fixed bottom-20 right-20 rounded-full p-5 shadow-md shadow-black" onClick={() => setCreateDoctorModal(!createDoctorModal)}>
                 <Image src={create} width={64} height={64} className="text-white" alt="create button image" />
             </button>
 

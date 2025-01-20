@@ -16,7 +16,7 @@ export default function DateComponent({ sendDate }: componentProps) {
     }
     return (<>
         <div className="text-slate-600">
-            <DatePicker selected={date} onChange={(selectedDate) => getDate(selectedDate)} dateFormat={"dd/MM/yyyy"} minDate={new Date()} className="rounded-lg p-2 gap-2 border-2 border-slate-600" />
+            <DatePicker selected={date} onChange={(selectedDate) => getDate(selectedDate)} dateFormat={"yyyy-MM-dd"} minDate={new Date()} className="rounded-lg p-2 gap-2 border-2 border-slate-600" />
         </div>
 
     </>)

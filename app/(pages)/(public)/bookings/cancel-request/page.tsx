@@ -5,28 +5,24 @@ import { useEffect, useState } from "react";
 export default function CancellationRequest() {
     const [today, setToday] = useState<string>()
     useEffect(() => {
-        const tdate = new Date()
-        console.log(tdate.toLocaleDateString('en-CA'))
-        setToday(tdate.toLocaleDateString('en-CA'))
+        const todayDate = new Date()
+        setToday(todayDate.toLocaleDateString('en-CA'))
     }, [])
 
-    const sendData = async (formData: FormData) => {
-
-        const data = JSON.stringify(Object.fromEntries(formData))
-
+    const handleRequestFormSubmit = async (formData: FormData) => {
         try {
+            const data = JSON.stringify(Object.fromEntries(formData))
             const res = await fetch("http://localhost:3000/api/v1/public/bookings/cancel-request", { method: "POST", body: data })
             const result = await res.json()
-            console.log(result)
         } catch (error) {
-
+            console.error(error)
         }
     }
 
 
     return (<>
         <div className="px-24 py-10 bg-gray-100">
-            <Form action={sendData} className="flex flex-col bg-[#086788] p-6 w-fit space-y-5 shadow-2xl rounded-lg justify-self-center mt-20 justify-between">
+            <Form action={handleRequestFormSubmit} className="flex flex-col bg-[#086788] p-6 w-fit space-y-5 shadow-2xl rounded-lg justify-self-center mt-20 justify-between">
                 <h1 className=" text-4xl font-semibold ">Request Cancellation</h1>
                 <div className="flex flex-row justify-between ">
                     <label className="font-semibold py-2  text-nowrap w-40">Booking Id</label>

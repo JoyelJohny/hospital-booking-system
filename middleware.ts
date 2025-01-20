@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { verify } from '@/libs/utils'
+import { verify } from '@/libs/middlewareUtils'
 
 const JWT_SECRET = process.env.JWT_SECRET as string
 
@@ -15,16 +15,15 @@ export default async function middleware(req: NextRequest) {
     if (token != null || token != 'null') {
         try {
 
-            // Verify the token
+
             const decoded = await verify(token)
 
-
-            return NextResponse.next(); // Proceed to the requested route
+            return NextResponse.next();
 
         } catch (error) {
 
-            console.error('JWT verification failed:', error);
-            // Redirect to login if token verification fails
+            console.error(error);
+
             return NextResponse.json({ error: "Invalid Credentials" }, { status: 401 })
         }
     }

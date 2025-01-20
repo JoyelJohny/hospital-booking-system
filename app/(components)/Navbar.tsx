@@ -17,7 +17,6 @@ export default function Navbar() {
                 <Link href="/" className="px-6 pt-3 rounded-xl hover:bg-green-400">Home</Link>
                 <Link href="/treatments" className="px-6 pt-3 rounded-xl hover:bg-green-400">Treatments</Link>
                 <Link href="/bookings/cancel-request" className="px-6 pt-3 rounded-xl hover:bg-green-400">Cancel appointment</Link>
-
             </div>
         </div>
     </>)
