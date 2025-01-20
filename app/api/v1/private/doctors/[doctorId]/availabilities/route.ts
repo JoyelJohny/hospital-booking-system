@@ -24,6 +24,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ doct
         if (data.length == 0) return NextResponse.json({ message: "No Schedules" })
         return NextResponse.json(data)
     } catch (error) {
+        console.log(error)
         return NextResponse.error()
     }
 }

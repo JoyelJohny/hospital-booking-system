@@ -5,10 +5,10 @@ import { useEffect, useState } from "react"
 import DividerComponent from "@/app/(components)/DividerComponent"
 import { useRouter } from "next/navigation"
 import Logout from "@/app/(components)/LogoutComponent"
-import { getTimings } from "@/libs/time"
+import { getTimings } from "@/libs/utils"
 
 
-interface Bookings {
+type Bookings = {
     _id: string,
     bookingId: string,
     patientName: string,
@@ -19,9 +19,8 @@ interface Bookings {
     patientDOB: string,
     doctor: { name: string, doctorId: string, }
     treatment: { name: string, treatmentId: string }
+    available: { availableId: string, startTime: string, endTime: string }
     date: string,
-    startTime: string,
-    endTime: string,
     additionalNotes: string,
     status: string
 
@@ -42,9 +41,8 @@ export default function Booking() {
         patientDOB: '',
         doctor: { name: '', doctorId: '' },
         treatment: { name: '', treatmentId: '' },
+        available: { startTime: '', endTime: '', availableId: '' },
         date: '',
-        startTime: '',
-        endTime: '',
         additionalNotes: '',
         status: ''
     })
@@ -78,7 +76,7 @@ export default function Booking() {
                 setBookings(result)
             }
         } catch (error) {
-
+            console.error(error)
         }
     }
 
@@ -90,17 +88,16 @@ export default function Booking() {
             const result = res.json()
             getBookingsData()
         } catch (error) {
-
+            console.error(error)
         }
     }
 
     return (<>
-        <div className=" px-40 py-10 ">
+        <div className=" px-40 py-5 space-y-5 ">
 
-            <div className="flex text-black p-6 justify-center">
-                <h2 className=" w-full text-2xl font-semibold text-center">Bookings Pending</h2>
+            <h1 className="text-[#086788] text-5xl  font-semibold">Bookings</h1>
 
-            </div>
+            {bookings.length == 0 && (<div className="text-black text-center text-3xl ">No new Bookings recieved</div>)}
 
             <div className="grid grid-cols-2 gap-10 w-full h-full place-content-center ">
 
@@ -129,7 +126,7 @@ export default function Booking() {
                         <div className=" flex gap-4 "><div className=" font-semibold text-sm w-24 text-nowrap ">Consultation By</div><div className="text-sm">: {selectedAppointment.doctor.name}</div></div>
                         <div className=" flex gap-4 "><div className=" font-semibold text-sm w-24">Treatment</div><div className="text-sm">: {selectedAppointment.treatment.name}</div></div>
                         <div className=" flex gap-4 "><div className=" font-semibold text-sm w-24">Date</div><div className="text-sm">: {selectedAppointment.date}</div></div>
-                        <div className=" flex gap-4 "><div className=" font-semibold text-sm w-24">Timings</div><div className="text-sm">: {getTimings(selectedAppointment.startTime, selectedAppointment.endTime)}</div></div>
+                        <div className=" flex gap-4 "><div className=" font-semibold text-sm w-24">Timings</div><div className="text-sm">: {getTimings(selectedAppointment.available.startTime, selectedAppointment.available.endTime)}</div></div>
                     </div>
                     <h2 className="mt-8 font-semibold text-lg">Patient Details</h2>
                     <DividerComponent />
@@ -149,11 +146,7 @@ export default function Booking() {
                     <div className="flex">
                         <button className="rounded-md w-full px-4 py-2 my-4 border-2 border-white text-2xl font-semibold hover:bg-red-400 hover:border-transparent" onClick={handleCancelAppointment}>Cancel Appointment</button>
                     </div>
-
-
                 </div>
-
-
             )}
 
             <Logout />
