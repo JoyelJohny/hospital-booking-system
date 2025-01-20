@@ -2,8 +2,9 @@
 import Logout from "@/app/(components)/LogoutComponent"
 import Form from "next/form"
 import Link from "next/link"
-
 import { useEffect, useState } from "react"
+
+const api_url = process.env.NEXT_PUBLIC_API_URI || 'http://localhost:3000'
 
 export default function Login() {
     const [showOptionModal, setShowOptionModal] = useState(false)
@@ -17,7 +18,7 @@ export default function Login() {
     const handleLoginFormSubmit = async (formData: FormData) => {
         const data = JSON.stringify(Object.fromEntries(formData))
         try {
-            const res = await fetch("http://localhost:3000/api/v1/private/admin/login", { method: "POST", body: data })
+            const res = await fetch(`${api_url}/api/v1/private/admin/login`, { method: "POST", body: data })
             const result = await res.json()
             if (result.token) {
                 localStorage.setItem('token', result.token)

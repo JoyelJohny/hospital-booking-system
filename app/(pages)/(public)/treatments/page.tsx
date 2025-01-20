@@ -8,12 +8,14 @@ interface Treatment {
     name: string,
 }
 
+const api_url = process.env.NEXT_PUBLIC_API_URI || 'http://localhost:3000'
+
 export default function Treatment() {
     const [treatments, setTreatments] = useState<Treatment[]>([]);
     useEffect(() => {
         async function getTreatmentsData() {
             try {
-                const res = await fetch("http://localhost:3000//api/v1/public/treatments", {
+                const res = await fetch(`${api_url}/api/v1/public/treatments`, {
                     method: "GET"
                 })
                 const result = await res.json()
