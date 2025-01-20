@@ -24,6 +24,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ do
             specialization
         }, { new: true })
     } catch (error) {
+        console.error(error)
         return NextResponse.json({ error: "Invalid update data" }, { status: 400 })
     }
     return NextResponse.json({ message: "Doctor updated successfully", updatedDoctor: data })

@@ -54,7 +54,7 @@ export default function AppointmentBooking() {
     const sendBookingData = async (data: string) => {
         try {
             const res = await fetch("http://localhost:3000/api/v1/public/bookings", { method: "POST", body: data })
-            const result = res.json()
+            res.json()
         } catch (error) {
             console.error(error)
         }

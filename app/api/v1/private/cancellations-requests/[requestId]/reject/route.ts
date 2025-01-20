@@ -10,10 +10,10 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ re
         if (!isRequestIdValid) return NextResponse.json({ error: "Cancellation request not found" }, { status: 404 })
         const bookingId = await Cancelled.findById(requestId)
         console.log(bookingId)
-        const data = await Cancelled.findByIdAndUpdate(requestId, { status: "Rejected" })
+        await Cancelled.findByIdAndUpdate(requestId, { status: "Rejected" })
         return NextResponse.json(bookingId)
     } catch (error) {
-
+        console.error(error)
     }
 
 }

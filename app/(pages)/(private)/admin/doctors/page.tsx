@@ -26,8 +26,8 @@ type Availability = {
     dayOfWeek: string,
     startTime: string,
     endTime: string,
-    slotDuration: Number,
-    bufferTime: Number,
+    slotDuration: number,
+    bufferTime: number,
 }
 
 type treatment = { _id: string, name: string }
@@ -114,7 +114,7 @@ export default function Doctor() {
             console.log(result)
             getDoctorsData()
         } catch (error) {
-
+            console.error(error)
         }
     }
 
@@ -137,7 +137,7 @@ export default function Doctor() {
             console.log(result)
             getDoctorsData()
         } catch (error) {
-
+            console.error(error)
         }
     }
 
@@ -149,10 +149,10 @@ export default function Doctor() {
             formdata.append('specialization', specialization)
             const data = JSON.stringify(Object.fromEntries(formdata))
             const res = await fetch(`http://localhost:3000/api/v1/private/doctors/${id}`, { method: "PATCH", body: data, headers: { auth: `Bearer ${token}` } })
-            const result = await res.json()
+            await res.json()
             getDoctorsData()
         } catch (error) {
-
+            console.error(error)
         }
     }
 
@@ -173,7 +173,7 @@ export default function Doctor() {
             console.log(result)
 
         } catch (error) {
-
+            console.error(error)
         }
 
     }
@@ -195,12 +195,12 @@ export default function Doctor() {
             getAvailabilitiesData(selectedDoctorDetail._id)
             console.log(result)
         } catch (error) {
-
+            console.error(error)
         }
 
     }
 
-    const handleUpdateAvailabilityDeleteButton = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    const handleUpdateAvailabilityDeleteButton = async () => {
         try {
             setUpdateAvailabilityModal(!updateAvailabilityModal)
             const id = selectedAvailabilityDetail._id
@@ -210,7 +210,7 @@ export default function Doctor() {
             getAvailabilitiesData(selectedDoctorDetail._id)
             console.log(result)
         } catch (error) {
-
+            console.error(error)
         }
     }
 
