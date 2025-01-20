@@ -26,7 +26,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ doct
         const bookedSlotIds = new Set(bookings.map((booked) => ((booked.available.Id).toString())))
 
         data.forEach((slot) => {
-            const slotId = slot._id as Object
+            const slotId = slot._id as object
             slot.status = bookedSlotIds.has(slotId.toString()) ? 'Booked' : 'Available'
         })
 

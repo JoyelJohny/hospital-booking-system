@@ -15,6 +15,7 @@ export async function GET() {
         }
         return NextResponse.json({ message: "Data fetched successfully", doctors, treatments })
     } catch (error) {
+        console.error(error)
         throw new Error('Error with fetching data')
     }
 

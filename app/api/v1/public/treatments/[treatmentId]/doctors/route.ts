@@ -25,6 +25,6 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ trea
 
         return NextResponse.json({ doctorsList: doctors, treatment: treatment }, { status: 200 })
     } catch (error) {
-
+        console.error(error)
     }
 }

@@ -39,5 +39,5 @@ export async function POST(req: NextRequest) {
         date: data.date,
         additionalNotes: data.description,
     })
-    return NextResponse.json(data)
+    return NextResponse.json(booked)
 }

@@ -12,13 +12,18 @@ type DataFormat = {
 }
 
 export async function POST(req: NextRequest) {
-    const formdata: DataFormat = await req.json()
-    connectDB()
-    const isBookingIdValid = await booking.findOne({ bookingId: formdata.bookingId })
-    if (!isBookingIdValid) return NextResponse.json({ error: "Invalid BookingId" })
-    console.log(isBookingIdValid)
-    if (!verifyUserForBookingCancellation(formdata.patientName, formdata.patientPhone, formdata.patientDOB, isBookingIdValid.treatment.Id, isBookingIdValid.doctor.Id, formdata.bookingId)) return NextResponse.json({ error: "Invalid credentials" })
-    console.log("hello")
-    const data = await Cancelled.create(formdata)
-    return NextResponse.json(formdata)
+    try {
+        const formdata: DataFormat = await req.json()
+        connectDB()
+        const isBookingIdValid = await booking.findOne({ bookingId: formdata.bookingId })
+        if (!isBookingIdValid) return NextResponse.json({ error: "Invalid BookingId" })
+        console.log(isBookingIdValid)
+        if (!verifyUserForBookingCancellation(formdata.patientName, formdata.patientPhone, formdata.patientDOB, isBookingIdValid.treatment.Id, isBookingIdValid.doctor.Id, formdata.bookingId)) return NextResponse.json({ error: "Invalid credentials" })
+        console.log("hello")
+        await Cancelled.create(formdata)
+        return NextResponse.json(formdata)
+    } catch (error) {
+        console.error(error)
+    }
+
 }

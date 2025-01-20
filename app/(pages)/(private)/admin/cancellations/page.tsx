@@ -76,7 +76,7 @@ export default function Cancellation() {
         try {
             setRequestModal(!requestModal)
             const res = await fetch(`http://localhost:3000/api/v1/private/cancellations-requests/${selectedCancellation._id}/approve`, { method: 'PATCH', headers: { auth: `Bearer ${token}` } })
-            const result = await res.json()
+            await res.json()
             getCancelRequestData()
         } catch (error) {
             console.error(error)
@@ -88,7 +88,7 @@ export default function Cancellation() {
         try {
             setRequestModal(!requestModal)
             const res = await fetch(`http://localhost:3000/api/v1/private/cancellations-requests/${selectedCancellation._id}/reject`, { method: 'PATCH', headers: { auth: `Bearer ${token}` } })
-            const result = await res.json()
+            await res.json()
             getCancelRequestData()
         } catch (error) {
             console.error(error)

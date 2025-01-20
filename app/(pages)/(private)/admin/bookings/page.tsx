@@ -85,7 +85,7 @@ export default function Booking() {
             setAppointmentModal(!appointmentModal)
             const id = selectedAppointment.bookingId
             const res = await fetch(`http://localhost:3000/api/v1/private/bookings/${id}/cancel`, { method: "PATCH", headers: { auth: `Bearer ${token}` } })
-            const result = res.json()
+            await res.json()
             getBookingsData()
         } catch (error) {
             console.error(error)

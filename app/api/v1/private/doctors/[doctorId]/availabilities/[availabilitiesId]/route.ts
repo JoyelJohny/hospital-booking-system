@@ -10,9 +10,9 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ do
     connectDB()
     const isAvailabilitiesIdValid = await Availability.findOne({ $and: [{ _id: availabilitiesId, doctorId: doctorId }] })
     if (!isAvailabilitiesIdValid) return NextResponse.json({ message: "Availability not found for this doctor" }, { status: 404 })
-    let data;
+
     try {
-        data = await Availability.findByIdAndUpdate(availabilitiesId, updatedAvailability, { new: true })
+        await Availability.findByIdAndUpdate(availabilitiesId, updatedAvailability, { new: true })
     } catch (error) {
         console.log(error)
         return NextResponse.json({ message: "Invalid Update data" }, { status: 400 })

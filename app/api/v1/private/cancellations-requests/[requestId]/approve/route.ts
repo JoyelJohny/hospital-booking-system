@@ -16,9 +16,9 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ re
         const isAlreadyApproved = await Cancelled.findOne({ _id: requestId, status: 'Approved' })
         if (isAlreadyApproved) return NextResponse.json({ error: 'Cancellation request already processed' }, { status: 400 })
 
-        const data = await Cancelled.findByIdAndUpdate(requestId, { status: "Approved" })
+        await Cancelled.findByIdAndUpdate(requestId, { status: "Approved" })
         const bookingId = await Cancelled.findById(requestId, 'bookingId')
-        const updateBookingInfo = await Booking.findOneAndUpdate({ bookingId: bookingId }, { status: 'Cancelled' })
+        await Booking.findOneAndUpdate({ bookingId: bookingId }, { status: 'Cancelled' })
 
         return NextResponse.json({ message: 'Approved cancellation successfully' }, { status: 200 })
     } catch (error) {

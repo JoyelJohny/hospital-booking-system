@@ -13,7 +13,7 @@ export default function CancellationRequest() {
         try {
             const data = JSON.stringify(Object.fromEntries(formData))
             const res = await fetch("http://localhost:3000/api/v1/public/bookings/cancel-request", { method: "POST", body: data })
-            const result = await res.json()
+            await res.json()
         } catch (error) {
             console.error(error)
         }

@@ -3,17 +3,16 @@ import { NextRequest, NextResponse } from "next/server";
 import Treatment from '@/models/treatments'
 
 
-export async function GET(req: NextRequest) {
-
-    connectDB()
-    let data
+export async function GET() {
     try {
-        data = await Treatment.find().sort({ createdAt: -1 });
+        connectDB()
+        const data = await Treatment.find().sort({ createdAt: -1 });
+        return NextResponse.json(data)
     } catch (error) {
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
+        console.error(error)
     }
 
-    return NextResponse.json(data)
+
 }
 
 export async function POST(req: NextRequest) {

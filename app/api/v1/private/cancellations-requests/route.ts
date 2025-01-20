@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { connectDB } from "@/libs/dbConnection";
 import Cancelled from "@/models/cancellation_request"
 
-export async function GET(req: NextRequest) {
+export async function GET() {
     try {
 
         connectDB()
