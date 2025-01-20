@@ -17,6 +17,8 @@ type Treatment = {
     description: string
 }
 
+const api_url = process.env.NEXT_PUBLIC_API_URI || 'http://localhost:3000'
+
 export default function SpecificTreatment() {
     const { treatmentId } = useParams<{ treatmentId: string }>()
     const [treatment, setTreatment] = useState<Treatment>({ _id: '', name: '', description: '' })
@@ -26,7 +28,7 @@ export default function SpecificTreatment() {
 
         async function getInitialData() {
             try {
-                const res = await fetch(`http://localhost:3000/api/v1/public/treatments/${treatmentId}/doctors`, { method: "GET" })
+                const res = await fetch(`${api_url}/api/v1/public/treatments/${treatmentId}/doctors`, { method: "GET" })
                 const { doctorsList, treatment } = await res.json()
                 setDoctors(doctorsList)
                 setTreatment(treatment)

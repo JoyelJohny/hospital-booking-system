@@ -22,6 +22,7 @@ type Available = {
     status: string
 }
 
+const api_url = process.env.NEXT_PUBLIC_API_URI || 'http://localhost:3000'
 
 export default function Availability() {
     const { doctorId } = useParams<{ doctorId: string }>()
@@ -33,7 +34,7 @@ export default function Availability() {
         setDate(new Date())
         async function getDoctorDetail() {
             try {
-                const res = await fetch(`http://localhost:3000//api/v1/public/doctors/${doctorId}`, { method: "GET" })
+                const res = await fetch(`${api_url}/api/v1/public/doctors/${doctorId}`, { method: "GET" })
                 const result = await res.json()
                 setDoctor(result)
             } catch (error) {
@@ -51,7 +52,7 @@ export default function Availability() {
 
     const getAvailableData = async () => {
         try {
-            const res = await fetch(`http://localhost:3000/api/v1/public/doctors/${doctorId}/timeslots?date=${date}`)
+            const res = await fetch(`${api_url}/api/v1/public/doctors/${doctorId}/timeslots?date=${date}`)
             const { availableList } = await res.json()
             setAvailable(availableList)
         } catch (error) {

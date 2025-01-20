@@ -22,6 +22,8 @@ type Data = {
     date: string
 }
 
+const api_url = process.env.NEXT_PUBLIC_API_URI || 'http://localhost:3000'
+
 export default function AppointmentBooking() {
     const [data, setData] = useState<Data>(
         {
@@ -53,7 +55,7 @@ export default function AppointmentBooking() {
 
     const sendBookingData = async (data: string) => {
         try {
-            const res = await fetch("http://localhost:3000/api/v1/public/bookings", { method: "POST", body: data })
+            const res = await fetch(`${api_url}/api/v1/public/bookings`, { method: "POST", body: data })
             res.json()
         } catch (error) {
             console.error(error)

@@ -14,6 +14,8 @@ interface Treatment {
     description: string
 }
 
+const api_url = process.env.NEXT_PUBLIC_API_URI || 'http://localhost:3000'
+
 export default function Treatment() {
     const router = useRouter()
     const [token, setToken] = useState<string | null>(null)
@@ -42,7 +44,7 @@ export default function Treatment() {
     const getTreatmentsData = async () => {
         try {
             const res = await fetch(
-                "http://localhost:3000/api/v1/private/treatments",
+                `${api_url}/api/v1/private/treatments`,
                 { method: "GET", headers: { auth: `Bearer ${token}` } })
             const result = await res.json()
 
@@ -69,7 +71,7 @@ export default function Treatment() {
         try {
             setUpdateTreatmentModal(!updateTreatmentModal)
             const data = JSON.stringify(Object.fromEntries(formdata))
-            const res = await fetch(`http://localhost:3000/api/v1/private/treatments/${id}`, { method: "PATCH", body: data, headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/treatments/${id}`, { method: "PATCH", body: data, headers: { auth: `Bearer ${token}` } })
             await res.json()
             getTreatmentsData()
         } catch (error) {
@@ -86,7 +88,7 @@ export default function Treatment() {
 
     const handleTreatmentDeleteButton = async (id: string) => {
         try {
-            const res = await fetch(`http://localhost:3000/api/v1/private/treatments/${id}`, { method: "DELETE", headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/treatments/${id}`, { method: "DELETE", headers: { auth: `Bearer ${token}` } })
             await res.json()
             getTreatmentsData()
         } catch (error) {
@@ -98,7 +100,7 @@ export default function Treatment() {
         try {
             setCreateTreatmentModal(!createTreatmentModal)
             const data = JSON.stringify(Object.fromEntries(formdata))
-            const res = await fetch('http://localhost:3000/api/v1/private/treatments', { method: "POST", body: data, headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/treatments`, { method: "POST", body: data, headers: { auth: `Bearer ${token}` } })
             await res.json()
             getTreatmentsData()
         } catch (error) {

@@ -26,6 +26,8 @@ type Bookings = {
 
 }
 
+const api_url = process.env.NEXT_PUBLIC_API_URI || 'http://localhost:3000'
+
 export default function Booking() {
     const router = useRouter()
     const [token, setToken] = useState<string | null>(null)
@@ -65,7 +67,7 @@ export default function Booking() {
 
     const getBookingsData = async () => {
         try {
-            const res = await fetch("http://localhost:3000/api/v1/private/bookings", { method: "GET", headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/bookings`, { method: "GET", headers: { auth: `Bearer ${token}` } })
             const result = await res.json()
             if (!res.ok) {
 
@@ -84,7 +86,7 @@ export default function Booking() {
         try {
             setAppointmentModal(!appointmentModal)
             const id = selectedAppointment.bookingId
-            const res = await fetch(`http://localhost:3000/api/v1/private/bookings/${id}/cancel`, { method: "PATCH", headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/bookings/${id}/cancel`, { method: "PATCH", headers: { auth: `Bearer ${token}` } })
             await res.json()
             getBookingsData()
         } catch (error) {

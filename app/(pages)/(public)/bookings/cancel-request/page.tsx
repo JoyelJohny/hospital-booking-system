@@ -2,6 +2,8 @@
 import Form from "next/form";
 import { useEffect, useState } from "react";
 
+const api_url = process.env.NEXT_PUBLIC_API_URI || 'http://localhost:3000'
+
 export default function CancellationRequest() {
     const [today, setToday] = useState<string>()
     useEffect(() => {
@@ -12,7 +14,7 @@ export default function CancellationRequest() {
     const handleRequestFormSubmit = async (formData: FormData) => {
         try {
             const data = JSON.stringify(Object.fromEntries(formData))
-            const res = await fetch("http://localhost:3000/api/v1/public/bookings/cancel-request", { method: "POST", body: data })
+            const res = await fetch(`${api_url}/api/v1/public/bookings/cancel-request`, { method: "POST", body: data })
             await res.json()
         } catch (error) {
             console.error(error)

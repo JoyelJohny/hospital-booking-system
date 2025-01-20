@@ -16,6 +16,8 @@ interface Cancellations {
 
 }
 
+const api_url = process.env.NEXT_PUBLIC_API_URI || 'http://localhost:3000'
+
 export default function Cancellation() {
     const router = useRouter()
     const [token, setToken] = useState<string | null>(null)
@@ -41,7 +43,7 @@ export default function Cancellation() {
 
     const getCancelRequestData = async () => {
         try {
-            const res = await fetch("http://localhost:3000/api/v1/private/cancellations-requests", { method: "GET", headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/cancellations-requests`, { method: "GET", headers: { auth: `Bearer ${token}` } })
             const result = await res.json()
             if (!res.ok) {
 
@@ -75,7 +77,7 @@ export default function Cancellation() {
     const handleApproveButton = async () => {
         try {
             setRequestModal(!requestModal)
-            const res = await fetch(`http://localhost:3000/api/v1/private/cancellations-requests/${selectedCancellation._id}/approve`, { method: 'PATCH', headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/cancellations-requests/${selectedCancellation._id}/approve`, { method: 'PATCH', headers: { auth: `Bearer ${token}` } })
             await res.json()
             getCancelRequestData()
         } catch (error) {
@@ -87,7 +89,7 @@ export default function Cancellation() {
     const handleRejectButton = async () => {
         try {
             setRequestModal(!requestModal)
-            const res = await fetch(`http://localhost:3000/api/v1/private/cancellations-requests/${selectedCancellation._id}/reject`, { method: 'PATCH', headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/cancellations-requests/${selectedCancellation._id}/reject`, { method: 'PATCH', headers: { auth: `Bearer ${token}` } })
             await res.json()
             getCancelRequestData()
         } catch (error) {

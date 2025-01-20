@@ -32,6 +32,8 @@ type Availability = {
 
 type treatment = { _id: string, name: string }
 
+const api_url = process.env.NEXT_PUBLIC_API_URI || 'http://localhost:3000'
+
 export default function Doctor() {
     const router = useRouter()
     const [token, setToken] = useState<string | null>(null)
@@ -67,7 +69,7 @@ export default function Doctor() {
 
     const getDoctorsData = async () => {
         try {
-            const res = await fetch("http://localhost:3000/api/v1/private/doctors", { method: "GET", headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/doctors`, { method: "GET", headers: { auth: `Bearer ${token}` } })
             const { doctors, treatments } = await res.json()
             if (!res.ok) {
                 router.back()
@@ -84,7 +86,7 @@ export default function Doctor() {
 
     const getAvailabilitiesData = async (id: string) => {
         try {
-            const res = await fetch(`http://localhost:3000/api/v1/private/doctors/${id}/availabilities`, { method: "GET", headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/doctors/${id}/availabilities`, { method: "GET", headers: { auth: `Bearer ${token}` } })
             const result = await res.json()
             setAvailabilities(result)
         } catch (error) {
@@ -109,7 +111,7 @@ export default function Doctor() {
         formdata.append('specialization', specialization)
         const data = JSON.stringify(Object.fromEntries(formdata))
         try {
-            const res = await fetch('http://localhost:3000/api/v1/private/doctors', { method: "POST", body: data, headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/doctors`, { method: "POST", body: data, headers: { auth: `Bearer ${token}` } })
             const result = await res.json()
             console.log(result)
             getDoctorsData()
@@ -132,7 +134,7 @@ export default function Doctor() {
     const handleDeleteButton = async (id: string) => {
         try {
             console.log(id)
-            const res = await fetch(`http://localhost:3000/api/v1/private/doctors/${id}`, { method: "DELETE", headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/doctors/${id}`, { method: "DELETE", headers: { auth: `Bearer ${token}` } })
             const result = await res.json()
             console.log(result)
             getDoctorsData()
@@ -148,7 +150,7 @@ export default function Doctor() {
             const specialization = treatment?.name || ''
             formdata.append('specialization', specialization)
             const data = JSON.stringify(Object.fromEntries(formdata))
-            const res = await fetch(`http://localhost:3000/api/v1/private/doctors/${id}`, { method: "PATCH", body: data, headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/doctors/${id}`, { method: "PATCH", body: data, headers: { auth: `Bearer ${token}` } })
             await res.json()
             getDoctorsData()
         } catch (error) {
@@ -167,7 +169,7 @@ export default function Doctor() {
             setCreateAvailabilityModal(!createAvailabilityModal)
             formdata.append('dayOfWeek', selectedDay)
             const data = JSON.stringify(Object.fromEntries(formdata))
-            const res = await fetch(`http://localhost:3000/api/v1/private/doctors/${selectedDoctorDetail._id}/availabilities`, { method: "POST", body: data, headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/doctors/${selectedDoctorDetail._id}/availabilities`, { method: "POST", body: data, headers: { auth: `Bearer ${token}` } })
             const result = await res.json()
             getAvailabilitiesData(selectedDoctorDetail._id)
             console.log(result)
@@ -190,7 +192,7 @@ export default function Doctor() {
             formdata.append('dayOfWeek', selectedDay)
             const data = JSON.stringify(Object.fromEntries(formdata))
             console.log(id)
-            const res = await fetch(`http://localhost:3000/api/v1/private/doctors/${selectedDoctorDetail._id}/availabilities/${id}`, { method: "PATCH", body: data, headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/doctors/${selectedDoctorDetail._id}/availabilities/${id}`, { method: "PATCH", body: data, headers: { auth: `Bearer ${token}` } })
             const result = await res.json()
             getAvailabilitiesData(selectedDoctorDetail._id)
             console.log(result)
@@ -205,7 +207,7 @@ export default function Doctor() {
             setUpdateAvailabilityModal(!updateAvailabilityModal)
             const id = selectedAvailabilityDetail._id
             console.log(selectedDoctorDetail._id)
-            const res = await fetch(`http://localhost:3000/api/v1/private/doctors/${selectedDoctorDetail._id}/availabilities/${id}`, { method: "DELETE", headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/doctors/${selectedDoctorDetail._id}/availabilities/${id}`, { method: "DELETE", headers: { auth: `Bearer ${token}` } })
             const result = await res.json()
             getAvailabilitiesData(selectedDoctorDetail._id)
             console.log(result)
