@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     const doctor = await Doctor.findById(data.drId, 'treatmentId name')
     const treatment = await Treatment.findById(doctor.treatmentId, 'name')
     const bookingId = createBookingId(data.name, data.phone, data.dob, doctor.treatmentId, data.drId)
-    const booked = await Booking.create({
+    await Booking.create({
         bookingId: bookingId,
         patientName: data.name,
         patientAge: Number(data.age),
