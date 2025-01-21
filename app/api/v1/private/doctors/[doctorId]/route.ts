@@ -1,6 +1,7 @@
 import Doctor from '@/models/doctor'
 import { connectDB } from '@/libs/dbConnection'
 import { NextRequest, NextResponse } from 'next/server'
+import Availability from '@/models/availabilities';
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ doctorId: string }> }) {
 
@@ -37,6 +38,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ d
     connectDB()
     try {
         await Doctor.findByIdAndDelete(doctorId)
+        await Availability.deleteMany({ doctorId: doctorId })
     } catch (error) {
         console.log(error)
     }

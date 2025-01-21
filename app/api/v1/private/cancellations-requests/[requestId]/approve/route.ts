@@ -14,11 +14,12 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ re
         if (!isRequestIdValid) return NextResponse.json({ error: "Cancellation request not found" }, { status: 404 })
 
         const isAlreadyApproved = await Cancelled.findOne({ _id: requestId, status: 'Approved' })
-        if (isAlreadyApproved) return NextResponse.json({ error: 'Cancellation request already processed' }, { status: 400 })
+
+        if (isAlreadyApproved) console.log('oops')
 
         await Cancelled.findByIdAndUpdate(requestId, { status: "Approved" })
-        const bookingId = await Cancelled.findById(requestId, 'bookingId')
-        await Booking.findOneAndUpdate({ bookingId: bookingId }, { status: 'Cancelled' })
+        const booking = await Cancelled.findById(requestId, 'bookingId')
+        await Booking.findOneAndUpdate({ bookingId: booking.bookingId }, { status: 'Cancelled' })
 
         return NextResponse.json({ message: 'Approved cancellation successfully' }, { status: 200 })
     } catch (error) {

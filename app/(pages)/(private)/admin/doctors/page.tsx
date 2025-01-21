@@ -11,6 +11,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Logout from "@/app/(components)/LogoutComponent"
 import { getTimings } from "@/libs/utils"
+import Loading from "@/app/(components)/LoadingComponent"
 
 type Doctor = {
     _id: string,
@@ -37,6 +38,7 @@ const api_url = process.env.NEXT_PUBLIC_API_URI || 'http://localhost:3000'
 export default function Doctor() {
     const router = useRouter()
     const [token, setToken] = useState<string | null>(null)
+    const [loading, isLoading] = useState<boolean>(true)
     const [doctors, setDoctors] = useState<Doctor[]>([])
     const [treatments, setTreatments] = useState<treatment[]>([])
     const [availabilities, setAvailabilities] = useState<Availability[]>()
@@ -47,7 +49,7 @@ export default function Doctor() {
     const [availabilityModal, setAvailabilityModal] = useState(false)
     const [createAvailabilityModal, setCreateAvailabilityModal] = useState(false)
     const [updateAvailabilityModal, setUpdateAvailabilityModal] = useState(false)
-    const [selectedDay, setSelectedDay] = useState("")
+    const [selectedDay, setSelectedDay] = useState("Sunday")
 
 
     useEffect(() => {
@@ -69,6 +71,7 @@ export default function Doctor() {
 
     const getDoctorsData = async () => {
         try {
+            isLoading(true)
             const res = await fetch(`${api_url}/api/v1/private/doctors`, { method: "GET", headers: { auth: `Bearer ${token}` } })
             const { doctors, treatments } = await res.json()
             if (!res.ok) {
@@ -81,6 +84,8 @@ export default function Doctor() {
             }
         } catch (error) {
             console.error(error)
+        } finally {
+            isLoading(false)
         }
     }
 
@@ -222,38 +227,41 @@ export default function Doctor() {
     }
 
     return (<>
-        <div className="px-40 py-10 ">
-            {!doctors && (<div className="text-black text-center">No doctor created</div>)}
-            <div className="grid grid-cols-3 gap-10 w-full h-full place-content-center ">
-
-                {Array.isArray(doctors) && doctors.map((doctor) => (
-                    <div key={doctor._id} className="flex flex-col bg-[#086788] p-5 justify-center rounded-3xl ">
-                        <div className="flex justify-between">
-                            <h2 className="text-2xl py-1 font-semibold">{doctor.name}</h2>
-                            <div className="flex gap-2">
-                                <button className="w-10 h-10 hover:bg-green-400 p-2 rounded-xl" onClick={() => handleEdit(doctor)}><Image src={edit} width={24} height={24} alt="edit button image" /></button>
-                                <button className="w-10 h-10 hover:bg-red-400 p-2 rounded-xl" onClick={() => handleDeleteButton(doctor._id)}><Image src={bin} width={24} height={24} alt="delete button image" /></button>
+        <div className="flex flex-col px-40 py-5 space-y-5 h-full">
+            <h1 className="text-[#086788] text-5xl px-6 font-semibold">Doctors</h1>
+            {loading ? <Loading /> : (
+                <div>
+                    {doctors.length == 0 &&
+                        (<div className="text-[#086788] pt-44 text-center text-3xl ">No Doctors have been created</div>)}
+                    <div className="grid grid-cols-3 gap-10 w-full h-full place-content-center ">
+                        {Array.isArray(doctors) && doctors.map((doctor) => (
+                            <div key={doctor._id} className="flex flex-col bg-[#086788] p-5 justify-center rounded-3xl ">
+                                <div className="flex justify-between">
+                                    <h2 className="text-2xl py-1 font-semibold">{doctor.name}</h2>
+                                    <div className="flex gap-2">
+                                        <button className="w-10 h-10 hover:bg-green-400 p-2 rounded-xl" onClick={() => handleEdit(doctor)}><Image src={edit} width={24} height={24} alt="edit button image" /></button>
+                                        <button className="w-10 h-10 hover:bg-red-400 p-2 rounded-xl" onClick={() => handleDeleteButton(doctor._id)}><Image src={bin} width={24} height={24} alt="delete button image" /></button>
+                                    </div>
+                                </div>
+                                <div className="flex justify-between py-1">
+                                    <div>
+                                        <p className="text-sm">{doctor.specialization}</p>
+                                        <p className="text-xs">{doctor.contact}</p>
+                                    </div>
+                                    <button className=" border-2 border-transparent box-border p-2 rounded-lg font-semibold  border-white hover:bg-green-400 hover:border-transparent" onClick={() => handleOpenAvailabilityModal(doctor)}>Set availability</button>
+                                </div>
                             </div>
-                        </div>
-                        <div className="flex justify-between py-1">
-                            <div>
-                                <p className="text-sm">{doctor.specialization}</p>
-                                <p className="text-xs">{doctor.contact}</p>
-                            </div>
-
-                            <button className=" border-2 border-transparent box-border p-2 rounded-lg font-semibold  border-white hover:bg-green-400 hover:border-transparent" onClick={() => handleOpenAvailabilityModal(doctor)}>Set availability</button>
-                        </div>
-
-
-                    </div>))}
+                        ))}
+                    </div>
+                </div>)}
 
 
 
-            </div>
 
             {/* Doctor updation Form*/}
 
             {updateDoctorModal && (<Form action={(e) => handleUpdateButton(e, selectedDoctorDetail._id)} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 justify-center bg-[#086788] border-4 border-gray-100 w-1/3 p-6 rounded-lg space-y-5">
+                <h1 className="text-center font-semibold text-2xl">Update Doctor</h1>
                 <div className="flex justify-between gap-2">
                     <label htmlFor="" className="py-2 font-semibold text-sm w-28">Dr Name</label>
                     <input type="text" name="name" value={selectedDoctorDetail.name} onChange={handleEditChange} className="text-black p-2 rounded-md focus:outline-slate-500 w-full" />
@@ -278,6 +286,7 @@ export default function Doctor() {
             {/* Doctor creation Form*/}
 
             {createDoctorModal && (<Form action={handleCreateButton} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 justify-center border-4 border-gray-100 bg-[#086788] w-1/3 p-6 rounded-lg space-y-5">
+                <h1 className="text-center font-semibold text-2xl">Create new Doctor</h1>
                 <div className="flex justify-between gap-2">
                     <label htmlFor="" className="py-2 font-semibold text-sm w-28">Dr Name</label>
                     <input type="text" name="name" className="text-black p-2 rounded-md focus:outline-slate-500 w-full" />
@@ -291,7 +300,7 @@ export default function Doctor() {
                 </div>
                 <div className="flex justify-between gap-2">
                     <label htmlFor="" className="py-2 font-semibold text-sm w-28">Contact</label>
-                    <input type="text" name="contact" className="text-black p-2 rounded-md focus:outline-slate-500 w-full" />
+                    <input type="email" name="contact" className="text-black p-2 rounded-md focus:outline-slate-500 w-full" />
                 </div>
                 <div className="flex justify-around gap-2">
                     <button type="submit" className=" border-2 border-transparent box-border p-2 rounded-lg font-semibold  border-white hover:bg-green-400 hover:border-transparent">Create</button>
@@ -360,6 +369,7 @@ export default function Doctor() {
 
 
             {createAvailabilityModal && (<Form action={handleCreateAvailabilityButton} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-100 border-2 rounded-xl border-[#086788] text-[#086788] p-4">
+                <h1 className="text-center font-semibold text-2xl pb-4">Create New Slot</h1>
                 <div className="flex justify-between">
                     <p className="font-semibold">Select the day</p>
                     <button className={`rounded-md  border-2 px-2 py-1 text-xs font-semibold  ${selectedDay == "Sunday" ? "border-[#086788] bg-green-400 text-white" : "border-[#086788] hover:bg-green-400 hover:text-white hover:border-transparent"} `} name="dayOfWeek" value="Sunday" onClick={handleDayButton}>Sunday</button>
@@ -387,6 +397,7 @@ export default function Doctor() {
             </Form>)}
 
             {updateAvailabilityModal && (<Form action={(e) => handleUpdateAvaialabilityButton(e, selectedAvailabilityDetail._id)} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-100 border-2 rounded-xl border-[#086788] text-[#086788] p-4">
+                <h1 className="text-center font-semibold text-2xl pb-4">Update Slot</h1>
                 <div className="flex justify-between">
                     <p className="font-semibold">Select the day</p>
                     <button className={`rounded-md  border-2 px-2 py-1 text-xs font-semibold  ${selectedDay == "Sunday" ? "border-[#086788] bg-green-400 text-white" : "border-[#086788] hover:bg-green-400 hover:text-white hover:border-transparent"} `} name="dayOfWeek" value="Sunday" onClick={handleDayButton}>Sunday</button>

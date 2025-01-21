@@ -10,9 +10,6 @@ export async function GET() {
         doctors.forEach((doctor) => (doctor.name = `Dr ${doctor.name}`))
         const treatments = await Treatment.find({}, 'name')
         console.log(doctors)
-        if (doctors.length == 0) {
-            return NextResponse.json({ message: "No doctors available", treatments })
-        }
         return NextResponse.json({ message: "Data fetched successfully", doctors, treatments })
     } catch (error) {
         console.error(error)
