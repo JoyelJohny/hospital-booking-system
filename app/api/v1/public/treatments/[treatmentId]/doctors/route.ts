@@ -16,10 +16,6 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ trea
 
         const doctors = await Doctor.find({ treatmentId: treatmentId })
 
-        if (doctors.length == 0) {
-            return NextResponse.json({ message: "No Doctors Available" })
-        }
-
         doctors.forEach((doctor) => (doctor.name = `Dr ${doctor.name}`))
         console.log(doctors)
 

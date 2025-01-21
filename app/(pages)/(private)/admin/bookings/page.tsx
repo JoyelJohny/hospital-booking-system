@@ -3,9 +3,9 @@ import Image from "next/image"
 import reject from "@/public/reject.png"
 import { useEffect, useState } from "react"
 import DividerComponent from "@/app/(components)/DividerComponent"
-import { useRouter } from "next/navigation"
 import Logout from "@/app/(components)/LogoutComponent"
 import { getTimings } from "@/libs/utils"
+import Loading from "@/app/(components)/LoadingComponent"
 
 
 type Bookings = {
@@ -29,9 +29,10 @@ type Bookings = {
 const api_url = process.env.NEXT_PUBLIC_API_URI || 'http://localhost:3000'
 
 export default function Booking() {
-    const router = useRouter()
+    const [isLoading, setLoading] = useState<boolean>(true)
     const [token, setToken] = useState<string | null>(null)
     const [bookings, setBookings] = useState<Bookings[]>([])
+    const [appointmentModal, setAppointmentModal] = useState(false)
     const [selectedAppointment, setSelectedAppointment] = useState<Bookings>({
         _id: '',
         bookingId: '',
@@ -48,37 +49,33 @@ export default function Booking() {
         additionalNotes: '',
         status: ''
     })
-    const [appointmentModal, setAppointmentModal] = useState(false)
+
     useEffect(() => {
         const storedToken = localStorage.getItem('token');
-        if (!storedToken) {
-
-            router.push('/login');
-        } else {
-            setToken(storedToken);
+        if (storedToken) {
+            setToken(storedToken)
         }
-    }, [router]);
+    }, [])
 
     useEffect(() => {
         if (token) {
             getBookingsData()
         }
-    }, [token]);
+    }, [token])
+
+
 
     const getBookingsData = async () => {
         try {
+            setLoading(true)
             const res = await fetch(`${api_url}/api/v1/private/bookings`, { method: "GET", headers: { auth: `Bearer ${token}` } })
             const result = await res.json()
-            if (!res.ok) {
+            setBookings(result)
 
-                router.back()
-
-            } else {
-
-                setBookings(result)
-            }
         } catch (error) {
             console.error(error)
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -95,27 +92,29 @@ export default function Booking() {
     }
 
     return (<>
-        <div className=" px-40 py-5 space-y-5 ">
+        <div className="flex flex-col px-40 py-5 space-y-5 h-full  ">
 
             <h1 className="text-[#086788] text-5xl  font-semibold">Bookings</h1>
 
-            {bookings.length == 0 && (<div className="text-black text-center text-3xl ">No new Bookings recieved</div>)}
+            {isLoading ? <Loading /> : (<div>{bookings.length == 0 && (<div className="text-[#086788] pt-44 text-center text-3xl ">No new Bookings have been made</div>)}
 
-            <div className="grid grid-cols-2 gap-10 w-full h-full place-content-center ">
+                <div className="grid grid-cols-2 gap-10 w-full h-full place-content-center ">
 
-                {bookings.map((booking) => (
-                    <div key={booking._id} className="flex flex-col bg-[#086788] p-6 h-16 justify-center rounded-xl hover:scale-105 hover:cursor-pointer hover:bg-green-400 hover:border-transparent drop-shadow-xl" onClick={() => { setSelectedAppointment(booking); setAppointmentModal(!appointmentModal) }}>
-                        <div className="flex justify-between">
-                            <span className="text-2xl px-2 py-1 rounded-lg font-semibold " >{booking.bookingId}</span>
+                    {bookings.map((booking) => (
+                        <div key={booking._id} className="flex flex-col bg-[#086788] p-6 h-16 justify-center rounded-xl hover:scale-105 hover:cursor-pointer hover:bg-green-400 hover:border-transparent drop-shadow-xl" onClick={() => { setSelectedAppointment(booking); setAppointmentModal(!appointmentModal) }}>
+                            <div className="flex justify-between">
+                                <span className="text-2xl px-2 py-1 rounded-lg font-semibold " >{booking.bookingId}</span>
+                            </div>
                         </div>
-                    </div>
 
 
 
-                ))}
+                    ))}
 
 
-            </div>
+                </div></div>)}
+
+
 
             {appointmentModal && (
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col bg-[#086788] px-6 py-4 w-fit h-fit shadow-2xl rounded-lg justify-between border-4">
@@ -123,6 +122,7 @@ export default function Booking() {
                     </button>
                     <h1 className=" text-4xl font-semibold mb-6 text-center">Appointment</h1>
                     <h2 className="font-semibold text-lg">Appointment Details</h2>
+                    <h3 className="font-semibold text-sm w-24 text-nowrap pt-2">ID: {selectedAppointment.bookingId}</h3>
                     <DividerComponent />
                     <div className="grid grid-cols-2 gap-x-2 gap-y-2">
                         <div className=" flex gap-4 "><div className=" font-semibold text-sm w-24 text-nowrap ">Consultation By</div><div className="text-sm">: {selectedAppointment.doctor.name}</div></div>

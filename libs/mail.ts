@@ -84,7 +84,7 @@ export async function sendCancellationRequestMail(patientName: string, cancelInf
     try {
         const info = await transporter.sendMail({
             from: 'HospitalBookingSystem@app.com',
-            to: process.env.EMAIL_USER,
+            to: process.env.ADMIN_EMAIL,
             subject: 'New Cancellation Request - Hospital Booking System',
             text: `Dear Admin,
 
