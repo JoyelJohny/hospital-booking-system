@@ -37,7 +37,6 @@ const api_url = process.env.NEXT_PUBLIC_API_URI || 'http://localhost:3000'
 
 export default function Doctor() {
     const router = useRouter()
-    const [token, setToken] = useState<string | null>(null)
     const [loading, isLoading] = useState<boolean>(true)
     const [doctors, setDoctors] = useState<Doctor[]>([])
     const [treatments, setTreatments] = useState<treatment[]>([])
@@ -52,27 +51,18 @@ export default function Doctor() {
     const [selectedDay, setSelectedDay] = useState("Sunday")
 
 
-    useEffect(() => {
-        const storedToken = localStorage.getItem('token');
-        if (!storedToken) {
-
-            router.push('/login');
-        } else {
-            setToken(storedToken);
-        }
-    }, [router]);
 
     useEffect(() => {
-        if (token) {
-            getDoctorsData();
-        }
-    }, [token]);
+
+        getDoctorsData();
+
+    }, []);
 
 
     const getDoctorsData = async () => {
         try {
             isLoading(true)
-            const res = await fetch(`${api_url}/api/v1/private/doctors`, { method: "GET", headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/doctors`, { method: "GET", credentials: 'include' })
             const { doctors, treatments } = await res.json()
             if (!res.ok) {
                 router.back()
@@ -91,7 +81,7 @@ export default function Doctor() {
 
     const getAvailabilitiesData = async (id: string) => {
         try {
-            const res = await fetch(`${api_url}/api/v1/private/doctors/${id}/availabilities`, { method: "GET", headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/doctors/${id}/availabilities`, { method: "GET", credentials: 'include' })
             const result = await res.json()
             setAvailabilities(result)
         } catch (error) {
@@ -116,7 +106,7 @@ export default function Doctor() {
         formdata.append('specialization', specialization)
         const data = JSON.stringify(Object.fromEntries(formdata))
         try {
-            const res = await fetch(`${api_url}/api/v1/private/doctors`, { method: "POST", body: data, headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/doctors`, { method: "POST", body: data, credentials: 'include' })
             const result = await res.json()
             console.log(result)
             getDoctorsData()
@@ -139,7 +129,7 @@ export default function Doctor() {
     const handleDeleteButton = async (id: string) => {
         try {
             console.log(id)
-            const res = await fetch(`${api_url}/api/v1/private/doctors/${id}`, { method: "DELETE", headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/doctors/${id}`, { method: "DELETE", credentials: 'include' })
             const result = await res.json()
             console.log(result)
             getDoctorsData()
@@ -155,7 +145,7 @@ export default function Doctor() {
             const specialization = treatment?.name || ''
             formdata.append('specialization', specialization)
             const data = JSON.stringify(Object.fromEntries(formdata))
-            const res = await fetch(`${api_url}/api/v1/private/doctors/${id}`, { method: "PATCH", body: data, headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/doctors/${id}`, { method: "PATCH", body: data, credentials: 'include' })
             await res.json()
             getDoctorsData()
         } catch (error) {
@@ -174,7 +164,7 @@ export default function Doctor() {
             setCreateAvailabilityModal(!createAvailabilityModal)
             formdata.append('dayOfWeek', selectedDay)
             const data = JSON.stringify(Object.fromEntries(formdata))
-            const res = await fetch(`${api_url}/api/v1/private/doctors/${selectedDoctorDetail._id}/availabilities`, { method: "POST", body: data, headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/doctors/${selectedDoctorDetail._id}/availabilities`, { method: "POST", body: data, credentials: 'include' })
             const result = await res.json()
             getAvailabilitiesData(selectedDoctorDetail._id)
             console.log(result)
@@ -197,7 +187,7 @@ export default function Doctor() {
             formdata.append('dayOfWeek', selectedDay)
             const data = JSON.stringify(Object.fromEntries(formdata))
             console.log(id)
-            const res = await fetch(`${api_url}/api/v1/private/doctors/${selectedDoctorDetail._id}/availabilities/${id}`, { method: "PATCH", body: data, headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/doctors/${selectedDoctorDetail._id}/availabilities/${id}`, { method: "PATCH", body: data, credentials: 'include' })
             const result = await res.json()
             getAvailabilitiesData(selectedDoctorDetail._id)
             console.log(result)
@@ -212,7 +202,7 @@ export default function Doctor() {
             setUpdateAvailabilityModal(!updateAvailabilityModal)
             const id = selectedAvailabilityDetail._id
             console.log(selectedDoctorDetail._id)
-            const res = await fetch(`${api_url}/api/v1/private/doctors/${selectedDoctorDetail._id}/availabilities/${id}`, { method: "DELETE", headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/doctors/${selectedDoctorDetail._id}/availabilities/${id}`, { method: "DELETE", credentials: 'include' })
             const result = await res.json()
             getAvailabilitiesData(selectedDoctorDetail._id)
             console.log(result)

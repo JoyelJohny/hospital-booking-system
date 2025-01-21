@@ -25,7 +25,11 @@ export async function POST(req: NextRequest) {
 
         const token = await sign({ username })
 
-        return NextResponse.json({ message: "Login Successful", token })
+        const response = NextResponse.json({ message: "Login Successful" })
+
+        response.cookies.set('token', `Bearer ${token}`, { httpOnly: true, maxAge: 60 * 60, secure: true })
+
+        return response
 
     } catch (error) {
 
