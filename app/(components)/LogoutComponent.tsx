@@ -7,14 +7,19 @@ type childProps = {
     adminPage?: (b: boolean) => void
 }
 
+const api_url = process.env.NEXT_PUBLIC_API_URI
+
 export default function Logout({ adminPage }: childProps) {
 
     const router = useRouter()
-    const handleClick = () => {
-        localStorage.removeItem('token')
-        if (adminPage) {
-            adminPage(false)
-        } else { router.push('/admin') }
+    const handleClick = async () => {
+        try {
+            const res = await fetch(`${api_url}/api/v1/private/admin/logout`, { method: 'DELETE' })
+            const result = await res.json()
+            console.log(result)
+        } catch (error) {
+            console.error(error)
+        }
 
     }
     return (<>

@@ -20,8 +20,8 @@ export default function Login() {
         try {
             const res = await fetch(`${api_url}/api/v1/private/admin/login`, { method: "POST", body: data })
             const result = await res.json()
-            if (result.token) {
-                localStorage.setItem('token', result.token)
+            console.log(result)
+            if (res.ok) {
                 setShowOptionModal(!showOptionModal)
 
             } else {

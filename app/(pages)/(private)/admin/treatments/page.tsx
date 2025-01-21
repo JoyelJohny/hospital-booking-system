@@ -20,35 +20,26 @@ const api_url = process.env.NEXT_PUBLIC_API_URI || 'http://localhost:3000'
 export default function Treatment() {
     const router = useRouter()
     const [isLoading, setLoading] = useState<boolean>(true)
-    const [token, setToken] = useState<string | null>(null)
     const [treatments, setTreatments] = useState<Treatment[]>([])
     const [selectedTreatment, setSelectedTreatment] = useState<Treatment>({ _id: "", name: "", description: "" })
     const [createTreatmentModal, setCreateTreatmentModal] = useState(false)
     const [updateTreatmentModal, setUpdateTreatmentModal] = useState(false)
 
 
-    useEffect(() => {
-        const storedToken = localStorage.getItem('token');
-        if (!storedToken) {
 
-            router.push('/login');
-        } else {
-            setToken(storedToken);
-        }
-    }, [router]);
 
     useEffect(() => {
-        if (token) {
-            getTreatmentsData();
-        }
-    }, [token]);
+
+        getTreatmentsData();
+
+    }, []);
 
     const getTreatmentsData = async () => {
         try {
             setLoading(true)
             const res = await fetch(
                 `${api_url}/api/v1/private/treatments`,
-                { method: "GET", headers: { auth: `Bearer ${token}` } })
+                { method: "GET", credentials: 'include' })
             const result = await res.json()
 
             if (!res.ok) {
@@ -76,7 +67,7 @@ export default function Treatment() {
         try {
             setUpdateTreatmentModal(!updateTreatmentModal)
             const data = JSON.stringify(Object.fromEntries(formdata))
-            const res = await fetch(`${api_url}/api/v1/private/treatments/${id}`, { method: "PATCH", body: data, headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/treatments/${id}`, { method: "PATCH", body: data, credentials: 'include' })
             await res.json()
             getTreatmentsData()
         } catch (error) {
@@ -93,7 +84,7 @@ export default function Treatment() {
 
     const handleTreatmentDeleteButton = async (id: string) => {
         try {
-            const res = await fetch(`${api_url}/api/v1/private/treatments/${id}`, { method: "DELETE", headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/treatments/${id}`, { method: "DELETE", credentials: 'include' })
             await res.json()
             getTreatmentsData()
         } catch (error) {
@@ -105,7 +96,7 @@ export default function Treatment() {
         try {
             setCreateTreatmentModal(!createTreatmentModal)
             const data = JSON.stringify(Object.fromEntries(formdata))
-            const res = await fetch(`${api_url}/api/v1/private/treatments`, { method: "POST", body: data, headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/treatments`, { method: "POST", body: data, credentials: 'include' })
             await res.json()
             getTreatmentsData()
         } catch (error) {

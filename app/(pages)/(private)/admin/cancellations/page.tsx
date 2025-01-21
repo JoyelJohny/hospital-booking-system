@@ -20,31 +20,22 @@ const api_url = process.env.NEXT_PUBLIC_API_URI || 'http://localhost:3000'
 
 export default function Cancellation() {
     const [isLoading, setLoading] = useState<boolean>(true)
-    const [token, setToken] = useState<string | null>(null)
     const [cancellations, setCancellations] = useState<Cancellations[]>([])
     const [selectedCancellation, setSelectedCancellation] = useState<Cancellations>({ _id: '', bookingId: '', patientName: '', patientPhone: '', patientDOB: '', requestDate: '', status: 'Approved' })
     const [requestModal, setRequestModal] = useState(false)
 
-    useEffect(() => {
-        const storedToken = localStorage.getItem('token')
-        if (storedToken) {
-            setToken(storedToken)
-        }
-    }, []);
+
 
     useEffect(() => {
-        console.log(token)
-        if (token) {
-            console.log(token)
-            getCancelRequestData()
-        }
-    }, [token]);
+
+        getCancelRequestData()
+    }
+        , []);
 
     const getCancelRequestData = async () => {
         try {
-            console.log(token)
             setLoading(true)
-            const res = await fetch(`${api_url}/api/v1/private/cancellations-requests`, { method: "GET", headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/cancellations-requests`, { method: "GET", credentials: 'include' })
             const result = await res.json()
             setCancellations(result)
         } catch (error) {
@@ -74,7 +65,7 @@ export default function Cancellation() {
     const handleApproveButton = async () => {
         try {
             setRequestModal(!requestModal)
-            const res = await fetch(`${api_url}/api/v1/private/cancellations-requests/${selectedCancellation._id}/approve`, { method: 'PATCH', headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/cancellations-requests/${selectedCancellation._id}/approve`, { method: 'PATCH', credentials: 'include' })
             await res.json()
             getCancelRequestData()
         } catch (error) {
@@ -86,7 +77,7 @@ export default function Cancellation() {
     const handleRejectButton = async () => {
         try {
             setRequestModal(!requestModal)
-            const res = await fetch(`${api_url}/api/v1/private/cancellations-requests/${selectedCancellation._id}/reject`, { method: 'PATCH', headers: { auth: `Bearer ${token}` } })
+            const res = await fetch(`${api_url}/api/v1/private/cancellations-requests/${selectedCancellation._id}/reject`, { method: 'PATCH', credentials: 'include' })
             await res.json()
             getCancelRequestData()
         } catch (error) {
