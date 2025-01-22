@@ -15,8 +15,12 @@ export default function Logout({ adminPage }: childProps) {
     const handleClick = async () => {
         try {
             const res = await fetch(`${api_url}/api/v1/private/admin/logout`, { method: 'DELETE' })
-            const result = await res.json()
-            console.log(result)
+            await res.json()
+            if (adminPage) {
+                adminPage(false)
+            } else {
+                router.push('/admin')
+            }
         } catch (error) {
             console.error(error)
         }
