@@ -8,12 +8,12 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ tr
     connectDB()
     await Treatment.findByIdAndUpdate(treatmentId, data)
 
-    return NextResponse.json({ message: "Successful" }, { status: 200 })
+    return NextResponse.json({ message: "Treatment Updated Successfully", messageType: 'success' }, { status: 200 })
 }
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ treatmentId: string }> }) {
     const treatmentId = (await params).treatmentId;
     connectDB()
     await Treatment.findByIdAndDelete(treatmentId)
-    return NextResponse.json({ message: "Deleted Treatment" }, { status: 200 })
+    return NextResponse.json({ message: "Deleted Treatment Successfully", messageType: 'success' }, { status: 200 })
 }

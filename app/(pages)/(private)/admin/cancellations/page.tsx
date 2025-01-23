@@ -4,6 +4,7 @@ import reject from "@/public/reject.png"
 import Logout from "@/app/(components)/LogoutComponent"
 import { useEffect, useState } from "react"
 import Loading from "@/app/(components)/LoadingComponent"
+import Message from "@/app/(components)/MessageComponent"
 
 interface Cancellations {
     _id: string,
@@ -19,6 +20,8 @@ interface Cancellations {
 const api_url = process.env.NEXT_PUBLIC_API_URI || 'http://localhost:3000'
 
 export default function Cancellation() {
+    const [trigger, setTrigger] = useState(0)
+    const [response, setResponse] = useState<{ message: '', messageType: '' } | null>(null)
     const [isLoading, setLoading] = useState<boolean>(true)
     const [cancellations, setCancellations] = useState<Cancellations[]>([])
     const [selectedCancellation, setSelectedCancellation] = useState<Cancellations>({ _id: '', bookingId: '', patientName: '', patientPhone: '', patientDOB: '', requestDate: '', status: 'Approved' })
@@ -66,7 +69,12 @@ export default function Cancellation() {
         try {
             setRequestModal(!requestModal)
             const res = await fetch(`${api_url}/api/v1/private/cancellations-requests/${selectedCancellation._id}/approve`, { method: 'PATCH', credentials: 'include' })
-            await res.json()
+            const result = await res.json()
+            if (result) {
+                setResponse({ message: result.message, messageType: result.messageType })
+                setTrigger((prev) => prev + 1)
+            }
+
             getCancelRequestData()
         } catch (error) {
             console.error(error)
@@ -78,7 +86,12 @@ export default function Cancellation() {
         try {
             setRequestModal(!requestModal)
             const res = await fetch(`${api_url}/api/v1/private/cancellations-requests/${selectedCancellation._id}/reject`, { method: 'PATCH', credentials: 'include' })
-            await res.json()
+            const result = await res.json()
+            if (result) {
+                setResponse({ message: result.message, messageType: result.messageType })
+                setTrigger((prev) => prev + 1)
+            }
+
             getCancelRequestData()
         } catch (error) {
             console.error(error)
@@ -142,6 +155,8 @@ export default function Cancellation() {
             )}
 
             <Logout />
+            {response && <Message trigger={trigger} message={response.message} messageType={response.messageType} />}
+
         </div>
     </>)
 }

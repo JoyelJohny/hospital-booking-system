@@ -1,10 +1,13 @@
 "use client"
+import Message from "@/app/(components)/MessageComponent";
 import Form from "next/form";
 import { useEffect, useState } from "react";
 
 const api_url = process.env.NEXT_PUBLIC_API_URI || 'http://localhost:3000'
 
 export default function CancellationRequest() {
+    const [trigger, setTrigger] = useState(0)
+    const [response, setResponse] = useState<{ message: '', messageType: '' } | null>(null)
     const [today, setToday] = useState<string>()
     useEffect(() => {
         const todayDate = new Date()
@@ -15,7 +18,12 @@ export default function CancellationRequest() {
         try {
             const data = JSON.stringify(Object.fromEntries(formData))
             const res = await fetch(`${api_url}/api/v1/public/bookings/cancel-request`, { method: "POST", body: data })
-            await res.json()
+            const result = await res.json()
+            if (result) {
+                setResponse({ message: result.message, messageType: result.messageType })
+                setTrigger((prev) => prev + 1)
+            }
+
         } catch (error) {
             console.error(error)
         }
@@ -47,6 +55,7 @@ export default function CancellationRequest() {
 
                 <button type="submit" className="rounded-md  px-4 py-2 my-4 border-2 border-white text-2xl font-semibold hover:bg-green-400 hover:border-transparent">Submit</button>
             </Form>
+            {response && <Message trigger={trigger} message={response.message} messageType={response.messageType} />}
         </div>
     </>)
 }

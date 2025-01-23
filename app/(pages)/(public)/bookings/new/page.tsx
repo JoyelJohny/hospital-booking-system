@@ -4,6 +4,7 @@ import Cookies from 'js-cookie'
 import { useEffect, useState } from "react";
 import { getTimings } from "@/libs/utils";
 import Form from "next/form";
+import Message from "@/app/(components)/MessageComponent";
 
 type Data = {
     doctor: {
@@ -25,6 +26,9 @@ type Data = {
 const api_url = process.env.NEXT_PUBLIC_API_URI || 'http://localhost:3000'
 
 export default function AppointmentBooking() {
+    const [trigger, setTrigger] = useState(0)
+    const [response, setResponse] = useState<{ message: '', messageType: '' } | null>(null)
+    const [date] = useState<string>(new Date().toLocaleDateString('en-CA'))
     const [data, setData] = useState<Data>(
         {
             doctor:
@@ -56,7 +60,12 @@ export default function AppointmentBooking() {
     const sendBookingData = async (data: string) => {
         try {
             const res = await fetch(`${api_url}/api/v1/public/bookings`, { method: "POST", body: data })
-            res.json()
+            const result = await res.json()
+            if (result) {
+                setResponse({ message: result.message, messageType: result.messageType })
+                setTrigger((prev) => prev + 1)
+            }
+
         } catch (error) {
             console.error(error)
         }
@@ -97,9 +106,9 @@ export default function AppointmentBooking() {
                             <option value="Other">Others</option>
                         </select>
                     </div>
-                    <div className="flex gap-4 justify-between"><label className="py-2 font-semibold text-sm">Age</label> <input name="age" type="text" required className="text-black p-2 rounded-md focus:outline-slate-500" /></div>
-                    <div className="flex gap-4 justify-between"><label className="py-2 font-semibold text-sm">D.O.B</label> <input name="dob" type="date" required className="text-black p-2 rounded-md focus:outline-slate-500 w-full" /></div>
-                    <div className="flex gap-4 justify-between"><label className="py-2 font-semibold text-sm">Phone</label> <input name="phone" type="text" required className="text-black p-2 rounded-md focus:outline-slate-500" /></div>
+                    <div className="flex gap-8 justify-between"><label className="py-2 font-semibold text-sm">Age</label> <input name="age" type="number" min={0} max={120} required className="text-black p-2 rounded-md focus:outline-slate-500 w-full" /></div>
+                    <div className="flex gap-4 justify-between"><label className="py-2 font-semibold text-sm">D.O.B</label> <input name="dob" type="date" min={"1905-01-01"} max={date} required className="text-black p-2 rounded-md focus:outline-slate-500 w-full" /></div>
+                    <div className="flex gap-4 justify-between"><label className="py-2 font-semibold text-sm">Phone</label> <input name="phone" type="text" pattern="^\+91\d{10}$" title="Phone number must start with +91 and be followed by 10 digits" placeholder="+91-XXX-XXX-XXXX" required className="text-black p-2 rounded-md focus:outline-slate-500" /></div>
                     <div className="flex gap-4 justify-between"><label className="py-2 font-semibold text-sm">Email</label> <input name="email" type="email" required className="text-black p-2 rounded-md focus:outline-slate-500" /></div>
                 </div>
                 <div className="flex flex-col my-2 gap-4">
@@ -108,6 +117,7 @@ export default function AppointmentBooking() {
                 </div>
                 <button type="submit" className="rounded-md  px-4 py-2 my-4 border-2 border-white text-2xl font-semibold hover:bg-green-400 hover:border-transparent">Submit</button>
             </Form>
+            {response && <Message trigger={trigger} message={response.message} messageType={response.messageType} />}
         </div>
     </>)
 }

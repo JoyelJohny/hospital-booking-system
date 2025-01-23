@@ -27,11 +27,11 @@ export async function POST(req: NextRequest) {
 
     try {
         const { name, description } = await Treatment.create(data)
-        return NextResponse.json({ message: "Treatment created successfully", treatment: { name: name, description: description } }, { status: 201 })
+        return NextResponse.json({ message: "Treatment created successfully", messageType: 'success', treatment: { name: name, description: description } }, { status: 201 })
     } catch (error) {
         if (error instanceof Error) {
-            if (error.name == "ValidationError") return NextResponse.json({ message: "One field is Empty" }, { status: 409 })
-            else if (error.name == 'MongoServerError') return NextResponse.json({ message: "Treatment already created" }, { status: 409 })
+            if (error.name == "ValidationError") return NextResponse.json({ message: "One field is Empty", messageType: 'error' }, { status: 409 })
+            else if (error.name == 'MongoServerError') return NextResponse.json({ message: "Treatment already created", messageType: 'error' }, { status: 409 })
         }
 
     }

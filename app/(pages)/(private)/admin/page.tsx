@@ -1,6 +1,7 @@
 "use client"
 import Loading from "@/app/(components)/LoadingComponent"
 import Logout from "@/app/(components)/LogoutComponent"
+import Message from "@/app/(components)/MessageComponent"
 import Form from "next/form"
 import Link from "next/link"
 
@@ -9,6 +10,8 @@ import { useEffect, useState } from "react"
 const api_url = process.env.NEXT_PUBLIC_API_URI || 'http://localhost:3000'
 
 export default function Login() {
+    const [trigger, setTrigger] = useState(0)
+    const [response, setResponse] = useState<{ message: '', messageType: '' } | null>(null)
     const [isLoading, setLoading] = useState<boolean>(true)
     const [showOptionModal, setShowOptionModal] = useState(false)
 
@@ -32,13 +35,13 @@ export default function Login() {
         const data = JSON.stringify(Object.fromEntries(formData))
         try {
             const res = await fetch(`${api_url}/api/v1/private/admin/login`, { method: "POST", body: data })
-            await res.json()
-
+            const result = await res.json()
+            if (result) {
+                setResponse({ message: result.message, messageType: result.messageType })
+                setTrigger((prev) => prev + 1)
+            }
             if (res.ok) {
                 setShowOptionModal(!showOptionModal)
-
-            } else {
-                console.error('Invalid username or password')
             }
         } catch (error) {
             console.error(error)
@@ -72,7 +75,7 @@ export default function Login() {
 
                     {showOptionModal && <Logout adminPage={setShowOptionModal} />}
                 </div>)}
-
+            {response && <Message trigger={trigger} message={response.message} messageType={response.messageType} />}
         </div>
 
 

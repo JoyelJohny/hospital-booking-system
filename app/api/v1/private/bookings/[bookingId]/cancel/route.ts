@@ -8,7 +8,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ bo
         connectDB()
         const updatedBooking = await Booking.findOneAndUpdate({ bookingId: bookingId }, { status: "Cancelled", cancelledAt: Date.now() }, { new: true })
         console.log(updatedBooking)
-        return NextResponse.json({ message: "Booking cancelled successfully", updatedBooking })
+        return NextResponse.json({ message: "Booking cancelled successfully", messageType: 'success', updatedBooking })
     } catch (error) {
         console.error(error)
         return NextResponse.error()
