@@ -6,6 +6,7 @@ import DividerComponent from "@/app/(components)/DividerComponent"
 import Logout from "@/app/(components)/LogoutComponent"
 import { getTimings } from "@/libs/utils"
 import Loading from "@/app/(components)/LoadingComponent"
+import Message from "@/app/(components)/MessageComponent"
 
 
 type Bookings = {
@@ -29,6 +30,8 @@ type Bookings = {
 const api_url = process.env.NEXT_PUBLIC_API_URI || 'http://localhost:3000'
 
 export default function Booking() {
+    const [trigger, setTrigger] = useState(0)
+    const [response, setResponse] = useState<{ message: '', messageType: '' } | null>(null)
     const [isLoading, setLoading] = useState<boolean>(true)
     const [bookings, setBookings] = useState<Bookings[]>([])
     const [appointmentModal, setAppointmentModal] = useState(false)
@@ -74,7 +77,11 @@ export default function Booking() {
             setAppointmentModal(!appointmentModal)
             const id = selectedAppointment.bookingId
             const res = await fetch(`${api_url}/api/v1/private/bookings/${id}/cancel`, { method: "PATCH", credentials: 'include' })
-            await res.json()
+            const result = await res.json()
+            if (result) {
+                setResponse({ message: result.message, messageType: result.messageType })
+                setTrigger((prev) => prev + 1)
+            }
             getBookingsData()
         } catch (error) {
             console.error(error)
@@ -142,6 +149,7 @@ export default function Booking() {
             )}
 
             <Logout />
+            {response && <Message trigger={trigger} message={response.message} messageType={response.messageType} />}
         </div>
     </>)
 }

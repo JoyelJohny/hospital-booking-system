@@ -5,9 +5,9 @@ import edit from "@/public/edit-text.png"
 import bin from "@/public/bin.png"
 import React, { useEffect, useState } from "react"
 import Form from "next/form"
-import { useRouter } from "next/navigation"
 import Logout from "@/app/(components)/LogoutComponent"
 import Loading from "@/app/(components)/LoadingComponent"
+import Message from "@/app/(components)/MessageComponent"
 
 interface Treatment {
     _id: string,
@@ -18,7 +18,8 @@ interface Treatment {
 const api_url = process.env.NEXT_PUBLIC_API_URI || 'http://localhost:3000'
 
 export default function Treatment() {
-    const router = useRouter()
+    const [trigger, setTrigger] = useState(0)
+    const [response, setResponse] = useState<{ message: '', messageType: '' } | null>(null)
     const [isLoading, setLoading] = useState<boolean>(true)
     const [treatments, setTreatments] = useState<Treatment[]>([])
     const [selectedTreatment, setSelectedTreatment] = useState<Treatment>({ _id: "", name: "", description: "" })
@@ -41,14 +42,12 @@ export default function Treatment() {
                 `${api_url}/api/v1/private/treatments`,
                 { method: "GET", credentials: 'include' })
             const result = await res.json()
-
-            if (!res.ok) {
-
-                router.back()
-
-            } else {
+            if (result) {
                 setTreatments(result)
             }
+
+
+
 
         } catch (error) {
             console.error(error)
@@ -68,7 +67,11 @@ export default function Treatment() {
             setUpdateTreatmentModal(!updateTreatmentModal)
             const data = JSON.stringify(Object.fromEntries(formdata))
             const res = await fetch(`${api_url}/api/v1/private/treatments/${id}`, { method: "PATCH", body: data, credentials: 'include' })
-            await res.json()
+            const result = await res.json()
+            if (result) {
+                setResponse({ message: result.message, messageType: result.messageType })
+                setTrigger((prev) => prev + 1)
+            }
             getTreatmentsData()
         } catch (error) {
             console.error(error)
@@ -85,7 +88,11 @@ export default function Treatment() {
     const handleTreatmentDeleteButton = async (id: string) => {
         try {
             const res = await fetch(`${api_url}/api/v1/private/treatments/${id}`, { method: "DELETE", credentials: 'include' })
-            await res.json()
+            const result = await res.json()
+            if (result) {
+                setResponse({ message: result.message, messageType: result.messageType })
+                setTrigger((prev) => prev + 1)
+            }
             getTreatmentsData()
         } catch (error) {
             console.error(error)
@@ -97,7 +104,11 @@ export default function Treatment() {
             setCreateTreatmentModal(!createTreatmentModal)
             const data = JSON.stringify(Object.fromEntries(formdata))
             const res = await fetch(`${api_url}/api/v1/private/treatments`, { method: "POST", body: data, credentials: 'include' })
-            await res.json()
+            const result = await res.json()
+            if (result) {
+                setResponse({ message: result.message, messageType: result.messageType })
+                setTrigger((prev) => prev + 1)
+            }
             getTreatmentsData()
         } catch (error) {
             console.error(error)
@@ -162,6 +173,7 @@ export default function Treatment() {
                 <Image src={create} width={64} height={64} alt="create button image" />
             </button>
             <Logout />
+            {response && <Message trigger={trigger} message={response.message} messageType={response.messageType} />}
         </div>
     </>)
 }

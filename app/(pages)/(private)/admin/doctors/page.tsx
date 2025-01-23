@@ -8,10 +8,10 @@ import reject from "@/public/reject.png"
 import Form from "next/form"
 import DividerComponent from "@/app/(components)/DividerComponent"
 import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
 import Logout from "@/app/(components)/LogoutComponent"
 import { getTimings } from "@/libs/utils"
 import Loading from "@/app/(components)/LoadingComponent"
+import Message from "@/app/(components)/MessageComponent"
 
 type Doctor = {
     _id: string,
@@ -36,7 +36,8 @@ type treatment = { _id: string, name: string }
 const api_url = process.env.NEXT_PUBLIC_API_URI || 'http://localhost:3000'
 
 export default function Doctor() {
-    const router = useRouter()
+    const [trigger, setTrigger] = useState(0)
+    const [response, setResponse] = useState<{ message: '', messageType: '' } | null>(null)
     const [loading, isLoading] = useState<boolean>(true)
     const [doctors, setDoctors] = useState<Doctor[]>([])
     const [treatments, setTreatments] = useState<treatment[]>([])
@@ -64,14 +65,8 @@ export default function Doctor() {
             isLoading(true)
             const res = await fetch(`${api_url}/api/v1/private/doctors`, { method: "GET", credentials: 'include' })
             const { doctors, treatments } = await res.json()
-            if (!res.ok) {
-                router.back()
-            }
-            else {
-                setTreatments(treatments)
-                setDoctors(doctors)
-
-            }
+            setTreatments(treatments)
+            setDoctors(doctors)
         } catch (error) {
             console.error(error)
         } finally {
@@ -108,7 +103,11 @@ export default function Doctor() {
         try {
             const res = await fetch(`${api_url}/api/v1/private/doctors`, { method: "POST", body: data, credentials: 'include' })
             const result = await res.json()
-            console.log(result)
+            if (result) {
+                setResponse({ message: result.message, messageType: result.messageType })
+                setTrigger((prev) => prev + 1)
+            }
+
             getDoctorsData()
         } catch (error) {
             console.error(error)
@@ -131,7 +130,11 @@ export default function Doctor() {
             console.log(id)
             const res = await fetch(`${api_url}/api/v1/private/doctors/${id}`, { method: "DELETE", credentials: 'include' })
             const result = await res.json()
-            console.log(result)
+            if (result) {
+                setResponse({ message: result.message, messageType: result.messageType })
+                setTrigger((prev) => prev + 1)
+            }
+
             getDoctorsData()
         } catch (error) {
             console.error(error)
@@ -146,7 +149,12 @@ export default function Doctor() {
             formdata.append('specialization', specialization)
             const data = JSON.stringify(Object.fromEntries(formdata))
             const res = await fetch(`${api_url}/api/v1/private/doctors/${id}`, { method: "PATCH", body: data, credentials: 'include' })
-            await res.json()
+            const result = await res.json()
+            if (result) {
+                setResponse({ message: result.message, messageType: result.messageType })
+                setTrigger((prev) => prev + 1)
+            }
+
             getDoctorsData()
         } catch (error) {
             console.error(error)
@@ -166,8 +174,12 @@ export default function Doctor() {
             const data = JSON.stringify(Object.fromEntries(formdata))
             const res = await fetch(`${api_url}/api/v1/private/doctors/${selectedDoctorDetail._id}/availabilities`, { method: "POST", body: data, credentials: 'include' })
             const result = await res.json()
+            if (result) {
+                setResponse({ message: result.message, messageType: result.messageType })
+                setTrigger((prev) => prev + 1)
+            }
+
             getAvailabilitiesData(selectedDoctorDetail._id)
-            console.log(result)
 
         } catch (error) {
             console.error(error)
@@ -189,8 +201,12 @@ export default function Doctor() {
             console.log(id)
             const res = await fetch(`${api_url}/api/v1/private/doctors/${selectedDoctorDetail._id}/availabilities/${id}`, { method: "PATCH", body: data, credentials: 'include' })
             const result = await res.json()
+            if (result) {
+                setResponse({ message: result.message, messageType: result.messageType })
+                setTrigger((prev) => prev + 1)
+            }
+
             getAvailabilitiesData(selectedDoctorDetail._id)
-            console.log(result)
         } catch (error) {
             console.error(error)
         }
@@ -204,8 +220,12 @@ export default function Doctor() {
             console.log(selectedDoctorDetail._id)
             const res = await fetch(`${api_url}/api/v1/private/doctors/${selectedDoctorDetail._id}/availabilities/${id}`, { method: "DELETE", credentials: 'include' })
             const result = await res.json()
+            if (result) {
+                setResponse({ message: result.message, messageType: result.messageType })
+                setTrigger((prev) => prev + 1)
+            }
+
             getAvailabilitiesData(selectedDoctorDetail._id)
-            console.log(result)
         } catch (error) {
             console.error(error)
         }
@@ -416,6 +436,8 @@ export default function Doctor() {
             </button>
 
             <Logout />
+            {response && <Message trigger={trigger} message={response.message} messageType={response.messageType} />}
+
         </div>
     </>)
 }

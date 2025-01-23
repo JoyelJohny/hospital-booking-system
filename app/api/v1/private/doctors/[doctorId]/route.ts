@@ -16,7 +16,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ do
     try {
         const isDoctorIdValid = await Doctor.exists({ _id: doctorId })
         if (!isDoctorIdValid) {
-            return NextResponse.json({ error: "Doctor not Found" }, { status: 404 })
+            return NextResponse.json({ message: "Doctor not Found", messageType: 'error' }, { status: 404 })
         }
         data = await Doctor.findByIdAndUpdate(doctorId, {
             name: name.split(' ')[1],
@@ -26,15 +26,15 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ do
         }, { new: true })
     } catch (error) {
         console.error(error)
-        return NextResponse.json({ error: "Invalid update data" }, { status: 400 })
+        return NextResponse.json({ message: "Invalid update data", messageType: 'error' }, { status: 400 })
     }
-    return NextResponse.json({ message: "Doctor updated successfully", updatedDoctor: data })
+    return NextResponse.json({ message: "Doctor updated successfully", messageType: 'success', updatedDoctor: data })
 }
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ doctorId: string }> }) {
     const doctorId = (await params).doctorId
     const isDoctorIdValid = await Doctor.exists({ _id: doctorId })
-    if (!isDoctorIdValid) return NextResponse.json({ error: "Doctor not found" }, { status: 404 })
+    if (!isDoctorIdValid) return NextResponse.json({ message: "Doctor not found", messageType: 'error' }, { status: 404 })
     connectDB()
     try {
         await Doctor.findByIdAndDelete(doctorId)
@@ -42,6 +42,6 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ d
     } catch (error) {
         console.log(error)
     }
-    return NextResponse.json({ message: "Doctor Deleted successfully" }, { status: 200 })
+    return NextResponse.json({ message: "Doctor Deleted successfully", messageType: 'success' }, { status: 200 })
 
 }

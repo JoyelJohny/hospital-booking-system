@@ -9,7 +9,6 @@ export async function GET() {
         const doctors = await Doctor.find()
         doctors.forEach((doctor) => (doctor.name = `Dr ${doctor.name}`))
         const treatments = await Treatment.find({}, 'name')
-        console.log(doctors)
         return NextResponse.json({ message: "Data fetched successfully", doctors, treatments })
     } catch (error) {
         console.error(error)
@@ -24,14 +23,14 @@ export async function POST(req: NextRequest) {
         const { name, treatmentId, contact, specialization } = await req.json();
         const isTreatmentIdValid = await Treatment.exists({ _id: treatmentId })
         if (!isTreatmentIdValid) {
-            return NextResponse.json({ error: "Associated treatment not found" }, { status: 404 })
+            return NextResponse.json({ message: "Associated treatment not found", messageType: 'error' }, { status: 404 })
         }
         await Doctor.create({ name: name, treatmentId, contact, specialization })
-        return NextResponse.json({ message: "Doctor created successfully" }, { status: 201 })
+        return NextResponse.json({ message: "Doctor created successfully", messageType: 'success' }, { status: 201 })
     } catch (error) {
         if (error instanceof Error) {
 
-            if (error.name == "ValidationError") return NextResponse.json({ error: "Doctor name, specialization, treatmentId and contact are required" }, { status: 400 })
+            if (error.name == "ValidationError") return NextResponse.json({ message: "Doctor name, specialization, treatmentId and contact are required", messageType: 'error' }, { status: 400 })
         }
     }
 

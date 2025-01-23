@@ -4,7 +4,7 @@ type Book = {
     bookId: string,
     treatment: string,
     doctor: string,
-    date: string
+    date: string,
     time: string
 }
 
@@ -12,7 +12,7 @@ type CancellationRequest = {
     bookId: string,
     patientDOB: string,
     patientName: string,
-    requestDate: string
+    requestDate: string,
     patientPhone: string
 }
 const transporter = nodemailer.createTransport(
@@ -80,7 +80,7 @@ Hospital Booking System`
     }
 }
 
-export async function sendCancellationRequestMail(patientName: string, cancelInfo: CancellationRequest) {
+export async function sendCancellationRequestMail(cancelInfo: CancellationRequest) {
     try {
         const info = await transporter.sendMail({
             from: 'HospitalBookingSystem@app.com',

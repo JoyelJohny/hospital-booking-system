@@ -19,15 +19,15 @@ export async function POST(req: NextRequest) {
 
         const user = await Admin.findOne({ username })
 
-        if (!user) return NextResponse.json({ message: "Invalid username or password" })
+        if (!user) return NextResponse.json({ message: "Invalid username or password", messageType: 'error' }, { status: 401 })
 
         const isMatch = await bcrypt.compare(password, user.password)
 
-        if (!isMatch) return NextResponse.json({ message: "Invalid username or password" })
+        if (!isMatch) return NextResponse.json({ message: "Invalid username or password", messageType: 'error' }, { status: 401 })
 
         const token = await sign({ username })
 
-        const response = NextResponse.json({ message: "Login Successful", token: 'LoggedIn' })
+        const response = NextResponse.json({ message: "Login Successful", token: 'LoggedIn', messageType: 'success' }, { status: 200 })
 
         response.cookies.set('token', `Bearer ${token}`, { httpOnly: true, maxAge: 60 * 60, secure: true })
 
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
 
         console.error(error)
 
-        return NextResponse.error()
+        return NextResponse.json({ message: 'Internal Server Error', messageType: 'error' }, { status: 500 })
     }
 
 
