@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/libs/dbConnection";
 import Cancelled from "@/models/cancellation_request"
 import Booking from "@/models/booking";
-// import {  sendCancellationRequestMail } from "@/libs/mail";
+import { sendCancellationRequestMail } from "@/libs/mail";
 
 
 type DataFormat = {
@@ -22,14 +22,14 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ message: 'Cancellation request has already been processed', messageType: 'error' }, { status: 409 })
         }
         await Cancelled.create(formdata)
-        // const cancelInfo = {
-        //     bookId: formdata.bookingId,
-        //     patientDOB: formdata.patientDOB,
-        //     patientName: formdata.patientName,
-        //     requestDate: new Date().toLocaleDateString('en-CA'),
-        //     patientPhone: formdata.patientPhone
-        // }
-        // await sendCancellationRequestMail(cancelInfo)
+        const cancelInfo = {
+            bookId: formdata.bookingId,
+            patientDOB: formdata.patientDOB,
+            patientName: formdata.patientName,
+            requestDate: new Date().toLocaleDateString('en-CA'),
+            patientPhone: formdata.patientPhone
+        }
+        await sendCancellationRequestMail(cancelInfo)
         return NextResponse.json({ message: 'Cancellation request submitted successfully', messageType: 'success' }, { status: 200 })
     } catch (error) {
         console.error(error)

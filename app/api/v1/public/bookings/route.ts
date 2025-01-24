@@ -5,8 +5,8 @@ import Availability from "@/models/availabilities";
 import Doctor from "@/models/doctor";
 import { createBookingId } from "@/libs/bookIdGenerator";
 import Treatment from "@/models/treatments";
-// import { getTimings } from "@/libs/utils";
-// import { sendBookingConfirmationMail } from "@/libs/mail";
+import { getTimings } from "@/libs/utils";
+import { sendBookingConfirmationMail } from "@/libs/mail";
 
 type dataFormat = {
     name: string,
@@ -50,14 +50,14 @@ export async function POST(req: NextRequest) {
             date: data.date,
             additionalNotes: data.description,
         })
-        // const bookInfo = {
-        //     bookId: bookingId,
-        //     treatment: treatment.name,
-        //     doctor: doctor.name,
-        //     date: data.date,
-        //     time: getTimings(slot.startTime, slot.endTime)
-        // }
-        // await sendBookingConfirmationMail(data.name, data.email, bookInfo)
+        const bookInfo = {
+            bookId: bookingId,
+            treatment: treatment.name,
+            doctor: doctor.name,
+            date: data.date,
+            time: getTimings(slot.startTime, slot.endTime)
+        }
+        await sendBookingConfirmationMail(data.name, data.email, bookInfo)
         return NextResponse.json({ messageType: 'success', message: 'Booking Successful' }, { status: 201 })
 
     } catch (error) {

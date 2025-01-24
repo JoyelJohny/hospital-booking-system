@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/libs/dbConnection";
 import Cancelled from "@/models/cancellation_request"
 import Booking from "@/models/booking";
-// import { getTimings } from "@/libs/utils";
-// import { sendBookingCancellationMail } from "@/libs/mail";
+import { getTimings } from "@/libs/utils";
+import { sendBookingCancellationMail } from "@/libs/mail";
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ requestId: string }> }) {
     try {
@@ -20,15 +20,15 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ re
         await Booking.findOneAndUpdate({ bookingId: cancel.bookingId }, { status: 'Cancelled' })
 
 
-        //  const booking = await Booking.findOne({ bookingId: cancel.bookingId }, 'patientName patientDOB patientEmail available.startTime available.endTime doctor.name treatment.name date')
-        // const bookInfo = {
-        //     bookId: cancel.bookingId,
-        //     treatment: booking.treatment.name,
-        //     doctor: booking.doctor.name,
-        //     date: booking.date,
-        //     time: getTimings(booking.available.startTime, booking.available.endTime)
-        // }
-        //await sendBookingCancellationMail(booking.patientName, booking.patientEmail, bookInfo)
+        const booking = await Booking.findOne({ bookingId: cancel.bookingId }, 'patientName patientDOB patientEmail available.startTime available.endTime doctor.name treatment.name date')
+        const bookInfo = {
+            bookId: cancel.bookingId,
+            treatment: booking.treatment.name,
+            doctor: booking.doctor.name,
+            date: booking.date,
+            time: getTimings(booking.available.startTime, booking.available.endTime)
+        }
+        await sendBookingCancellationMail(booking.patientName, booking.patientEmail, bookInfo)
 
 
         return NextResponse.json({ message: 'Approved cancellation successfully', messageType: 'success' }, { status: 200 })
