@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 import { verify } from '@/libs/middlewareUtils'
 
-const api_url = process.env.PUBLIC_NEXT_API_URI || 'http://localhost:3000'
+const api_url = process.env.PUBLIC_NEXT_API_URI
 
 export default async function middleware(req: NextRequest) {
     const path = req.nextUrl.pathname

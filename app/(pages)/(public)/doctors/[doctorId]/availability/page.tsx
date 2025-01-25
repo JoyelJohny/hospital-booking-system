@@ -23,7 +23,7 @@ type Available = {
     status: string
 }
 
-const api_url = process.env.NEXT_PUBLIC_API_URI || 'http://localhost:3000'
+const api_url = process.env.NEXT_PUBLIC_API_URI
 
 export default function Availability() {
     const [isLoading, setLoading] = useState<boolean>(true)
