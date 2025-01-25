@@ -23,7 +23,7 @@ type Data = {
     date: string
 }
 
-const api_url = process.env.NEXT_PUBLIC_API_URI || 'http://localhost:3000'
+const api_url = process.env.NEXT_PUBLIC_API_URI
 
 export default function AppointmentBooking() {
     const [trigger, setTrigger] = useState(0)

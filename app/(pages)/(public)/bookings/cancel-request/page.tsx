@@ -3,7 +3,7 @@ import Message from "@/app/(components)/MessageComponent";
 import Form from "next/form";
 import { useEffect, useState } from "react";
 
-const api_url = process.env.NEXT_PUBLIC_API_URI || 'http://localhost:3000'
+const api_url = process.env.NEXT_PUBLIC_API_URI
 
 export default function CancellationRequest() {
     const [trigger, setTrigger] = useState(0)
