@@ -12,7 +12,7 @@ export default async function middleware(req: NextRequest) {
     try {
         if (!token) {
             if (path.startsWith('/admin')) {
-                return NextResponse.redirect(new URL(`${api_url}/`))
+                return NextResponse.redirect(new URL(`${api_url}`))
             } else {
                 return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
             }
