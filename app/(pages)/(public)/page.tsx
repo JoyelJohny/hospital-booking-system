@@ -6,7 +6,7 @@ export default function MyApp() {
         <div className="flex flex-col gap-5 px-5 py-5 xl:px-32">
             <div className="text-xs">&gt; <Link href="/" className="text-blue-700">Home</Link></div>
             <h1 className="font-bold md:text-3xl">World-class care, Focused on you</h1>
-            <div className="lg:flex lg:gap-4">
+            <div className="space-y-2 lg:space-y-0 lg:flex lg:gap-4">
                 <div className="lg:w-2/3">
                     <Image src={home1} alt="Background image" className="object-cover rounded" ></Image>
 

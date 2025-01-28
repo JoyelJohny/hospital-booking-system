@@ -1,4 +1,6 @@
 "use client"
+import Image from "next/image"
+import logo from "@/public/hospital.png"
 import Loading from "@/app/(components)/LoadingComponent"
 import Logout from "@/app/(components)/LogoutComponent"
 import Message from "@/app/(components)/MessageComponent"
@@ -6,6 +8,9 @@ import Form from "next/form"
 import Link from "next/link"
 
 import { useEffect, useState } from "react"
+import AdminLoginComponent from "@/app/(components)/AdminLoginComponent"
+import AdminSignUpComponent from "@/app/(components)/AdminSignUpComponent"
+import AdminForgotPasswordComponent from "@/app/(components)/AdminForgotPasswordComponent"
 
 const api_url = process.env.NEXT_PUBLIC_API_URI
 
@@ -48,34 +53,18 @@ export default function Login() {
         }
     }
     return (<>
-        <div className="flex flex-col px-24 h-full">
-            {isLoading ? <Loading /> : (
-                <div>
-                    {showOptionModal && (<div className="grid grid-cols-2 gap-20 w-full place-content-center my-32">
-                        <Link href="/admin/treatments" className="flex bg-[#086788] p-6 justify-center rounded-3xl text-4xl font-semibold hover:bg-green-400">Treatments</Link>
-                        <Link href="/admin/doctors" className="flex bg-[#086788] p-6 justify-center rounded-3xl text-4xl font-semibold hover:bg-green-400">Doctors</Link>
-                        <Link href="/admin/bookings" className="flex bg-[#086788] p-6 justify-center rounded-3xl text-4xl font-semibold hover:bg-green-400">Bookings</Link>
-                        <Link href="/admin/cancellations" className="flex bg-[#086788] p-6 justify-center rounded-3xl text-4xl font-semibold hover:bg-green-400">Cancellations</Link>
-                    </div>)}
+        <div className="flex flex-col gap-5 px-5 py-5 h-full bg-gradient-to-r from-blue-400 to-blue-700">
+            <div className="flex items-center justify-start gap-2">
+                <Image src={logo} alt='Hospital Logo' className="size-10" />
+                <div className="flex flex-col text-white">
+                    <div className="text-xl font-semibold text-nowrap md:text-2xl lg:text-3xl">Holy Memorial Hospital</div>
+                    <div className="text-xs font-thin">We Care For You</div>
+                </div>
+            </div>
+            {/* <AdminLoginComponent /> */}
+            {/* <AdminSignUpComponent /> */}
+            <AdminForgotPasswordComponent />
 
-                    {!showOptionModal && (<Form action={handleLoginFormSubmit} className="flex flex-col bg-[#086788] p-6 w-fit h-96 shadow-2xl rounded-lg justify-self-center mt-20 justify-between">
-                        <h1 className=" text-4xl font-semibold my-6">Administrator Login</h1>
-                        <div className="flex justify-between gap-4">
-                            <label className="font-semibold py-2 ">Username</label>
-                            <input type="text" required name="username" className="rounded-md text-black p-1 focus:outline-slate-600 w-full" />
-                        </div>
-                        <div className=" flex justify-between gap-4">
-                            <label className="font-semibold py-2">Password</label>
-                            <input type="password" required name="password" className="rounded-md text-black p-1 focus:outline-slate-600 w-full " />
-
-                        </div>
-
-                        <button type="submit" className="rounded-md  px-4 py-2 my-4 border-2 border-white text-2xl font-semibold hover:bg-green-400 hover:border-transparent">Login</button>
-                    </Form>)}
-
-                    {showOptionModal && <Logout adminPage={setShowOptionModal} />}
-                </div>)}
-            {response && <Message trigger={trigger} message={response.message} messageType={response.messageType} />}
         </div>
 
 
