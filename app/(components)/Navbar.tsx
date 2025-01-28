@@ -33,7 +33,7 @@ export default function Navbar() {
 
             <div className="hidden md:hidden lg:flex items-center justify-center gap-8 text-md xl:gap-16">
 
-                <Link href="/" className="hover:underline hover:text-blue-700">Home</Link>
+                <Link href="" className="hover:underline hover:text-blue-700">Home</Link>
                 <Link href="/doctors" className="hover:underline hover:text-blue-700">Doctors</Link>
                 <Link href="/treatments" className="hover:underline hover:text-blue-700">Treatments</Link>
                 <Link href="/bookings/new" className="hover:underline hover:text-blue-700">Request an Appointment</Link>
@@ -42,13 +42,13 @@ export default function Navbar() {
             {navbarModal && (
 
                 <div className={`absolute flex flex-col justify-around w-screen h-72 right-0 top-16 bg-blue-600 rounded-b-xl py-2 px-4 text-white md:top-24 lg:hidden`}>
-                    <span>Home</span>
+                    <Link href="/" onClick={() => { setNavbarModal(!navbarModal) }}>Home</Link>
                     <hr />
-                    <span>Doctors</span>
+                    <Link href="/doctors" onClick={() => { setNavbarModal(!navbarModal) }}>Doctors</Link>
                     <hr />
-                    <span>Treatments</span>
+                    <Link href="/treatments" onClick={() => { setNavbarModal(!navbarModal) }}>Treatments</Link>
                     <hr />
-                    <span>Request an Appointment</span>
+                    <Link href="/bookings/new" onClick={() => { setNavbarModal(!navbarModal) }}>Request an Appointment</Link>
                 </div>
 
             )}
