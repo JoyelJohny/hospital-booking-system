@@ -1,6 +1,8 @@
 "use client"
 
 import Image from "next/image"
+import add from "@/public/addition.png"
+import addAppointmentIcon from "@/public/add-appointment.png"
 import create from "@/public/write.png"
 import edit from "@/public/edit-text.png"
 import bin from "@/public/bin.png"
@@ -12,6 +14,7 @@ import Logout from "@/app/(components)/LogoutComponent"
 import { getTimings } from "@/libs/utils"
 import Loading from "@/app/(components)/LoadingComponent"
 import Message from "@/app/(components)/MessageComponent"
+import Link from "next/link"
 
 type Doctor = {
     _id: string,
@@ -236,9 +239,34 @@ export default function Doctor() {
         setSelectedAvailibilityDetail((prev) => ({ ...prev, [name]: value }))
     }
 
-    return (<>
-        <div className="flex flex-col px-40 py-5 space-y-5 h-full">
-            <h1 className="text-[#086788] text-5xl px-6 font-semibold">Doctors</h1>
+    return (
+        <div className="flex flex-col px-5 py-5 h-full gap-4">
+            <div className="text-xs">&gt; <Link href="/admin/dashboard" className="text-blue-700">Home</Link> &gt; <Link href="/admin/doctors" className="text-blue-700">Doctors</Link></div>
+            <div className="flex justify-between ">
+                <h1 className="text-blue-700 font-semibold text-4xl">Doctors</h1>
+                <Image src={add} alt="" className="size-10" />
+            </div>
+
+            <div className="grid grid-cols-1 text-white">
+                <div className="flex bg-blue-600 w-full rounded-md p-4 justify-between">
+                    <div className="text-xs space-y-2">
+                        <p className="font-normal">Dr Name  <span className="font-semibold text-sm tracking-wider">Arun Joseph</span></p>
+                        <p className="font-normal">Speciality  <span className="font-semibold text-sm tracking-wider">Cardiology</span></p>
+                        <p className="font-normal">Contact  <span className="font-semibold text-sm tracking-wider">arunjoseph@gmail.com</span></p>
+                    </div>
+                    <div className="flex gap-4 justify-between">
+                        <Image src={edit} alt="" className="size-6" />
+                        <Image src={addAppointmentIcon} alt="" className="size-6" />
+                        <Image src={bin} alt="" className="size-6" />
+
+                    </div>
+
+                </div>
+            </div>
+
+
+
+            {/* <h1 className="text-[#086788] text-5xl px-6 font-semibold">Doctors</h1>
             {loading ? <Loading /> : (
                 <div>
                     {doctors.length == 0 &&
@@ -270,7 +298,7 @@ export default function Doctor() {
 
             {/* Doctor updation Form*/}
 
-            {updateDoctorModal && (<Form action={(e) => handleUpdateButton(e, selectedDoctorDetail._id)} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 justify-center bg-[#086788] border-4 border-gray-100 w-1/3 p-6 rounded-lg space-y-5">
+            {/* {updateDoctorModal && (<Form action={(e) => handleUpdateButton(e, selectedDoctorDetail._id)} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 justify-center bg-[#086788] border-4 border-gray-100 w-1/3 p-6 rounded-lg space-y-5">
                 <h1 className="text-center font-semibold text-2xl">Update Doctor</h1>
                 <div className="flex justify-between gap-2">
                     <label htmlFor="" className="py-2 font-semibold text-sm w-28">Dr Name</label>
@@ -290,12 +318,12 @@ export default function Doctor() {
                     <button className=" border-2 border-transparent box-border p-2 rounded-lg font-semibold  border-white hover:bg-green-400 hover:border-transparent">Update</button>
                     <button className=" border-2 border-transparent box-border p-2 rounded-lg font-semibold  border-white hover:bg-red-400 hover:border-transparent" onClick={() => setUpdateDoctorModal(!updateDoctorModal)}>Cancel</button>
                 </div>
-            </Form>)}
+            </Form>)} */}
 
 
             {/* Doctor creation Form*/}
 
-            {createDoctorModal && (<Form action={handleCreateButton} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 justify-center border-4 border-gray-100 bg-[#086788] w-1/3 p-6 rounded-lg space-y-5">
+            {/* {createDoctorModal && (<Form action={handleCreateButton} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 justify-center border-4 border-gray-100 bg-[#086788] w-1/3 p-6 rounded-lg space-y-5">
                 <h1 className="text-center font-semibold text-2xl">Create new Doctor</h1>
                 <div className="flex justify-between gap-2">
                     <label htmlFor="" className="py-2 font-semibold text-sm w-28">Dr Name</label>
@@ -316,10 +344,10 @@ export default function Doctor() {
                     <button type="submit" className=" border-2 border-transparent box-border p-2 rounded-lg font-semibold  border-white hover:bg-green-400 hover:border-transparent">Create</button>
                     <button className=" border-2 border-transparent box-border p-2 rounded-lg font-semibold  border-white hover:bg-red-400 hover:border-transparent" onClick={() => setCreateDoctorModal(!createDoctorModal)}>Cancel</button>
                 </div>
-            </Form>)}
+            </Form>)} */}
 
 
-            {availabilityModal && (
+            {/* {availabilityModal && (
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-100 p-3 text-[#086788] border-4 border-[#086788] rounded-xl w-2/3">
                     <button className="flex justify-self-end p-1 mb-2 rounded-lg text-white bg-[#086788] hover:bg-red-400" onClick={handleCloseAvailabilityModal}>
                         <Image src={reject} width={24} height={24} alt="close the availability modal" />
@@ -375,10 +403,10 @@ export default function Doctor() {
                             </table>
                         </div>
                     </div>
-                </div>)}
+                </div>)} */}
 
 
-            {createAvailabilityModal && (<Form action={handleCreateAvailabilityButton} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-100 border-2 rounded-xl border-[#086788] text-[#086788] p-4">
+            {/* {createAvailabilityModal && (<Form action={handleCreateAvailabilityButton} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-100 border-2 rounded-xl border-[#086788] text-[#086788] p-4">
                 <h1 className="text-center font-semibold text-2xl pb-4">Create New Slot</h1>
                 <div className="flex justify-between">
                     <p className="font-semibold">Select the day</p>
@@ -404,9 +432,9 @@ export default function Doctor() {
                 </div>
 
 
-            </Form>)}
+            </Form>)} */}
 
-            {updateAvailabilityModal && (<Form action={(e) => handleUpdateAvaialabilityButton(e, selectedAvailabilityDetail._id)} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-100 border-2 rounded-xl border-[#086788] text-[#086788] p-4">
+            {/* {updateAvailabilityModal && (<Form action={(e) => handleUpdateAvaialabilityButton(e, selectedAvailabilityDetail._id)} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-100 border-2 rounded-xl border-[#086788] text-[#086788] p-4">
                 <h1 className="text-center font-semibold text-2xl pb-4">Update Slot</h1>
                 <div className="flex justify-between">
                     <p className="font-semibold">Select the day</p>
@@ -429,15 +457,13 @@ export default function Doctor() {
                     <button className="rounded-md  px-4 py-2  border-2 border-[#086788] text-2xl font-semibold hover:bg-red-400 hover:border-transparent hover:text-white" onClick={handleUpdateAvailabilityDeleteButton}>Delete</button>
                     <button className="rounded-md  px-4 py-2  border-2 border-[#086788] text-2xl font-semibold hover:bg-red-400 hover:border-transparent hover:text-white" onClick={() => { setUpdateAvailabilityModal(!updateAvailabilityModal) }}>Discard</button>
                 </div>
-            </Form>)}
+            </Form>)} */}
 
-            <button className="bg-[#086788] w-20 h-20 fixed bottom-20 right-20 rounded-full p-5 shadow-md shadow-black" onClick={() => setCreateDoctorModal(!createDoctorModal)}>
+            {/* <button className="bg-[#086788] w-20 h-20 fixed bottom-20 right-20 rounded-full p-5 shadow-md shadow-black" onClick={() => setCreateDoctorModal(!createDoctorModal)}>
                 <Image src={create} width={64} height={64} className="text-white" alt="create button image" />
-            </button>
+            </button>  */}
 
-            <Logout />
-            {response && <Message trigger={trigger} message={response.message} messageType={response.messageType} />}
 
         </div>
-    </>)
+    )
 }

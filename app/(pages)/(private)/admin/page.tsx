@@ -11,6 +11,8 @@ import { useEffect, useState } from "react"
 import AdminLoginComponent from "@/app/(components)/AdminLoginComponent"
 import AdminSignUpComponent from "@/app/(components)/AdminSignUpComponent"
 import AdminForgotPasswordComponent from "@/app/(components)/AdminForgotPasswordComponent"
+import AdminOTPVerificationComponent from "@/app/(components)/AdminOTPVerificationComponent"
+import AdminNewPasswordComponent from "@/app/(components)/AdminNewPasswordComponent"
 
 const api_url = process.env.NEXT_PUBLIC_API_URI
 
@@ -63,7 +65,9 @@ export default function Login() {
             </div>
             {/* <AdminLoginComponent /> */}
             {/* <AdminSignUpComponent /> */}
-            <AdminForgotPasswordComponent />
+            {/* <AdminForgotPasswordComponent /> */}
+            {/* <AdminOTPVerificationComponent /> */}
+            <AdminNewPasswordComponent />
 
         </div>
 

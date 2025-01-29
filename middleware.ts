@@ -8,26 +8,26 @@ export default async function middleware(req: NextRequest) {
     const path = req.nextUrl.pathname
     const cookies = req.cookies.get('token')?.value
     const token = cookies && cookies.startsWith('Bearer') ? cookies.split(' ')[1] : null
+    return NextResponse.next()
+    // try {
+    //     if (!token) {
+    //         if (path.startsWith('/admin')) {
+    //             return NextResponse.redirect(new URL(`${api_url}`))
+    //         } else {
+    //             return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
+    //         }
+    //     }
+    //     await verify(token)
 
-    try {
-        if (!token) {
-            if (path.startsWith('/admin')) {
-                return NextResponse.redirect(new URL(`${api_url}`))
-            } else {
-                return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
-            }
-        }
-        await verify(token)
+    //     return NextResponse.next()
 
-        return NextResponse.next()
-
-    } catch (error) {
-        console.error(error);
-        if (path.startsWith('/admin')) {
-            return NextResponse.redirect(new URL(`${api_url}/`))
-        }
-        return NextResponse.json({ error: "Invalid Credentials" }, { status: 401 })
-    }
+    // } catch (error) {
+    //     console.error(error);
+    //     if (path.startsWith('/admin')) {
+    //         return NextResponse.redirect(new URL(`${api_url}/`))
+    //     }
+    //     return NextResponse.json({ error: "Invalid Credentials" }, { status: 401 })
+    // }
 
 }
 
