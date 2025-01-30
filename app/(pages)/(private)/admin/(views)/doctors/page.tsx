@@ -240,24 +240,35 @@ export default function Doctor() {
     }
 
     return (
-        <div className="flex flex-col px-5 py-5 h-full gap-4">
+        <div className="flex flex-col px-5 py-5 h-full gap-4 lg:px-10 xl:px-32">
             <div className="text-xs">&gt; <Link href="/admin/dashboard" className="text-blue-700">Home</Link> &gt; <Link href="/admin/doctors" className="text-blue-700">Doctors</Link></div>
             <div className="flex justify-between ">
                 <h1 className="text-blue-700 font-semibold text-4xl">Doctors</h1>
-                <Image src={add} alt="" className="size-10" />
+                <Image src={add} alt="" className="size-10 lg:hover:cursor-pointer lg:hover:scale-110" />
             </div>
 
-            <div className="grid grid-cols-1 text-white">
+            <div className="grid grid-cols-1 text-white md:grid-cols-2 xl:grid-cols-3">
                 <div className="flex bg-blue-600 w-full rounded-md p-4 justify-between">
-                    <div className="text-xs space-y-2">
-                        <p className="font-normal">Dr Name  <span className="font-semibold text-sm tracking-wider">Arun Joseph</span></p>
-                        <p className="font-normal">Speciality  <span className="font-semibold text-sm tracking-wider">Cardiology</span></p>
-                        <p className="font-normal">Contact  <span className="font-semibold text-sm tracking-wider">arunjoseph@gmail.com</span></p>
+                    <div className="text-xs space-y-2 ">
+                        <div className="flex">
+                            <p className="font-normal mr-3">Dr Name  </p>
+                            <p className="font-semibold text-sm tracking-wider ">Arun Joseph</p>
+                        </div>
+                        <div className="flex">
+                            <p className="font-normal mr-3">Speciality  </p>
+                            <p className="font-semibold text-sm tracking-wider ">Cardiology</p>
+                        </div>
+                        <div className="flex">
+                            <p className="font-normal mr-5">Contact  </p>
+                            <p className=" font-semibold text-sm tracking-wider ">arunjoseph@gmail.com</p>
+                        </div>
+
+
                     </div>
                     <div className="flex gap-4 justify-between">
-                        <Image src={edit} alt="" className="size-6" />
-                        <Image src={addAppointmentIcon} alt="" className="size-6" />
-                        <Image src={bin} alt="" className="size-6" />
+                        <Image src={edit} alt="" className="size-6 lg:hover:cursor-pointer lg:hover:scale-110" />
+                        <Image src={addAppointmentIcon} alt="" className="size-6 lg:hover:cursor-pointer lg:hover:scale-110" />
+                        <Image src={bin} alt="" className="size-6 lg:hover:cursor-pointer lg:hover:scale-110" />
 
                     </div>
 
