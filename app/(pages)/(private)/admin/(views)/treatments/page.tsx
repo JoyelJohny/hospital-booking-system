@@ -1,6 +1,7 @@
 "use client"
 import Image from "next/image"
 import create from "@/public/write.png"
+import add from "@/public/addition.png"
 import edit from "@/public/edit-text.png"
 import bin from "@/public/bin.png"
 import React, { useEffect, useState } from "react"
@@ -8,6 +9,7 @@ import Form from "next/form"
 import Logout from "@/app/(components)/LogoutComponent"
 import Loading from "@/app/(components)/LoadingComponent"
 import Message from "@/app/(components)/MessageComponent"
+import Link from "next/link"
 
 interface Treatment {
     _id: string,
@@ -115,8 +117,40 @@ export default function Treatment() {
         }
     }
 
-    return (<>
-        <div className="flex flex-col px-40 py-5 h-full space-y-5">
+    return (
+        <div className="flex flex-col px-5 py-5 h-full gap-4 lg:px-10 xl:px-32">
+            <div className="text-xs">&gt; <Link href="/admin/dashboard" className="text-blue-700">Home</Link> &gt; <Link href="/admin/treatments" className="text-blue-700">Treatments</Link></div>
+            <div className="flex justify-between ">
+                <h1 className="text-blue-700 font-semibold text-4xl">Treatments</h1>
+                <Image src={add} alt="" className="size-10 lg:hover:cursor-pointer lg:hover:scale-110" />
+            </div>
+
+            <div className="grid grid-cols-1 text-white md:grid-cols-2 xl:grid-cols-3">
+                <div className="flex bg-blue-600 w-full rounded-md p-4 justify-between">
+                    <div className="text-xs space-y-2 w-64">
+                        <div className="flex">
+                            <p>Cardiology</p>
+                            {/* <input type="text" className="font-semibold text-sm tracking-wider text-black p-1" readOnly={true} value={'Cardiology'} /> */}
+                        </div>
+                        <div className="flex">
+                            <p className="">aasdflksjlkdf jsljdflojsw odifswofjho fowfwfjhff wwjfjojslksdj fsjdfsdfks dhlkfhskfhk sdhfksdfsikhshfisd</p>
+                            {/* <textarea name="" className="font-semibold text-sm tracking-wider text-black p-1 w-full" value={'aasdflksjlkdfjsljdflojswodifswofjhofowfwfjhffwwjfjoj'} /> */}
+                        </div>
+
+
+
+                    </div>
+                    <div className="flex gap-4 justify-between">
+                        <Image src={edit} alt="" className="size-6 lg:hover:cursor-pointer lg:hover:scale-110" />
+                        <Image src={bin} alt="" className="size-6 lg:hover:cursor-pointer lg:hover:scale-110" />
+
+                    </div>
+
+                </div>
+            </div>
+        </div>)
+
+    {/* <div className="flex flex-col px-40 py-5 h-full space-y-5">
 
             <h1 className="text-[#086788] text-5xl px-6 font-semibold">Treatments</h1>
             {isLoading ? <Loading /> : (
@@ -137,9 +171,9 @@ export default function Treatment() {
                             </div>
                         ))}
                     </div>
-                </div>)}
+                </div>)} */}
 
-            {createTreatmentModal && (<Form action={handleTreatmentCreateSubmit} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 justify-center border-4 border-gray-100 bg-[#086788] p-6 rounded-lg space-y-5 w-1/3">
+    {/* {createTreatmentModal && (<Form action={handleTreatmentCreateSubmit} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 justify-center border-4 border-gray-100 bg-[#086788] p-6 rounded-lg space-y-5 w-1/3">
                 <div className="flex justify-between gap-2">
                     <label htmlFor="" className="py-2 font-semibold text-sm w-24">Treatment</label>
                     <input type="text" name="name" className="text-black p-2 rounded-md focus:outline-slate-500 w-full" />
@@ -152,9 +186,9 @@ export default function Treatment() {
                     <button type="submit" className=" border-2 border-transparent box-border p-2 rounded-lg font-semibold  border-white hover:bg-green-400 hover:border-transparent">Create</button>
                     <button className=" border-2 border-transparent box-border p-2 rounded-lg font-semibold  border-white hover:bg-red-400 hover:border-transparent" onClick={() => setCreateTreatmentModal(!createTreatmentModal)}>Cancel</button>
                 </div>
-            </Form>)}
+            </Form>)} */}
 
-            {updateTreatmentModal && (<Form action={(e) => handleTreatmentUpdateButton(e, selectedTreatment._id)} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 justify-center border-4 border-gray-100 bg-[#086788] p-6 rounded-lg space-y-5 w-1/3">
+    {/* {updateTreatmentModal && (<Form action={(e) => handleTreatmentUpdateButton(e, selectedTreatment._id)} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 justify-center border-4 border-gray-100 bg-[#086788] p-6 rounded-lg space-y-5 w-1/3">
                 <div className="flex justify-between gap-2">
                     <label htmlFor="" className="py-2 font-semibold text-sm w-24">Treatment</label>
                     <input type="text" name="name" value={selectedTreatment.name} onChange={handleTreatmentEditInputChange} className="text-black p-2 rounded-md focus:outline-slate-500 w-full" />
@@ -167,13 +201,13 @@ export default function Treatment() {
                     <button type="submit" className=" border-2 border-transparent box-border p-2 rounded-lg font-semibold  border-white hover:bg-green-400 hover:border-transparent" >Update</button>
                     <button className=" border-2 border-transparent box-border p-2 rounded-lg font-semibold  border-white hover:bg-red-400 hover:border-transparent" onClick={() => setUpdateTreatmentModal(!updateTreatmentModal)}>Cancel</button>
                 </div>
-            </Form>)}
+            </Form>)} */}
 
-            <button title="Create new Treatment" onClick={() => setCreateTreatmentModal(!createTreatmentModal)} className=" w-20 h-20 fixed bottom-20 right-20 rounded-full p-5 shadow-md shadow-black bg-[#086788]">
+    {/* <button title="Create new Treatment" onClick={() => setCreateTreatmentModal(!createTreatmentModal)} className=" w-20 h-20 fixed bottom-20 right-20 rounded-full p-5 shadow-md shadow-black bg-[#086788]">
                 <Image src={create} width={64} height={64} alt="create button image" />
             </button>
             <Logout />
             {response && <Message trigger={trigger} message={response.message} messageType={response.messageType} />}
-        </div>
-    </>)
+        </div> */}
+
 }
