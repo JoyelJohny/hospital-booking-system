@@ -7,6 +7,7 @@ import Logout from "@/app/(components)/LogoutComponent"
 import { getTimings } from "@/libs/utils"
 import Loading from "@/app/(components)/LoadingComponent"
 import Message from "@/app/(components)/MessageComponent"
+import Link from "next/link"
 
 
 type Bookings = {
@@ -88,10 +89,20 @@ export default function Booking() {
         }
     }
 
-    return (<>
-        <div className="flex flex-col px-40 py-5 space-y-5 h-full  ">
+    return (
+        <div className="flex flex-col px-5 py-5 h-full gap-4 lg:px-10 xl:px-32">
+            <div className="text-xs">&gt; <Link href="/admin/dashboard" className="text-blue-700">Home</Link> &gt; <Link href="/admin/bookings" className="text-blue-700">Bookings</Link></div>
+            <h1 className="text-blue-700 font-semibold text-4xl">Bookings</h1>
+            <div className="grid grid-cols-2 gap-4 text-white md:grid-cols-3 xl:grid-cols-4">
+                <div className="flex flex-col bg-blue-600 w-full rounded-md p-3 lg:hover:cursor-pointer lg:hover:bg-gradient-to-l lg:hover:from-blue-500 lg:hover:to-blue-700">
+                    <h2 className="text-xs lg:text-sm">HBS12312312</h2>
+                </div>
 
-            <h1 className="text-[#086788] text-5xl  font-semibold">Bookings</h1>
+            </div>
+        </div>)
+    {/* <div className="flex flex-col px-40 py-5 space-y-5 h-full  "> */ }
+
+    {/* <h1 className="text-[#086788] text-5xl  font-semibold">Bookings</h1>
 
             {isLoading ? <Loading /> : (<div>{bookings.length == 0 && (<div className="text-[#086788] pt-44 text-center text-3xl ">No new Bookings have been made</div>)}
 
@@ -109,11 +120,11 @@ export default function Booking() {
                     ))}
 
 
-                </div></div>)}
+                </div></div>)} */}
 
 
 
-            {appointmentModal && (
+    {/* {appointmentModal && (
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col bg-[#086788] px-6 py-4 w-fit h-fit shadow-2xl rounded-lg justify-between border-4">
                     <button className="ml-auto w-8 h-8  p-1 mb-2 rounded-lg text-white bg-[#086788] hover:bg-red-400" onClick={() => (setAppointmentModal(!appointmentModal))}><Image src={reject} width={24} height={24} alt="close the availability modal" />
                     </button>
@@ -146,10 +157,9 @@ export default function Booking() {
                         <button className="rounded-md w-full px-4 py-2 my-4 border-2 border-white text-2xl font-semibold hover:bg-red-400 hover:border-transparent" onClick={handleCancelAppointment}>Cancel Appointment</button>
                     </div>
                 </div>
-            )}
+            )} */}
 
-            <Logout />
-            {response && <Message trigger={trigger} message={response.message} messageType={response.messageType} />}
-        </div>
-    </>)
+
+    {/* </div> */ }
+
 }

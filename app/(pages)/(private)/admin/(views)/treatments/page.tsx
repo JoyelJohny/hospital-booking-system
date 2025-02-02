@@ -125,26 +125,19 @@ export default function Treatment() {
                 <Image src={add} alt="" className="size-10 lg:hover:cursor-pointer lg:hover:scale-110" />
             </div>
 
-            <div className="grid grid-cols-1 text-white md:grid-cols-2 xl:grid-cols-3">
-                <div className="flex bg-blue-600 w-full rounded-md p-4 justify-between">
-                    <div className="text-xs space-y-2 w-64">
-                        <div className="flex">
-                            <p>Cardiology</p>
-                            {/* <input type="text" className="font-semibold text-sm tracking-wider text-black p-1" readOnly={true} value={'Cardiology'} /> */}
-                        </div>
-                        <div className="flex">
-                            <p className="">aasdflksjlkdf jsljdflojsw odifswofjho fowfwfjhff wwjfjojslksdj fsjdfsdfks dhlkfhskfhk sdhfksdfsikhshfisd</p>
-                            {/* <textarea name="" className="font-semibold text-sm tracking-wider text-black p-1 w-full" value={'aasdflksjlkdfjsljdflojswodifswofjhofowfwfjhffwwjfjoj'} /> */}
+            <div className="grid grid-cols-1 gap-4 text-white md:grid-cols-2 md:gap-4 xl:gap-6 xl:grid-cols-3">
+                <div className="flex flex-col bg-blue-600 w-full rounded-md p-4 space-y-4">
+                    <div className="flex justify-between">
+
+                        <p className="text-xl">Cardiology</p>
+                        <div className="flex gap-4 justify-between items-center">
+                            <Image src={edit} alt="" className="size-6 lg:hover:cursor-pointer lg:hover:scale-110" />
+                            <Image src={bin} alt="" className="size-6 lg:hover:cursor-pointer lg:hover:scale-110" />
                         </div>
 
 
-
                     </div>
-                    <div className="flex gap-4 justify-between">
-                        <Image src={edit} alt="" className="size-6 lg:hover:cursor-pointer lg:hover:scale-110" />
-                        <Image src={bin} alt="" className="size-6 lg:hover:cursor-pointer lg:hover:scale-110" />
-
-                    </div>
+                    <p className="text-xs">Focuses on diagnosing and treating heart and blood vessel disorders, including heart attacks, arrhythmias, and hypertension. Cardiologists often perform diagnostic tests like ECGs and echocardiograms. Interventional cardiology may include procedures like angioplasty or stenting.</p>
 
                 </div>
             </div>

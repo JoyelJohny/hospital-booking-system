@@ -249,21 +249,10 @@ export default function Doctor() {
 
             <div className="grid grid-cols-1 text-white md:grid-cols-2 xl:grid-cols-3">
                 <div className="flex bg-blue-600 w-full rounded-md p-4 justify-between">
-                    <div className="text-xs space-y-2 ">
-                        <div className="flex">
-                            <p className="font-normal mr-3">Dr Name  </p>
-                            <p className="font-semibold text-sm tracking-wider ">Arun Joseph</p>
-                        </div>
-                        <div className="flex">
-                            <p className="font-normal mr-3">Speciality  </p>
-                            <p className="font-semibold text-sm tracking-wider ">Cardiology</p>
-                        </div>
-                        <div className="flex">
-                            <p className="font-normal mr-5">Contact  </p>
-                            <p className=" font-semibold text-sm tracking-wider ">arunjoseph@gmail.com</p>
-                        </div>
-
-
+                    <div className="text-xs space-y-1 ">
+                        <p className="font-semibold text-sm ">Dr Arun Joseph</p>
+                        <p className="  ">Cardiology</p>
+                        <p className="  ">arunjoseph@gmail.com</p>
                     </div>
                     <div className="flex gap-4 justify-between">
                         <Image src={edit} alt="" className="size-6 lg:hover:cursor-pointer lg:hover:scale-110" />
