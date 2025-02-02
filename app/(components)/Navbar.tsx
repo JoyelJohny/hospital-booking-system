@@ -33,7 +33,7 @@ export default function Navbar() {
 
             <div className="hidden md:hidden lg:flex items-center justify-center gap-8 text-md xl:gap-16">
 
-                <Link href="" className="hover:underline hover:text-blue-700">Home</Link>
+                <Link href="/" className="hover:underline hover:text-blue-700">Home</Link>
                 <Link href="/doctors" className="hover:underline hover:text-blue-700">Doctors</Link>
                 <Link href="/treatments" className="hover:underline hover:text-blue-700">Treatments</Link>
                 <Link href="/bookings/new" className="hover:underline hover:text-blue-700">Request an Appointment</Link>
