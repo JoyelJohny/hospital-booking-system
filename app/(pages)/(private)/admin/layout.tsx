@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import "@/app/(pages)/globals.css";
-import NavbarAdmin from "@/app/(components)/NavbarAdmin";
+import { Noto_Sans } from 'next/font/google'
+
+const noto_sans = Noto_Sans({
+    subsets: ['latin'],
+    weight: ['400', '700']
+})
 
 export const metadata: Metadata = {
     title: "Create Next App",
@@ -13,8 +18,8 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
-            <body className="flex flex-col h-screen">
+        <html lang="en" className="!scroll-smooth">
+            <body className={`flex flex-col h-screen ${noto_sans.className}`}>
                 <main className="flex-1">{children}</main>
             </body>
         </html>

@@ -3,6 +3,7 @@
 import Image from "next/image"
 import add from "@/public/addition.png"
 import addAppointmentIcon from "@/public/add-appointment.png"
+import doctor from "@/public/doctor.jpg"
 import create from "@/public/write.png"
 import edit from "@/public/edit-text.png"
 import bin from "@/public/bin.png"
@@ -15,6 +16,7 @@ import { getTimings } from "@/libs/utils"
 import Loading from "@/app/(components)/LoadingComponent"
 import Message from "@/app/(components)/MessageComponent"
 import Link from "next/link"
+import DoctorUpdateModal from "./Components/UpdateModal"
 
 type Doctor = {
     _id: string,
@@ -243,25 +245,40 @@ export default function Doctor() {
         <div className="flex flex-col px-5 py-5 h-full gap-4 lg:px-10 xl:px-32">
             <div className="text-xs">&gt; <Link href="/admin/dashboard" className="text-blue-700">Home</Link> &gt; <Link href="/admin/doctors" className="text-blue-700">Doctors</Link></div>
             <div className="flex justify-between ">
-                <h1 className="text-blue-700 font-semibold text-4xl">Doctors</h1>
-                <Image src={add} alt="" className="size-10 lg:hover:cursor-pointer lg:hover:scale-110" />
+                <h1 className=" font-semibold text-blue-700 text-3xl md:text-4xl lg:text-5xl">Doctors List</h1>
+                <div className="flex gap-2 border px-1 rounded-lg border-blue-700 lg:hover:cursor-pointer lg:hover:scale-110">
+                    <Image src={add} alt="" className="size-5  my-auto lg:size-8" />
+                    <span className="text-blue-700 font-semibold my-auto text-xs lg:text-sm">Add Doctor</span>
+                </div>
+
             </div>
 
-            <div className="grid grid-cols-1 text-white md:grid-cols-2 xl:grid-cols-3">
-                <div className="flex bg-blue-600 w-full rounded-md p-4 justify-between">
-                    <div className="text-xs space-y-1 ">
-                        <p className="font-semibold text-sm ">Dr Arun Joseph</p>
-                        <p className="  ">Cardiology</p>
-                        <p className="  ">arunjoseph@gmail.com</p>
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 mt-5">
+                <div className="flex flex-col bg-white gap-1 w-full border border-blue-700 rounded-2xl justify-between p-1 xl:p-2">
+                    <div className=" ">
+                        <Image src={doctor} alt="" className="rounded-t-2xl" />
+                    </div >
+                    <div className="p-2 w-full">
+                        <p className="text-xs">Cardiology</p>
+                        <p className="font-bold text-xl ">Dr. Arun Joseph</p>
+                        <p className=" text-xs break-words font-light">arunjoseph@gmail.com</p>
+                        <div className="flex mt-3 text-white gap-1 justify-between rounded-lg lg:justify-around items-center">
+                            <div className="flex gap-1 border rounded-lg p-2 bg-blue-700 md:p-1 md:rounded-md xl:p-2 lg:hover:cursor-pointer lg:hover:scale-110">
+                                <Image src={edit} alt="" className="size-4 " />
+                                <span className="hidden md:block text-xs select-none">Edit</span>
+                            </div>
+                            <div className="flex gap-1 border rounded-lg p-2 bg-blue-700 md:p-1 md:rounded-md xl:p-2 lg:hover:cursor-pointer lg:hover:scale-110">
+                                <Image src={addAppointmentIcon} alt="" className="size-4 " />
+                                <span className="hidden md:block text-xs select-none">Schedule</span>
+                            </div>
+                            <div className="flex gap-1 border rounded-lg p-2 bg-blue-700 md:p-1 md:rounded-md xl:p-2 lg:hover:cursor-pointer lg:hover:scale-110">
+                                <Image src={bin} alt="" className="size-4 " />
+                                <span className="hidden md:block text-xs select-none">Delete</span>
+                            </div>
+                        </div>
                     </div>
-                    <div className="flex gap-4 justify-between">
-                        <Image src={edit} alt="" className="size-6 lg:hover:cursor-pointer lg:hover:scale-110" />
-                        <Image src={addAppointmentIcon} alt="" className="size-6 lg:hover:cursor-pointer lg:hover:scale-110" />
-                        <Image src={bin} alt="" className="size-6 lg:hover:cursor-pointer lg:hover:scale-110" />
-
-                    </div>
-
                 </div>
+                <DoctorUpdateModal />
             </div>
 
 

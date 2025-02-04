@@ -103,7 +103,8 @@ export default function Cancellation() {
         <div className="flex flex-col px-5 py-5 h-full gap-4 lg:px-10 xl:px-32">
             <div className="text-xs">&gt; <Link href="/admin/dashboard" className="text-blue-700">Home</Link> &gt; <Link href="/admin/cancellations" className="text-blue-700">Cancellation Requests</Link></div>
             <h1 className="text-blue-700 font-semibold text-4xl">Cancellation Requests</h1>
-        </div>)
+        </div>
+    )
     // <div className="flex flex-col px-40 py-5 space-y-10 h-full">
     //     <div className="space-y-5">
     //         <h1 className="text-[#086788] text-5xl font-semibold w-full">Cancellation Requests</h1>
