@@ -1,6 +1,7 @@
 "use client"
 import Image from "next/image"
 import create from "@/public/write.png"
+import treatmentIcon from '@/public/treatments.png'
 import add from "@/public/addition.png"
 import edit from "@/public/edit-text.png"
 import bin from "@/public/bin.png"
@@ -120,16 +121,23 @@ export default function Treatment() {
     return (
         <div className="flex flex-col px-5 py-5 h-full gap-4 lg:px-10 xl:px-32">
             <div className="text-xs">&gt; <Link href="/admin/dashboard" className="text-blue-700">Home</Link> &gt; <Link href="/admin/treatments" className="text-blue-700">Treatments</Link></div>
-            <div className="flex justify-between ">
-                <h1 className="text-blue-700 font-semibold text-4xl">Treatments</h1>
-                <Image src={add} alt="" className="size-10 lg:hover:cursor-pointer lg:hover:scale-110" />
+            <div className="flex justify-between items-center">
+                <h1 className="text-blue-700 font-semibold text-3xl md:text-4xl lg:text-5xl">Treatments List</h1>
+                <div className="flex items-center gap-2 border p-1 rounded-lg border-blue-700 lg:hover:cursor-pointer lg:hover:scale-110 ">
+                    <Image src={add} alt="" className="size-6 lg:hover:cursor-pointer lg:hover:scale-110" />
+                    <span className="text-blue-700 font-semibold my-auto text-xs lg:text-sm">Add Treatment</span>
+                </div>
+
             </div>
 
-            <div className="grid grid-cols-1 gap-4 text-white md:grid-cols-2 md:gap-4 xl:gap-6 xl:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 text-white md:grid-cols-2 md:gap-4 xl:gap-6 xl:grid-cols-3 mt-5">
                 <div className="flex flex-col bg-blue-600 w-full rounded-md p-4 space-y-4">
                     <div className="flex justify-between">
+                        <div className="flex gap-2 items-center">
+                            <Image src={treatmentIcon} alt="" className="size-8" />
+                            <p className="text-xl font-semibold">Cardiology</p>
+                        </div>
 
-                        <p className="text-xl">Cardiology</p>
                         <div className="flex gap-4 justify-between items-center">
                             <Image src={edit} alt="" className="size-6 lg:hover:cursor-pointer lg:hover:scale-110" />
                             <Image src={bin} alt="" className="size-6 lg:hover:cursor-pointer lg:hover:scale-110" />

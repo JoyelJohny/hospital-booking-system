@@ -2,6 +2,12 @@ import type { Metadata } from "next";
 import "@/app/(pages)/globals.css";
 import Navbar from "@/app/(components)/Navbar"
 import Footer from '@/app/(components)/Footer'
+import { Noto_Sans } from 'next/font/google'
+
+const noto_sans = Noto_Sans({
+  subsets: ['latin'],
+  weight: ['400', '700']
+})
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="flex flex-col h-screen overflow-x-hidden ">
+      <body className={`flex flex-col h-screen overflow-x-hidden ${noto_sans.className} `}>
         <Navbar></Navbar>
         <main className="flex-1">{children}</main>
         <Footer />
