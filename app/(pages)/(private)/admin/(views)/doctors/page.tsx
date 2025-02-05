@@ -263,22 +263,22 @@ export default function Doctor() {
                         <p className="font-bold text-xl ">Dr. Arun Joseph</p>
                         <p className=" text-xs break-words font-light">arunjoseph@gmail.com</p>
                         <div className="flex mt-3 text-white gap-1 justify-between rounded-lg lg:justify-around items-center">
-                            <div className="flex gap-1 border rounded-lg p-2 bg-blue-700 md:p-1 md:rounded-md xl:p-2 lg:hover:cursor-pointer lg:hover:scale-110">
+                            <button className="flex gap-1 border rounded-lg p-2 bg-blue-700 md:p-1 md:rounded-md xl:p-2 lg:hover:cursor-pointer lg:hover:scale-110" onClick={() => setUpdateDoctorModal(!updateDoctorModal)}>
                                 <Image src={edit} alt="" className="size-4 " />
                                 <span className="hidden md:block text-xs select-none">Edit</span>
-                            </div>
-                            <div className="flex gap-1 border rounded-lg p-2 bg-blue-700 md:p-1 md:rounded-md xl:p-2 lg:hover:cursor-pointer lg:hover:scale-110">
+                            </button>
+                            <button className="flex gap-1 border rounded-lg p-2 bg-blue-700 md:p-1 md:rounded-md xl:p-2 lg:hover:cursor-pointer lg:hover:scale-110">
                                 <Image src={addAppointmentIcon} alt="" className="size-4 " />
                                 <span className="hidden md:block text-xs select-none">Schedule</span>
-                            </div>
-                            <div className="flex gap-1 border rounded-lg p-2 bg-blue-700 md:p-1 md:rounded-md xl:p-2 lg:hover:cursor-pointer lg:hover:scale-110">
+                            </button>
+                            <button className="flex gap-1 border rounded-lg p-2 bg-blue-700 md:p-1 md:rounded-md xl:p-2 lg:hover:cursor-pointer lg:hover:scale-110">
                                 <Image src={bin} alt="" className="size-4 " />
                                 <span className="hidden md:block text-xs select-none">Delete</span>
-                            </div>
+                            </button>
                         </div>
                     </div>
                 </div>
-                <DoctorUpdateModal />
+                {updateDoctorModal && <DoctorUpdateModal />}
             </div>
 
 
