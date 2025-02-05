@@ -4,7 +4,6 @@ export default function DoctorUpdateModal() {
             <div>
                 <p>Speciality</p>
                 <p>Doctor Name</p>
-
                 <p>Contact</p>
             </div>
         </div>
