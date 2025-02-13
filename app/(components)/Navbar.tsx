@@ -41,7 +41,7 @@ export default function Navbar() {
             </div>
             {navbarModal && (
 
-                <div className={`absolute flex flex-col justify-around w-screen h-72 right-0 top-16 bg-blue-600 rounded-b-xl py-2 px-4 text-white md:top-24 lg:hidden`}>
+                <div className={`absolute z-0 flex flex-col justify-around w-screen h-72 right-0 top-16 bg-blue-600 rounded-b-xl py-2 px-4 text-white md:top-24 lg:hidden`}>
                     <Link href="/" onClick={() => { setNavbarModal(!navbarModal) }}>Home</Link>
                     <hr />
                     <Link href="/doctors" onClick={() => { setNavbarModal(!navbarModal) }}>Doctors</Link>

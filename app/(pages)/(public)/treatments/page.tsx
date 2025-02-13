@@ -1,8 +1,11 @@
 "use client"
 
+import Image from "next/image";
 import Loading from "@/app/(components)/LoadingComponent";
+import SearchBar from "@/app/(components)/SearchBarComponent";
 import Link from "next/link";
 import { useEffect, useState } from "react"
+import cardiology from '@/public/treatments.png'
 
 interface Treatment {
     _id: string,
@@ -31,21 +34,21 @@ export default function Treatment() {
         getTreatmentsData()
     }, [])
 
-    return (<>
-        <div className="flex flex-col px-24 py-5 space-y-4 h-full">
-            <h1 className="text-[#086788] text-5xl px-6 font-semibold">Treatments</h1>
-            {isLoading ? <Loading /> : (
-                <div>
-                    {treatments.length == 0 && (
-                        <div className="text-[#086788] pt-44 text-center text-3xl ">No Treatments have been created</div>)}
-                    <div className="grid grid-cols-2 gap-5 py-6">
-                        {treatments.map((treatment) => (
-                            <Link href={`/treatments/${treatment._id}`} key={treatment._id} className="flex bg-[#086788] p-6 justify-center rounded-3xl text-4xl font-semibold hover:bg-green-400">{treatment.name}</Link>
-                        ))
-                        }
+    const handleSearch = () => { }
+    return (
+        <div className="flex flex-col gap-2 px-5 py-5 lg:px-10 xl:px-32">
+            <div className="text-xs pb-2">&gt; <Link href="/" className="text-blue-700">Home</Link> &gt; <Link href="/treatments" className="text-blue-700">Treatments</Link></div>
+            <SearchBar placeHolder="Search for Treatmens" searchAction={handleSearch} />
+            <h1 className="text-3xl font-semibold ">Our Treatments</h1>
+            <div className="grid grid-cols-1 pt-2 pb-10 gap-5 md:grid-cols-2">
+                <button className="flex flex-col bg-blue-700 gap-4 p-4 border border-blue-700 rounded-xl text-white">
+                    <div className="flex gap-2 items-center lg:gap-8">
+                        <Image src={cardiology} alt="" className="size-7 lg:size-16" />
+                        <p className="text-xl font-semibold lg:text-2xl">Cardiology</p>
                     </div>
-                </div>)}
+                </button>
+
+            </div>
         </div>
-    </>
     )
 }

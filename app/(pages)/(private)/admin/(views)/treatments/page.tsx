@@ -134,7 +134,7 @@ export default function Treatment() {
                 <div className="flex flex-col bg-blue-600 w-full rounded-md p-4 space-y-4">
                     <div className="flex justify-between">
                         <div className="flex gap-2 items-center">
-                            <Image src={treatmentIcon} alt="" className="size-8" />
+                            <Image src={treatmentIcon} alt="" className="size-7" />
                             <p className="text-xl font-semibold">Cardiology</p>
                         </div>
 
@@ -145,7 +145,7 @@ export default function Treatment() {
 
 
                     </div>
-                    <p className="text-xs">Focuses on diagnosing and treating heart and blood vessel disorders, including heart attacks, arrhythmias, and hypertension. Cardiologists often perform diagnostic tests like ECGs and echocardiograms. Interventional cardiology may include procedures like angioplasty or stenting.</p>
+                    <p className="text-xs text-justify">Focuses on diagnosing and treating heart and blood vessel disorders, including heart attacks, arrhythmias, and hypertension. Cardiologists often perform diagnostic tests like ECGs and echocardiograms. Interventional cardiology may include procedures like angioplasty or stenting.</p>
 
                 </div>
             </div>

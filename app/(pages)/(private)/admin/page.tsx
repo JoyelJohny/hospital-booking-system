@@ -17,6 +17,9 @@ import AdminNewPasswordComponent from "@/app/(components)/AdminNewPasswordCompon
 const api_url = process.env.NEXT_PUBLIC_API_URI
 
 export default function Login() {
+    const [loginModal, openLoginModal] = useState(true)
+    const [signUpModal, openSignUpModal] = useState(false)
+    const [forgotPasswordModal, openForgotPasswordModal] = useState(false)
     const [trigger, setTrigger] = useState(0)
     const [response, setResponse] = useState<{ message: '', messageType: '' } | null>(null)
     const [isLoading, setLoading] = useState<boolean>(true)
@@ -63,11 +66,11 @@ export default function Login() {
                     <div className="text-xs font-thin">We Care For You</div>
                 </div>
             </div>
-            {/* <AdminLoginComponent /> */}
-            {/* <AdminSignUpComponent /> */}
-            {/* <AdminForgotPasswordComponent /> */}
+            {loginModal && <AdminLoginComponent handleSignUpModal={openSignUpModal} handleLoginModal={openLoginModal} handleForgotPasswordModal={openForgotPasswordModal} />}
+            {signUpModal && <AdminSignUpComponent handleLoginModal={openSignUpModal} handleSignUpModal={openLoginModal} />}
+            {forgotPasswordModal && <AdminForgotPasswordComponent handleLoginModal={openLoginModal} handleForgotPasswordModal={openForgotPasswordModal} />}
             {/* <AdminOTPVerificationComponent /> */}
-            <AdminNewPasswordComponent />
+            {/* <AdminNewPasswordComponent /> */}
 
         </div>
 

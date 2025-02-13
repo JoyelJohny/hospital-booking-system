@@ -5,19 +5,20 @@ import "react-datepicker/dist/react-datepicker.css";
 
 type componentProps = {
     sendDate: (d: Date | null) => void;
+    className?: string;
 }
 
 
-export default function DateComponent({ sendDate }: componentProps) {
+export default function DateComponent({ sendDate, className }: componentProps) {
     const [date, setDate] = useState<Date | null>(new Date())
     const getDate = (date: Date | null) => {
         setDate(date)
         sendDate(date)
     }
-    return (<>
-        <div className="text-slate-600">
-            <DatePicker selected={date} onChange={(selectedDate) => getDate(selectedDate)} dateFormat={"yyyy-MM-dd"} minDate={new Date()} className="rounded-lg p-2 gap-2 border-2 border-slate-600" />
-        </div>
+    return (
 
-    </>)
+        <DatePicker selected={date} onChange={(selectedDate) => getDate(selectedDate)} dateFormat={"yyyy-MM-dd"} minDate={new Date()} className=" rounded-md p-1 gap-2 border border-blue-700 text-xs text-center focus:outline-none" />
+
+
+    )
 }

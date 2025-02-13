@@ -17,6 +17,7 @@ import Loading from "@/app/(components)/LoadingComponent"
 import Message from "@/app/(components)/MessageComponent"
 import Link from "next/link"
 import DoctorUpdateModal from "./Components/UpdateModal"
+import AvailabilityModal from "./Components/AvailabilityModal"
 
 type Doctor = {
     _id: string,
@@ -267,7 +268,7 @@ export default function Doctor() {
                                 <Image src={edit} alt="" className="size-4 " />
                                 <span className="hidden md:block text-xs select-none">Edit</span>
                             </button>
-                            <button className="flex gap-1 border rounded-lg p-2 bg-blue-700 md:p-1 md:rounded-md xl:p-2 lg:hover:cursor-pointer lg:hover:scale-110">
+                            <button className="flex gap-1 border rounded-lg p-2 bg-blue-700 md:p-1 md:rounded-md xl:p-2 lg:hover:cursor-pointer lg:hover:scale-110" onClick={() => setAvailabilityModal(!availabilityModal)}>
                                 <Image src={addAppointmentIcon} alt="" className="size-4 " />
                                 <span className="hidden md:block text-xs select-none">Schedule</span>
                             </button>
@@ -278,7 +279,8 @@ export default function Doctor() {
                         </div>
                     </div>
                 </div>
-                {updateDoctorModal && <DoctorUpdateModal />}
+                {updateDoctorModal && <DoctorUpdateModal discard={setUpdateDoctorModal} />}
+                {availabilityModal && <AvailabilityModal closeModal={setAvailabilityModal} />}
             </div>
 
 
