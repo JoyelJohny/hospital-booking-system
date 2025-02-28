@@ -7,7 +7,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ doct
         const doctorId = (await params).doctorId
         connectDB()
         const data = await Doctor.findById(doctorId, 'name specialization contact')
-        data.name = `Dr ${data.name}`
+        data.name = `Dr. ${data.name}`
         return NextResponse.json(data)
     } catch (error) {
         console.error(error)
