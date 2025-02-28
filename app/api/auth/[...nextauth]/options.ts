@@ -1,8 +1,10 @@
-import { NextAuthOptions } from "next-auth"
+import { NextAuthOptions, User } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import bcrypt from "bcrypt"
 import { connectDB } from "@/libs/dbConnection"
 import Admin from "@/models/admin"
+
+
 
 export const authOptions: NextAuthOptions = {
     providers: [
@@ -13,10 +15,10 @@ export const authOptions: NextAuthOptions = {
                 email: { label: "Email", type: "text" },
                 password: { label: "Password", type: "password" }
             },
-            async authorize(credentials: any, req): Promise<any> {
+            async authorize(credentials: Record<string, string> | undefined): Promise<User | null> {
                 await connectDB()
                 try {
-                    if (credentials.email == '' || credentials.password == '') {
+                    if (!credentials?.email || !credentials?.password) {
                         throw new Error('Email and Password are required')
                     }
                     const user = await Admin.findOne({
@@ -29,15 +31,18 @@ export const authOptions: NextAuthOptions = {
                         throw new Error('No user found with this Email')
                     }
 
+
                     const isPasswordCorrect = await bcrypt.compare(credentials.password, user.password)
 
-                    if (isPasswordCorrect) {
-                        return user
-                    } else {
+                    if (!isPasswordCorrect) {
                         throw new Error('Incorrect Password')
                     }
-                } catch (error: any) {
-                    throw new Error(error)
+
+                    return user
+
+                } catch (error: unknown) {
+                    if (error instanceof Error) throw new Error(error.message)
+                    return null
                 }
             },
 

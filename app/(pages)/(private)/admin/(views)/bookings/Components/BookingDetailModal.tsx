@@ -1,4 +1,3 @@
-import DividerComponent from "@/app/(components)/DividerComponent";
 import Image from "next/image";
 import cancelIcon from '@/public/wrong.png'
 

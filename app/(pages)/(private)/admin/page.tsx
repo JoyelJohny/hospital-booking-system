@@ -1,18 +1,18 @@
 "use client"
 import Image from "next/image"
 import logo from "@/public/hospital.png"
-import Loading from "@/app/(components)/LoadingComponent"
-import Logout from "@/app/(components)/LogoutComponent"
-import Message from "@/app/(components)/MessageComponent"
-import Form from "next/form"
-import Link from "next/link"
+// import Loading from "@/app/(components)/LoadingComponent"
+// import Logout from "@/app/(components)/LogoutComponent"
+// import Message from "@/app/(components)/MessageComponent"
+// import Form from "next/form"
+// import Link from "next/link"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import AdminLoginComponent from "@/app/(components)/AdminLoginComponent"
 import AdminSignUpComponent from "@/app/(components)/AdminSignUpComponent"
 import AdminForgotPasswordComponent from "@/app/(components)/AdminForgotPasswordComponent"
-import AdminOTPVerificationComponent from "@/app/(components)/AdminOTPVerificationComponent"
-import AdminNewPasswordComponent from "@/app/(components)/AdminNewPasswordComponent"
+// import AdminOTPVerificationComponent from "@/app/(components)/AdminOTPVerificationComponent"
+// import AdminNewPasswordComponent from "@/app/(components)/AdminNewPasswordComponent"
 import { signIn } from "next-auth/react"
 import MessageComponent from "@/app/(components)/MessageComponent"
 import { useRouter } from "next/navigation"
@@ -26,8 +26,8 @@ export default function Login() {
     const [forgotPasswordModal, openForgotPasswordModal] = useState(false)
     const [trigger, setTrigger] = useState(0)
     const [response, setResponse] = useState<{ message: string, messageType: string } | null>(null)
-    const [isLoading, setLoading] = useState<boolean>(true)
-    const [showOptionModal, setShowOptionModal] = useState(false)
+    // const [isLoading, setLoading] = useState<boolean>(true)
+    // const [showOptionModal, setShowOptionModal] = useState(false)
 
 
     const handleLoginFormSubmit = async (email: string, password: string) => {

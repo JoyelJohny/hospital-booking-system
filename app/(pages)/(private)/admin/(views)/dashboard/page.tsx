@@ -5,11 +5,10 @@ import treatmentIcon from "@/public/treatments.png"
 import bookingsIcon from "@/public/appointment.png"
 import requestCancelIcon from "@/public/wrong-time.png"
 import Link from "next/link";
-import { useSession } from "next-auth/react";
-import logo from '@/public/hospital.png'
+// import { useSession } from "next-auth/react";
 
 export default function Dashboard() {
-    const { data: session } = useSession()
+    // const { data: session } = useSession()
     return (
         <div className="flex flex-col h-full bg-slate-800">
             <div className="h-[8%] w-full px-5 py-2  rounded-b-lg lg:hidden">

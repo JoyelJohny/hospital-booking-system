@@ -14,8 +14,6 @@ export async function GET() {
         console.error(error)
         throw new Error('Error with fetching data')
     }
-
-
 }
 
 export async function POST(req: NextRequest) {

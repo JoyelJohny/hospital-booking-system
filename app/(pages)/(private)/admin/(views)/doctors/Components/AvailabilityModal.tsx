@@ -18,7 +18,7 @@ type Availability = {
 type props = {
     closeModal: React.Dispatch<React.SetStateAction<boolean>>
     createSlotModal: React.Dispatch<React.SetStateAction<boolean>>
-    updateSlotModal: (data: any) => void
+    updateSlotModal: (data: Availability) => void
     slotsData: Availability[] | undefined
 }
 
