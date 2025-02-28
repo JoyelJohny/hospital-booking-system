@@ -14,15 +14,15 @@ type Doctor = {
     contact: string
 }
 
-type Availability = {
-    _id: string,
-    doctorId: string
-    dayOfWeek: string,
-    startTime: string,
-    endTime: string,
-    slotDuration: number,
-    bufferTime: number,
-}
+// type Availability = {
+//     _id: string,
+//     doctorId: string
+//     dayOfWeek: string,
+//     startTime: string,
+//     endTime: string,
+//     slotDuration: number,
+//     bufferTime: number,
+// }
 
 type treatment = { _id: string, name: string }
 

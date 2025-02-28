@@ -2,7 +2,15 @@ import add from '@/public/add.png'
 import deleteIcon from '@/public/bin.png'
 import Form from 'next/form'
 import Image from 'next/image'
+
 type treatment = { _id: string, name: string }
+// type Doctor = {
+//     _id: string,
+//     name: string,
+//     specialization: string,
+//     treatmentId: string
+//     contact: string
+// }
 type props = {
     discard: React.Dispatch<React.SetStateAction<boolean>>,
     availabilityModal: (id: string) => void,
@@ -14,8 +22,8 @@ type props = {
         treatmentId: string
         contact: string
     },
-    doctorDetailChange?: (doctor: any) => void,
-    formSubmitaction: (data: any) => void
+    doctorDetailChange?: (doctor: React.ChangeEvent<HTMLInputElement>) => void,
+    formSubmitaction: (data: FormData) => void
 }
 
 export default function DoctorModal({ discard, availabilityModal, doctorDetail, doctorDetailChange, formSubmitaction, treatments }: props) {
@@ -52,7 +60,7 @@ export default function DoctorModal({ discard, availabilityModal, doctorDetail, 
                     </div>
                 </div>
 
-                <button className='py-1 px-2 text-sm bg-slate-800 rounded-md text-white w-full' onClick={() => availabilityModal(doctorDetail?._id!)}>Set Schedule</button>
+                {doctorDetail && <button className='py-1 px-2 text-sm bg-slate-800 rounded-md text-white w-full' onClick={() => availabilityModal(doctorDetail?._id)}>Set Schedule</button>}
                 <div className="flex justify-between">
                     <button type='submit' className="w-24 border border-transparent rounded-md bg-slate-800 text-white">Save</button>
                     <button className="w-24 border border-black rounded-md" onClick={handleDiscardButton}>Discard</button>

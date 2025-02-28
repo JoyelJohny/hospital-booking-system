@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectDB } from "@/libs/dbConnection";
+// import { connectDB } from "@/libs/dbConnection";
 import Admin from "@/models/admin"
 import bcrypt from 'bcrypt'
 
-type user = {
-    _id: string,
-    email: string,
-    username: string,
-    password: string
-}
+// type user = {
+//     _id: string,
+//     email: string,
+//     username: string,
+//     password: string
+// }
 
 export async function POST(req: NextRequest) {
     try {
@@ -24,11 +24,11 @@ export async function POST(req: NextRequest) {
         }
 
         const hashedPassword = await bcrypt.hash(password, 3);
-        const newAdmin = await Admin.create({ username: username, email: email, password: hashedPassword })
+        await Admin.create({ username: username, email: email, password: hashedPassword })
 
         return NextResponse.json({ message: "Account created successfully! Please log in to continue.", messageType: 'success' }, { status: 201 });
-    } catch (error: any) {
-        throw new Error(error)
+    } catch (error: unknown) {
+        if (error instanceof Error) throw new Error(error.message)
 
     }
 

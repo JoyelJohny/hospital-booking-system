@@ -1,7 +1,7 @@
 "use client"
 import Image from "next/image"
-import Loading from "@/app/(components)/LoadingComponent"
-import TreatmentDetailComponent from "@/app/(components)/TreatmentDetailComponent"
+// import Loading from "@/app/(components)/LoadingComponent"
+// import TreatmentDetailComponent from "@/app/(components)/TreatmentDetailComponent"
 import Link from "next/link"
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -24,7 +24,7 @@ type Treatment = {
 const api_url = process.env.NEXT_PUBLIC_API_URI
 
 export default function SpecificTreatment() {
-    const [isLoading, setLoading] = useState<boolean>(true)
+    // const [isLoading, setLoading] = useState<boolean>(true)
     const { treatmentId } = useParams<{ treatmentId: string }>()
     const [treatment, setTreatment] = useState<Treatment>({ _id: '', name: '', description: '' })
     const [doctors, setDoctors] = useState<Doctor[]>([])
@@ -42,7 +42,7 @@ export default function SpecificTreatment() {
         } catch (error) {
             console.error(error)
         } finally {
-            setLoading(false)
+            // setLoading(false)
         }
     }
 

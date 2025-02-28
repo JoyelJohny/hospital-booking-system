@@ -1,11 +1,11 @@
 "use client"
-import Image from "next/image"
-import reject from "@/public/reject.png"
-import Logout from "@/app/(components)/LogoutComponent"
+// import Image from "next/image"
+// import reject from "@/public/reject.png"
+// import Logout from "@/app/(components)/LogoutComponent"
 import { useEffect, useState } from "react"
-import Loading from "@/app/(components)/LoadingComponent"
-import Message from "@/app/(components)/MessageComponent"
-import Link from "next/link"
+// import Loading from "@/app/(components)/LoadingComponent"
+// import Message from "@/app/(components)/MessageComponent"
+// import Link from "next/link"
 import SearchBar from "@/app/(components)/SearchBarComponent"
 import RequestDetailModal from "./Components/RequestDetailModal"
 
@@ -23,11 +23,11 @@ interface Cancellations {
 const api_url = process.env.NEXT_PUBLIC_API_URI
 
 export default function Cancellation() {
-    const [trigger, setTrigger] = useState(0)
-    const [response, setResponse] = useState<{ message: '', messageType: '' } | null>(null)
-    const [isLoading, setLoading] = useState<boolean>(true)
+    // const [trigger, setTrigger] = useState(0)
+    // const [response, setResponse] = useState<{ message: '', messageType: '' } | null>(null)
+    // const [isLoading, setLoading] = useState<boolean>(true)
     const [cancellations, setCancellations] = useState<Cancellations[]>([])
-    const [selectedCancellation, setSelectedCancellation] = useState<Cancellations>({ _id: '', bookingId: '', patientName: '', patientPhone: '', patientDOB: '', requestDate: '', status: 'Approved' })
+    // const [selectedCancellation, setSelectedCancellation] = useState<Cancellations>({ _id: '', bookingId: '', patientName: '', patientPhone: '', patientDOB: '', requestDate: '', status: 'Approved' })
     const [requestModal, setRequestModal] = useState(false)
 
 
@@ -40,66 +40,66 @@ export default function Cancellation() {
 
     const getCancelRequestData = async () => {
         try {
-            setLoading(true)
+            // setLoading(true)
             const res = await fetch(`${api_url}/api/v1/private/cancellations-requests`, { method: "GET", credentials: 'include' })
             const result = await res.json()
             setCancellations(result)
         } catch (error) {
             console.error(error)
         } finally {
-            setLoading(false)
+            // setLoading(false)
         }
     }
 
-    const statusColourSetter = (s: string | undefined) => {
-        if (s == "Pending") return "text-yellow-400"
-        else if (s == "Approved") return "text-green-400"
-        else return "text-red-400"
-    }
+    // const statusColourSetter = (s: string | undefined) => {
+    //     if (s == "Pending") return "text-yellow-400"
+    //     else if (s == "Approved") return "text-green-400"
+    //     else return "text-red-400"
+    // }
 
-    const setRequestCompColor = (s: string | undefined) => {
-        if (s == "Rejected") return "bg-red-400"
-        else if (s == "Approved") return "bg-green-400"
-        else return "bg-[#086788]"
-    }
+    // const setRequestCompColor = (s: string | undefined) => {
+    //     if (s == "Rejected") return "bg-red-400"
+    //     else if (s == "Approved") return "bg-green-400"
+    //     else return "bg-[#086788]"
+    // }
 
-    const handleClick = (d: Cancellations) => {
-        setRequestModal(!requestModal)
-        setSelectedCancellation(d)
-    }
+    // const handleClick = (d: Cancellations) => {
+    //     setRequestModal(!requestModal)
+    //     setSelectedCancellation(d)
+    // }
 
-    const handleApproveButton = async () => {
-        try {
-            setRequestModal(!requestModal)
-            const res = await fetch(`${api_url}/api/v1/private/cancellations-requests/${selectedCancellation._id}/approve`, { method: 'PATCH', credentials: 'include' })
-            const result = await res.json()
-            if (result) {
-                setResponse({ message: result.message, messageType: result.messageType })
-                setTrigger((prev) => prev + 1)
-            }
+    // const handleApproveButton = async () => {
+    //     try {
+    //         setRequestModal(!requestModal)
+    //         const res = await fetch(`${api_url}/api/v1/private/cancellations-requests/${selectedCancellation._id}/approve`, { method: 'PATCH', credentials: 'include' })
+    //         const result = await res.json()
+    //         // if (result) {
+    //         //     setResponse({ message: result.message, messageType: result.messageType })
+    //         //     setTrigger((prev) => prev + 1)
+    //         // }
 
-            getCancelRequestData()
-        } catch (error) {
-            console.error(error)
-        }
+    //         getCancelRequestData()
+    //     } catch (error) {
+    //         console.error(error)
+    //     }
 
-    }
+    // }
 
-    const handleRejectButton = async () => {
-        try {
-            setRequestModal(!requestModal)
-            const res = await fetch(`${api_url}/api/v1/private/cancellations-requests/${selectedCancellation._id}/reject`, { method: 'PATCH', credentials: 'include' })
-            const result = await res.json()
-            if (result) {
-                setResponse({ message: result.message, messageType: result.messageType })
-                setTrigger((prev) => prev + 1)
-            }
+    // const handleRejectButton = async () => {
+    //     try {
+    //         setRequestModal(!requestModal)
+    //         const res = await fetch(`${api_url}/api/v1/private/cancellations-requests/${selectedCancellation._id}/reject`, { method: 'PATCH', credentials: 'include' })
+    //         const result = await res.json()
+    //         // if (result) {
+    //         //     setResponse({ message: result.message, messageType: result.messageType })
+    //         //     setTrigger((prev) => prev + 1)
+    //         // }
 
-            getCancelRequestData()
-        } catch (error) {
-            console.error(error)
-        }
-    }
+    //         getCancelRequestData()
+    //     } catch (error) {
+    //         console.error(error)
+    //     }
+    // }
 
     return (
         <div className="flex flex-col h-full bg-slate-800">

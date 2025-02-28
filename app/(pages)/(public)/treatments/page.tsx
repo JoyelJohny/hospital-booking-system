@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image";
-import Loading from "@/app/(components)/LoadingComponent";
+// import Loading from "@/app/(components)/LoadingComponent";
 import SearchBar from "@/app/(components)/SearchBarComponent";
 import Link from "next/link";
 import { useEffect, useState } from "react"
@@ -15,7 +15,7 @@ interface Treatment {
 const api_url = process.env.NEXT_PUBLIC_API_URI
 
 export default function Treatment() {
-    const [isLoading, setLoading] = useState<boolean>(true)
+    // const [isLoading, setLoading] = useState<boolean>(true)
     const [treatments, setTreatments] = useState<Treatment[]>([]);
     useEffect(() => {
         async function getTreatmentsData() {
@@ -28,7 +28,7 @@ export default function Treatment() {
             } catch (error) {
                 console.log(error)
             } finally {
-                setLoading(false)
+                // setLoading(false)
             }
         }
         getTreatmentsData()

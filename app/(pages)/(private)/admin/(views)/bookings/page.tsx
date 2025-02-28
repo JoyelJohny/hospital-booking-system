@@ -1,13 +1,5 @@
 "use client"
-import Image from "next/image"
-import reject from "@/public/reject.png"
 import { useEffect, useState } from "react"
-import DividerComponent from "@/app/(components)/DividerComponent"
-import Logout from "@/app/(components)/LogoutComponent"
-import { getTimings } from "@/libs/utils"
-import Loading from "@/app/(components)/LoadingComponent"
-import Message from "@/app/(components)/MessageComponent"
-import Link from "next/link"
 import SearchBar from "@/app/(components)/SearchBarComponent"
 import BookingDetailModal from "./Components/BookingDetailModal"
 
@@ -33,27 +25,24 @@ type Bookings = {
 const api_url = process.env.NEXT_PUBLIC_API_URI
 
 export default function Booking() {
-    const [trigger, setTrigger] = useState(0)
-    const [response, setResponse] = useState<{ message: '', messageType: '' } | null>(null)
-    const [isLoading, setLoading] = useState<boolean>(true)
     const [bookings, setBookings] = useState<Bookings[]>([])
     const [appointmentModal, setAppointmentModal] = useState(false)
-    const [selectedAppointment, setSelectedAppointment] = useState<Bookings>({
-        _id: '',
-        bookingId: '',
-        patientName: '',
-        patientAge: '',
-        patientGender: '',
-        patientEmail: '',
-        patientPhone: '',
-        patientDOB: '',
-        doctor: { name: '', doctorId: '' },
-        treatment: { name: '', treatmentId: '' },
-        available: { startTime: '', endTime: '', availableId: '' },
-        date: '',
-        additionalNotes: '',
-        status: ''
-    })
+    // const [selectedAppointment, setSelectedAppointment] = useState<Bookings>({
+    //     _id: '',
+    //     bookingId: '',
+    //     patientName: '',
+    //     patientAge: '',
+    //     patientGender: '',
+    //     patientEmail: '',
+    //     patientPhone: '',
+    //     patientDOB: '',
+    //     doctor: { name: '', doctorId: '' },
+    //     treatment: { name: '', treatmentId: '' },
+    //     available: { startTime: '', endTime: '', availableId: '' },
+    //     date: '',
+    //     additionalNotes: '',
+    //     status: ''
+    // })
 
     useEffect(() => {
         getBookingsData()
@@ -63,7 +52,6 @@ export default function Booking() {
 
     const getBookingsData = async () => {
         try {
-            setLoading(true)
             const res = await fetch(`${api_url}/api/v1/private/bookings`, { method: "GET", credentials: 'include' })
             const result = await res.json()
             setBookings(result)
@@ -71,25 +59,20 @@ export default function Booking() {
         } catch (error) {
             console.error(error)
         } finally {
-            setLoading(false)
         }
     }
 
-    const handleCancelAppointment = async () => {
-        try {
-            setAppointmentModal(!appointmentModal)
-            const id = selectedAppointment.bookingId
-            const res = await fetch(`${api_url}/api/v1/private/bookings/${id}/cancel`, { method: "PATCH", credentials: 'include' })
-            const result = await res.json()
-            if (result) {
-                setResponse({ message: result.message, messageType: result.messageType })
-                setTrigger((prev) => prev + 1)
-            }
-            getBookingsData()
-        } catch (error) {
-            console.error(error)
-        }
-    }
+    // const handleCancelAppointment = async () => {
+    //     try {
+    //         setAppointmentModal(!appointmentModal)
+    //         const id = selectedAppointment.bookingId
+    //         const res = await fetch(`${api_url}/api/v1/private/bookings/${id}/cancel`, { method: "PATCH", credentials: 'include' })
+    //         const result = await res.json()
+    //         getBookingsData()
+    //     } catch (error) {
+    //         console.error(error)
+    //     }
+    // }
 
     return (
         <div className="flex flex-col h-full bg-slate-800">

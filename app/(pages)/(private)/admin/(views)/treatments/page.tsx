@@ -1,17 +1,17 @@
 "use client"
 import Image from "next/image"
-import create from "@/public/write.png"
+// import create from "@/public/write.png"
 import treatmentIcon from '@/public/treatments.png'
-import add from "@/public/addition.png"
-import edit from "@/public/edit-text.png"
-import bin from "@/public/bin.png"
+// import add from "@/public/addition.png"
+// import edit from "@/public/edit-text.png"
+// import bin from "@/public/bin.png"
 
 import React, { useEffect, useState } from "react"
-import Form from "next/form"
-import Logout from "@/app/(components)/LogoutComponent"
-import Loading from "@/app/(components)/LoadingComponent"
-import Message from "@/app/(components)/MessageComponent"
-import Link from "next/link"
+// import Form from "next/form"
+// import Logout from "@/app/(components)/LogoutComponent"
+// import Loading from "@/app/(components)/LoadingComponent"
+// import Message from "@/app/(components)/MessageComponent"
+// import Link from "next/link"
 import SearchBar from "@/app/(components)/SearchBarComponent"
 import TreatmentDetailModal from "./Components/TreatmentDetailModal"
 
@@ -24,14 +24,14 @@ interface Treatment {
 const api_url = process.env.NEXT_PUBLIC_API_URI
 
 export default function Treatment() {
-    const [trigger, setTrigger] = useState(0)
-    const [response, setResponse] = useState<{ message: '', messageType: '' } | null>(null)
-    const [isLoading, setLoading] = useState<boolean>(true)
+    // const [trigger, setTrigger] = useState(0)
+    // const [response, setResponse] = useState<{ message: '', messageType: '' } | null>(null)
+    // const [isLoading, setLoading] = useState<boolean>(true)
     const [treatments, setTreatments] = useState<Treatment[]>([])
-    const [selectedTreatment, setSelectedTreatment] = useState<Treatment>({ _id: "", name: "", description: "" })
+    // const [selectedTreatment, setSelectedTreatment] = useState<Treatment>({ _id: "", name: "", description: "" })
     const [treatmentModal, setTreatmentModal] = useState(false)
-    const [createTreatmentModal, setCreateTreatmentModal] = useState(false)
-    const [updateTreatmentModal, setUpdateTreatmentModal] = useState(false)
+    // const [createTreatmentModal, setCreateTreatmentModal] = useState(false)
+    // const [updateTreatmentModal, setUpdateTreatmentModal] = useState(false)
 
 
 
@@ -44,7 +44,7 @@ export default function Treatment() {
 
     const getTreatmentsData = async () => {
         try {
-            setLoading(true)
+            // setLoading(true)
             const res = await fetch(
                 `${api_url}/api/v1/private/treatments`,
                 { method: "GET" })
@@ -59,68 +59,68 @@ export default function Treatment() {
         } catch (error) {
             console.error(error)
         } finally {
-            setLoading(false)
+            // setLoading(false)
         }
     }
 
-    const handleTreatmentEditButton = (selectedTreatment: Treatment) => {
-        setUpdateTreatmentModal(!updateTreatmentModal)
-        setSelectedTreatment(selectedTreatment)
+    // const handleTreatmentEditButton = (selectedTreatment: Treatment) => {
+    //     setUpdateTreatmentModal(!updateTreatmentModal)
+    //     setSelectedTreatment(selectedTreatment)
 
-    }
+    // }
 
-    const handleTreatmentUpdateButton = async (formdata: FormData, id: string) => {
-        try {
-            setUpdateTreatmentModal(!updateTreatmentModal)
-            const data = JSON.stringify(Object.fromEntries(formdata))
-            const res = await fetch(`${api_url}/api/v1/private/treatments/${id}`, { method: "PATCH", body: data, credentials: 'include' })
-            const result = await res.json()
-            if (result) {
-                setResponse({ message: result.message, messageType: result.messageType })
-                setTrigger((prev) => prev + 1)
-            }
-            getTreatmentsData()
-        } catch (error) {
-            console.error(error)
-        }
-    }
+    // const handleTreatmentUpdateButton = async (formdata: FormData, id: string) => {
+    //     try {
+    //         setUpdateTreatmentModal(!updateTreatmentModal)
+    //         const data = JSON.stringify(Object.fromEntries(formdata))
+    //         const res = await fetch(`${api_url}/api/v1/private/treatments/${id}`, { method: "PATCH", body: data, credentials: 'include' })
+    //         const result = await res.json()
+    //         if (result) {
+    //             setResponse({ message: result.message, messageType: result.messageType })
+    //             setTrigger((prev) => prev + 1)
+    //         }
+    //         getTreatmentsData()
+    //     } catch (error) {
+    //         console.error(error)
+    //     }
+    // }
 
-    const handleTreatmentEditInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    // const handleTreatmentEditInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 
-        const { name, value } = e.currentTarget
-        setSelectedTreatment((prev) => ({ ...prev, [name]: value }))
+    //     const { name, value } = e.currentTarget
+    //     setSelectedTreatment((prev) => ({ ...prev, [name]: value }))
 
-    }
+    // }
 
-    const handleTreatmentDeleteButton = async (id: string) => {
-        try {
-            const res = await fetch(`${api_url}/api/v1/private/treatments/${id}`, { method: "DELETE", credentials: 'include' })
-            const result = await res.json()
-            if (result) {
-                setResponse({ message: result.message, messageType: result.messageType })
-                setTrigger((prev) => prev + 1)
-            }
-            getTreatmentsData()
-        } catch (error) {
-            console.error(error)
-        }
-    }
+    // const handleTreatmentDeleteButton = async (id: string) => {
+    //     try {
+    //         const res = await fetch(`${api_url}/api/v1/private/treatments/${id}`, { method: "DELETE", credentials: 'include' })
+    //         const result = await res.json()
+    //         if (result) {
+    //             setResponse({ message: result.message, messageType: result.messageType })
+    //             setTrigger((prev) => prev + 1)
+    //         }
+    //         getTreatmentsData()
+    //     } catch (error) {
+    //         console.error(error)
+    //     }
+    // }
 
-    const handleTreatmentCreateSubmit = async (formdata: FormData) => {
-        try {
-            setCreateTreatmentModal(!createTreatmentModal)
-            const data = JSON.stringify(Object.fromEntries(formdata))
-            const res = await fetch(`${api_url}/api/v1/private/treatments`, { method: "POST", body: data, credentials: 'include' })
-            const result = await res.json()
-            if (result) {
-                setResponse({ message: result.message, messageType: result.messageType })
-                setTrigger((prev) => prev + 1)
-            }
-            getTreatmentsData()
-        } catch (error) {
-            console.error(error)
-        }
-    }
+    // const handleTreatmentCreateSubmit = async (formdata: FormData) => {
+    //     try {
+    //         setCreateTreatmentModal(!createTreatmentModal)
+    //         const data = JSON.stringify(Object.fromEntries(formdata))
+    //         const res = await fetch(`${api_url}/api/v1/private/treatments`, { method: "POST", body: data, credentials: 'include' })
+    //         const result = await res.json()
+    //         if (result) {
+    //             setResponse({ message: result.message, messageType: result.messageType })
+    //             setTrigger((prev) => prev + 1)
+    //         }
+    //         getTreatmentsData()
+    //     } catch (error) {
+    //         console.error(error)
+    //     }
+    // }
 
     return (
         <div className="flex flex-col h-full bg-slate-800">

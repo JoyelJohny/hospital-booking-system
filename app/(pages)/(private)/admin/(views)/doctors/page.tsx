@@ -1,21 +1,21 @@
 "use client"
 
 import Image from "next/image"
-import add from "@/public/addition.png"
-import addAppointmentIcon from "@/public/add-appointment.png"
+// import add from "@/public/addition.png"
+// import addAppointmentIcon from "@/public/add-appointment.png"
 import doctorImage from "@/public/doctor.jpg"
-import create from "@/public/write.png"
-import edit from "@/public/edit-text.png"
-import bin from "@/public/bin.png"
-import reject from "@/public/reject.png"
-import Form from "next/form"
-import DividerComponent from "@/app/(components)/DividerComponent"
+// import create from "@/public/write.png"
+// import edit from "@/public/edit-text.png"
+// import bin from "@/public/bin.png"
+// import reject from "@/public/reject.png"
+// import Form from "next/form"
+// import DividerComponent from "@/app/(components)/DividerComponent"
 import { useEffect, useState } from "react"
-import Logout from "@/app/(components)/LogoutComponent"
-import { getTimings } from "@/libs/utils"
-import Loading from "@/app/(components)/LoadingComponent"
-import Message from "@/app/(components)/MessageComponent"
-import Link from "next/link"
+// import Logout from "@/app/(components)/LogoutComponent"
+// import { getTimings } from "@/libs/utils"
+// import Loading from "@/app/(components)/LoadingComponent"
+// import Message from "@/app/(components)/MessageComponent"
+// import Link from "next/link"
 
 import AvailabilityModal from "./Components/AvailabilityModal"
 import SearchBar from "@/app/(components)/SearchBarComponent"
@@ -45,9 +45,9 @@ type treatment = { _id: string, name: string }
 const api_url = process.env.NEXT_PUBLIC_API_URI
 
 export default function Doctor() {
-    const [trigger, setTrigger] = useState(0)
-    const [response, setResponse] = useState<{ message: '', messageType: '' } | null>(null)
-    const [loading, isLoading] = useState<boolean>(true)
+    // const [trigger, setTrigger] = useState(0)
+    // const [response, setResponse] = useState<{ message: '', messageType: '' } | null>(null)
+    // const [loading, isLoading] = useState<boolean>(true)
     const [doctors, setDoctors] = useState<Doctor[]>([])
     const [treatments, setTreatments] = useState<treatment[]>([])
     const [availabilities, setAvailabilities] = useState<Availability[]>()
@@ -56,8 +56,8 @@ export default function Doctor() {
     const [createDoctorModal, setCreateDoctorModal] = useState(false)
     const [updateDoctorModal, setUpdateDoctorModal] = useState(false)
     const [availabilityModal, setAvailabilityModal] = useState(false)
-    const [createAvailabilityModal, setCreateAvailabilityModal] = useState(false)
-    const [updateAvailabilityModal, setUpdateAvailabilityModal] = useState(false)
+    // const [createAvailabilityModal, setCreateAvailabilityModal] = useState(false)
+    // const [updateAvailabilityModal, setUpdateAvailabilityModal] = useState(false)
     const [selectedDay, setSelectedDay] = useState("Sunday")
     const [updateSlotModal, setUpdateSlotModal] = useState(false)
     const [createSlotModal, setCreateSlotModal] = useState(false)
@@ -70,7 +70,7 @@ export default function Doctor() {
 
     const getDoctorsData = async () => {
         try {
-            isLoading(true)
+            // isLoading(true)
             const res = await fetch(`${api_url}/api/v1/private/doctors`, { method: "GET" })
             const { doctors, treatments } = await res.json()
             setTreatments(treatments)
@@ -78,7 +78,7 @@ export default function Doctor() {
         } catch (error) {
             console.error(error)
         } finally {
-            isLoading(false)
+            // isLoading(false)
         }
     }
 
@@ -95,16 +95,16 @@ export default function Doctor() {
         }
     }
 
-    const handleDayButton = (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault()
-        const val = e.currentTarget.value
-        setSelectedDay(val)
-    }
+    // const handleDayButton = (e: React.MouseEvent<HTMLButtonElement>) => {
+    //     e.preventDefault()
+    //     const val = e.currentTarget.value
+    //     setSelectedDay(val)
+    // }
 
-    const handleCloseAvailabilityModal = () => {
-        if (createAvailabilityModal) setCreateAvailabilityModal(!createAvailabilityModal)
-        setAvailabilityModal(!availabilityModal)
-    }
+    // const handleCloseAvailabilityModal = () => {
+    //     if (createAvailabilityModal) setCreateAvailabilityModal(!createAvailabilityModal)
+    //     setAvailabilityModal(!availabilityModal)
+    // }
     const handleCreateButton = async (formdata: FormData) => {
         setCreateDoctorModal(!createDoctorModal)
         const treatment = treatments.find((item) => item._id == formdata.get('treatmentId'))
@@ -112,12 +112,12 @@ export default function Doctor() {
         formdata.append('specialization', specialization)
         const data = JSON.stringify(Object.fromEntries(formdata))
         try {
-            const res = await fetch(`${api_url}/api/v1/private/doctors`, { method: "POST", body: data, credentials: 'include' })
-            const result = await res.json()
-            if (result) {
-                setResponse({ message: result.message, messageType: result.messageType })
-                setTrigger((prev) => prev + 1)
-            }
+            await fetch(`${api_url}/api/v1/private/doctors`, { method: "POST", body: data, credentials: 'include' })
+            // const result = await res.json()
+            // if (result) {
+            //     setResponse({ message: result.message, messageType: result.messageType })
+            //     setTrigger((prev) => prev + 1)
+            // }
 
             getDoctorsData()
         } catch (error) {
@@ -130,21 +130,21 @@ export default function Doctor() {
         setSelectedDoctorDetail((prev) => ({ ...prev, [name]: value }))
     }
 
-    const handleDeleteButton = async (id: string) => {
-        try {
-            console.log(id)
-            const res = await fetch(`${api_url}/api/v1/private/doctors/${id}`, { method: "DELETE", credentials: 'include' })
-            const result = await res.json()
-            if (result) {
-                setResponse({ message: result.message, messageType: result.messageType })
-                setTrigger((prev) => prev + 1)
-            }
+    // const handleDeleteButton = async (id: string) => {
+    //     try {
+    //         console.log(id)
+    //         const res = await fetch(`${api_url}/api/v1/private/doctors/${id}`, { method: "DELETE", credentials: 'include' })
+    //         const result = await res.json()
+    //         if (result) {
+    //             setResponse({ message: result.message, messageType: result.messageType })
+    //             setTrigger((prev) => prev + 1)
+    //         }
 
-            getDoctorsData()
-        } catch (error) {
-            console.error(error)
-        }
-    }
+    //         getDoctorsData()
+    //     } catch (error) {
+    //         console.error(error)
+    //     }
+    // }
 
     const handleUpdateButton = async (formdata: FormData) => {
         try {
@@ -155,12 +155,12 @@ export default function Doctor() {
             const data = JSON.stringify(Object.fromEntries(formdata))
             const id = selectedDoctorDetail._id
 
-            const res = await fetch(`${api_url}/api/v1/private/doctors/${id}`, { method: "PATCH", body: data, credentials: 'include' })
-            const result = await res.json()
-            if (result) {
-                setResponse({ message: result.message, messageType: result.messageType })
-                setTrigger((prev) => prev + 1)
-            }
+            await fetch(`${api_url}/api/v1/private/doctors/${id}`, { method: "PATCH", body: data, credentials: 'include' })
+            // const result = await res.json()
+            // if (result) {
+            //     setResponse({ message: result.message, messageType: result.messageType })
+            //     setTrigger((prev) => prev + 1)
+            // }
 
             getDoctorsData()
         } catch (error) {
@@ -200,8 +200,8 @@ export default function Doctor() {
             formdata.append('dayOfWeek', selectedDay)
             const id = selectedAvailabilityDetail._id
             const data = JSON.stringify(Object.fromEntries(formdata))
-            const res = await fetch(`${api_url}/api/v1/private/doctors/${selectedDoctorDetail._id}/availabilities/${id}`, { method: "PATCH", body: data, credentials: 'include' })
-            const result = await res.json()
+            await fetch(`${api_url}/api/v1/private/doctors/${selectedDoctorDetail._id}/availabilities/${id}`, { method: "PATCH", body: data, credentials: 'include' })
+            // const result = await res.json()
             getAvailabilitiesData(selectedDoctorDetail._id)
         } catch (error) {
             console.error(error)
@@ -209,23 +209,23 @@ export default function Doctor() {
 
     }
 
-    const handleUpdateAvailabilityDeleteButton = async () => {
-        try {
-            setUpdateAvailabilityModal(!updateAvailabilityModal)
-            const id = selectedAvailabilityDetail._id
-            console.log(selectedDoctorDetail._id)
-            const res = await fetch(`${api_url}/api/v1/private/doctors/${selectedDoctorDetail._id}/availabilities/${id}`, { method: "DELETE", credentials: 'include' })
-            const result = await res.json()
-            if (result) {
-                setResponse({ message: result.message, messageType: result.messageType })
-                setTrigger((prev) => prev + 1)
-            }
+    // const handleUpdateAvailabilityDeleteButton = async () => {
+    //     try {
+    //         setUpdateAvailabilityModal(!updateAvailabilityModal)
+    //         const id = selectedAvailabilityDetail._id
+    //         console.log(selectedDoctorDetail._id)
+    //         const res = await fetch(`${api_url}/api/v1/private/doctors/${selectedDoctorDetail._id}/availabilities/${id}`, { method: "DELETE", credentials: 'include' })
+    //         const result = await res.json()
+    //         if (result) {
+    //             setResponse({ message: result.message, messageType: result.messageType })
+    //             setTrigger((prev) => prev + 1)
+    //         }
 
-            getAvailabilitiesData(selectedDoctorDetail._id)
-        } catch (error) {
-            console.error(error)
-        }
-    }
+    //         getAvailabilitiesData(selectedDoctorDetail._id)
+    //     } catch (error) {
+    //         console.error(error)
+    //     }
+    // }
 
     const handleAvailabilityUpdateInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.currentTarget

@@ -16,6 +16,6 @@ export default function AdminOTPVerificationComponent() {
 
 
             <button type="submit" className="border-2 py-2 px-6 bg-blue-700 rounded-md mx-auto text-white font-semibold hover:scale-105">Verify</button>
-            <span className="text-gray-600 lg:hover:text-blue-600 lg:hover:underline text-center">Didn't receive code? <span className="text-blue-700 cursor-pointer">Resend</span></span>
+            <span className="text-gray-600 lg:hover:text-blue-600 lg:hover:underline text-center">Didn&apos;t receive code? <span className="text-blue-700 cursor-pointer">Resend</span></span>
         </Form>)
 }

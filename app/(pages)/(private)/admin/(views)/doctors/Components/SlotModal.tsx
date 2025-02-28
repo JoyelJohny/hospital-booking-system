@@ -3,7 +3,7 @@ type props = {
     closeModal: React.Dispatch<React.SetStateAction<boolean>>
     selectedDay: string,
     changeSelectedDay: React.Dispatch<React.SetStateAction<string>>,
-    formSubmitAction: (data: any) => void,
+    formSubmitAction: (data: FormData) => void,
     selectedSlotDetail?: {
         _id: string,
         doctorId: string
@@ -13,7 +13,7 @@ type props = {
         slotDuration: number,
         bufferTime: number,
     },
-    slotDetailChange?: (slot: any) => void,
+    slotDetailChange?: (slot: React.ChangeEvent<HTMLInputElement>) => void,
 
 }
 export default function SlotModal({ closeModal, formSubmitAction, selectedDay, changeSelectedDay, selectedSlotDetail, slotDetailChange }: props) {

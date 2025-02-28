@@ -4,12 +4,11 @@ import Image from "next/image";
 
 
 type props = {
-    getDate: (d: Date | null) => void;
     currentModal: React.Dispatch<React.SetStateAction<boolean>>,
     nextModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export default function RequestFormSlide1({ getDate, currentModal, nextModal }: props) {
+export default function RequestFormSlide1({ currentModal, nextModal }: props) {
     const handleNextButton = () => {
         currentModal(prev => !prev)
         nextModal(prev => !prev)
@@ -30,7 +29,7 @@ export default function RequestFormSlide1({ getDate, currentModal, nextModal }: 
                     </div>
 
                     <div className="flex items-center justify-between gap-4">
-                        <p>Pick a Date</p><DateComponent sendDate={getDate} className="block" />
+                        <p>Pick a Date</p><DateComponent className="block" />
                     </div>
                 </div>
             </div>
