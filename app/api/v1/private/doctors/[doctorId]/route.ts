@@ -19,7 +19,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ do
             return NextResponse.json({ message: "Doctor not Found", messageType: 'error' }, { status: 404 })
         }
         data = await Doctor.findByIdAndUpdate(doctorId, {
-            name: name.split(' ')[1],
+            name: name.substring(4),
             treatmentId,
             contact,
             specialization

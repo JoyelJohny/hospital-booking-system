@@ -20,7 +20,7 @@ export default function Navbar() {
 
 
                 <div className="flex flex-col ">
-                    <div className="text-xl font-semibold text-nowrap md:text-2xl lg:text-3xl">Holy Memorial Hospital</div>
+                    <div className="text-lg font-semibold text-nowrap md:text-2xl lg:text-3xl">Holy Memorial Hospital</div>
                     <div className="text-xs font-thin">We Care For You</div>
                 </div>
 

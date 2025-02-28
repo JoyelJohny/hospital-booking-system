@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "@/app/(pages)/globals.css";
 import { Noto_Sans } from 'next/font/google'
+import AuthProvider from "@/context/AuthProvider";
 
 const noto_sans = Noto_Sans({
     subsets: ['latin'],
@@ -19,9 +20,11 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" className="!scroll-smooth">
-            <body className={`flex flex-col h-screen ${noto_sans.className}`}>
-                <main className="flex-1">{children}</main>
-            </body>
+            <AuthProvider>
+                <body className={`flex flex-col h-screen ${noto_sans.className}`}>
+                    <main className="flex-1">{children}</main>
+                </body>
+            </AuthProvider>
         </html>
     );
 }
