@@ -13,15 +13,10 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <div className="flex flex-col h-screen overflow-x-hidden">
-            <NavbarAdmin />
-            <main className="flex-1">{children}</main>
+        <div className="flex flex-col h-screen overflow-x-hidden bg-slate-800 lg:flex-row-reverse">
+            <main className="h-[91%] lg:h-full lg:flex-1">{children}</main>
+            <NavbarAdmin className="lg:w-auto" />
         </div>
-
-
-
-
-
-    );
+    )
 }
 

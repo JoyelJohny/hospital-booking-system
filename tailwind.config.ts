@@ -8,6 +8,9 @@ export default {
   ],
   theme: {
     extend: {
+      fontSize: {
+        xs: '10px'
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",

@@ -1,8 +1,8 @@
 'use client'
 import { useEffect, useRef, useState } from "react"
 type childProps = {
-    messageType: string,
-    message: string
+    messageType: string | undefined,
+    message: string | undefined,
     trigger: number
 }
 export default function Message({ messageType, message, trigger }: childProps) {
@@ -39,7 +39,7 @@ export default function Message({ messageType, message, trigger }: childProps) {
 
 
         timeoutRefs.current[1] = setTimeout(() => {
-            setVisible(`${backgroundColor} -translate-x-32`);
+            setVisible(`${backgroundColor} -translate-x-5 md:-translate-x-20`);
         }, 1000);
 
         timeoutRefs.current[2] = setTimeout(() => {
@@ -62,7 +62,7 @@ export default function Message({ messageType, message, trigger }: childProps) {
             <div
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
-                className={`absolute flex items-center justify-center text-nowrap transition-all ease-in-out duration-500 rounded-md transform font-semibold px-4 top-24 right-0 text-white h-10 ${visible}`}>
+                className={`text-xs absolute flex items-center justify-center text-nowrap transition-all ease-in-out duration-500 rounded-md transform font-semibold px-2 top-24 right-0 text-white h-10 ${visible}`}>
                 {message}
             </div>
         </>

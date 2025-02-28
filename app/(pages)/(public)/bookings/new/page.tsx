@@ -1,16 +1,21 @@
 "use client"
 
-import DateComponent from "@/app/(components)/DateComponent";
-import Image from "next/image";
+
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import back from "@/public/back.png"
+import RequestFormSlide1 from "./components/RequestFormSlide1";
+import RequestFormSlide2 from "./components/RequestFormSlide2";
+import RequestFormSlide3 from "./components/RequestFormSlide3";
+
 
 
 const api_url = process.env.NEXT_PUBLIC_API_URI
 
 export default function AppointmentBooking() {
     const [date, setDate] = useState<Date | null>(null)
+    const [form1Modal, setForm1Modal] = useState(true)
+    const [form2Modal, setForm2Modal] = useState(false)
+    const [form3Modal, setForm3Modal] = useState(false)
     const getDate = (date: Date | null) => {
         setDate(date)
     }
@@ -21,28 +26,9 @@ export default function AppointmentBooking() {
             <div className="text-xs">&gt; <Link href="/" className="text-blue-700">Home</Link> &gt; <Link href="/bookings/new" className="text-blue-700">Request Appointment</Link></div>
 
             <div className="flex flex-col bg-white rounded-xl border border-blue-700 p-2 h-96 ">
-                <div className=" h-full ">
-                    <div className="flex  items-center">
-                        <Image src={back} alt="" className="size-4 " />
-                        <p className="font-semibold w-full  text-center">Appointment Request</p>
-                    </div>
-                    <div className="flex items-center justify-center h-full">
-                        <div className="flex flex-col text-xs gap-10">
-                            <div className="flex  gap-4 items-center">
-                                <label htmlFor="">Choose your Treatment</label>
-                                <select name="" id="" className="border p-1 rounded-md border-blue-700">
-                                    <option value="Cardiology">Cardiology</option>
-                                </select>
-                            </div>
-
-                            <div className="flex items-center justify-between gap-4">
-                                <p>Pick a Date</p><DateComponent sendDate={getDate} className="block" />
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
+                {form1Modal && <RequestFormSlide1 getDate={getDate} currentModal={setForm1Modal} nextModal={setForm2Modal} />}
+                {form2Modal && <RequestFormSlide2 prevModal={setForm1Modal} currentModal={setForm2Modal} nextModal={setForm3Modal} />}
+                {form3Modal && <RequestFormSlide3 prevModal={setForm2Modal} currentModal={setForm3Modal} nextModal={setForm1Modal} />}
 
 
             </div>

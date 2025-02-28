@@ -1,64 +1,56 @@
 "use client"
 import Image from "next/image"
-import logo from "@/public/hospital.png"
-import menu from "@/public/menu.png"
-import reject from "@/public/reject.png"
 import Link from "next/link"
-import { useState } from "react"
-export default function NavbarAdmin() {
-    const [navbarModal, setNavbarModal] = useState(false)
 
+//mobile navbar images
+import dashboardIcon from '@/public/home.png'
+import doctorIcon from '@/public/doctors.png'
+import treatmentIcon from "@/public/treatments.png"
+import bookingsIcon from '@/public/appointment.png'
+import cancellation_requestIcon from "@/public/wrong-time.png"
+import userIcon from '@/public/user.png'
 
-    return (<>
-        <div className="flex bg-white w-screen justify-between py-2 px-4 drop-shadow-xl md:py-4 lg:px-10 xl:px-32">
-            <div className="flex gap-2 items-center justify-start md:gap-4 ">
-                <div className="flex ">
-                    <Image src={logo}
-                        className="size-10 md:size-16"
-                        alt="Logo of the Hospital booking system" />
-                </div>
+export default function NavbarAdmin({ className }: { className: string }) {
 
+    return (
+        <div className={`${className} fixed bottom-0 p-1 rounded-t-xl bg-slate-800 w-screen lg:static lg:px-3 lg:py-5 lg:overflow-hidden`}>
 
-                <div className="flex flex-col ">
-                    <div className="text-xl font-semibold text-nowrap md:text-2xl lg:text-2xl xl:text-3xl">Holy Memorial Hospital</div>
-                    <div className="text-xs font-thin">We Care For You</div>
-                </div>
+            <div className="hidden lg:flex mb-5 text-white text-md font-semibold text-nowrap w-fit p-2">Holy Memorial Hospital</div>
 
+            <div className="flex gap-7 px-2 py-1 items-center overflow-x-scroll md:justify-between md:gap-0 lg:flex-col lg:h-96 lg:justify-normal lg:space-y-2 lg:overflow-visible">
+
+                <Link href="/admin/dashboard" className="flex flex-col gap-1 items-center lg:flex-row lg:gap-4 lg:w-full lg:p-2 lg:hover:bg-slate-400 lg:rounded-md ">
+                    <Image src={dashboardIcon} alt="" className="size-5" />
+                    <span className="text-white text-xs lg:text-sm">Home</span>
+                </Link>
+
+                <Link href="/admin/doctors" className="flex flex-col gap-1 items-center lg:flex-row lg:gap-4 lg:w-full lg:p-2 lg:hover:bg-slate-400 lg:rounded-md ">
+                    <Image src={doctorIcon} alt="" className="size-5" />
+                    <span className="text-white text-xs lg:text-sm">Doctors</span>
+                </Link>
+
+                <Link href="/admin/treatments" className="flex flex-col gap-1 items-center lg:flex-row lg:gap-4 lg:w-full lg:p-2 lg:hover:bg-slate-400 lg:rounded-md ">
+                    <Image src={treatmentIcon} alt="" className="size-5" />
+                    <span className="text-white text-xs lg:text-sm">Treatments</span>
+                </Link>
+
+                <Link href="/admin/bookings" className="flex flex-col gap-1 items-center lg:flex-row lg:gap-4 lg:w-full lg:p-2 lg:hover:bg-slate-400 lg:rounded-md ">
+                    <Image src={bookingsIcon} alt="" className="size-5" />
+                    <span className="text-white text-xs lg:text-sm">Bookings</span>
+                </Link>
+
+                <Link href="/admin/cancellations" className="flex flex-col gap-0.5 items-center lg:flex-row lg:gap-3 lg:w-full lg:p-2 lg:hover:bg-slate-400 lg:rounded-md ">
+                    <Image src={cancellation_requestIcon} alt="" className="size-6" />
+                    <span className="text-white text-xs text-nowrap lg:text-sm">Cancel Requests</span>
+                </Link>
+
+                <Link href="/admin/account" className="flex flex-col items-center lg:flex-row lg:gap-3 lg:w-full lg:p-2 lg:hover:bg-slate-400 lg:rounded-md ">
+                    <Image src={userIcon} alt="" className="size-6" />
+                    <span className="text-white text-xs lg:text-sm">Account</span>
+                </Link>
 
             </div>
-
-            <div className="py-4 lg:hidden">
-                <Image src={navbarModal ? reject : menu} alt="Menu icon" className="my-auto size-5 md:size-8" onClick={() => setNavbarModal(!navbarModal)} />
-            </div>
-
-            <div className="hidden md:hidden lg:flex items-center justify-center gap-8 text-md lg:gap-4 xl:gap-10">
-
-                <Link href="/admin/dashboard" className="hover:underline hover:text-blue-700">Home</Link>
-                <Link href="/admin/doctors" className="hover:underline hover:text-blue-700">Doctors</Link>
-                <Link href="/admin/treatments" className="hover:underline hover:text-blue-700">Treatments</Link>
-                <Link href="/admin/bookings" className="hover:underline hover:text-blue-700">Bookings</Link>
-                <Link href="/admin/cancellations" className="hover:underline hover:text-blue-700 text-nowrap" >Cancellation Requests</Link>
-                <Link href="/admin" className="hover:underline hover:text-blue-700">Logout</Link>
-
-            </div>
-            {navbarModal && (
-
-                <div className={`absolute flex flex-col justify-around w-screen h-72 right-0 top-16 bg-blue-600 rounded-b-xl py-2 px-4 text-white md:top-24 lg:hidden`}>
-                    <Link href="/admin/dashboard" onClick={() => { setNavbarModal(!navbarModal) }}>Home</Link>
-                    <hr />
-                    <Link href="/admin/doctors" onClick={() => { setNavbarModal(!navbarModal) }}>Doctors</Link>
-                    <hr />
-                    <Link href="/admin/treatments" onClick={() => { setNavbarModal(!navbarModal) }}>Treatments</Link>
-                    <hr />
-                    <Link href="/admin/bookings" onClick={() => { setNavbarModal(!navbarModal) }}>Bookings</Link>
-                    <hr />
-                    <Link href="/admin/cancellations" onClick={() => { setNavbarModal(!navbarModal) }}>Cancellation Requests</Link>
-                    <hr />
-                    <Link href="/admin" onClick={() => { setNavbarModal(!navbarModal) }}>Logout</Link>
-                </div>
-
-            )}
 
         </div>
-    </>)
+    )
 }

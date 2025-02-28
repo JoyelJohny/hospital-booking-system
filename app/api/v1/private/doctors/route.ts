@@ -7,7 +7,7 @@ export async function GET() {
     try {
         connectDB();
         const doctors = await Doctor.find()
-        doctors.forEach((doctor) => (doctor.name = `Dr ${doctor.name}`))
+        doctors.forEach((doctor) => (doctor.name = `Dr. ${doctor.name}`))
         const treatments = await Treatment.find({}, 'name')
         return NextResponse.json({ message: "Data fetched successfully", doctors, treatments })
     } catch (error) {

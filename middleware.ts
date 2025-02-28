@@ -1,14 +1,37 @@
 import { NextResponse } from "next/server"
-import type { NextRequest } from "next/server"
-import { verify } from '@/libs/middlewareUtils'
+import { NextRequest } from "next/server"
+import { getToken } from "next-auth/jwt"
+export { default } from 'next-auth/middleware'
 
-const api_url = process.env.PUBLIC_NEXT_API_URI
+// const api_url = process.env.PUBLIC_NEXT_API_URI
 
-export default async function middleware(req: NextRequest) {
-    const path = req.nextUrl.pathname
-    const cookies = req.cookies.get('token')?.value
-    const token = cookies && cookies.startsWith('Bearer') ? cookies.split(' ')[1] : null
+export async function middleware(req: NextRequest) {
+    const token = await getToken({ req: req, secret: process.env.JWT_SECRET })
+    const url = req.nextUrl
+    if (!token &&
+        (
+            url.pathname.startsWith('/admin/dashboard') ||
+            url.pathname.startsWith('/admin/doctors') ||
+            url.pathname.startsWith('/admin/treatments') ||
+            url.pathname.startsWith('/admin/bookings') ||
+            url.pathname.startsWith('/admin/cancellations')
+        )
+    ) {
+        return NextResponse.redirect(new URL('/admin', req.url))
+    }
+    if (token &&
+        (
+            url.pathname.startsWith('/admin')
+        )
+    ) {
+        return NextResponse.next()
+    }
+
     return NextResponse.next()
+    // const path = req.nextUrl.pathname
+    // const cookies = req.cookies.get('token')?.value
+    // const token = cookies && cookies.startsWith('Bearer') ? cookies.split(' ')[1] : null
+    // return NextResponse.next()
     // try {
     //     if (!token) {
     //         if (path.startsWith('/admin')) {
@@ -32,7 +55,8 @@ export default async function middleware(req: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/api/v1/private/bookings/:path*', '/api/v1/private/treatments/:path*', '/api/v1/private/cancellations-requests/:path*', '/api/v1/private/doctors/:path*', '/admin/cancellations', '/admin/bookings', '/admin/treatments', '/admin/doctors']
+    matcher: ['/admin/:path*', '/admin']
+    // matcher: ['/api/v1/private/bookings/:path*', '/api/v1/private/treatments/:path*', '/api/v1/private/cancellations-requests/:path*', '/api/v1/private/doctors/:path*', '/admin/cancellations', '/admin/bookings', '/admin/treatments', '/admin/doctors']
 
 
 }

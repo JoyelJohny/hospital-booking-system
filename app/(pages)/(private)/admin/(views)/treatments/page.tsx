@@ -5,12 +5,15 @@ import treatmentIcon from '@/public/treatments.png'
 import add from "@/public/addition.png"
 import edit from "@/public/edit-text.png"
 import bin from "@/public/bin.png"
+
 import React, { useEffect, useState } from "react"
 import Form from "next/form"
 import Logout from "@/app/(components)/LogoutComponent"
 import Loading from "@/app/(components)/LoadingComponent"
 import Message from "@/app/(components)/MessageComponent"
 import Link from "next/link"
+import SearchBar from "@/app/(components)/SearchBarComponent"
+import TreatmentDetailModal from "./Components/TreatmentDetailModal"
 
 interface Treatment {
     _id: string,
@@ -26,6 +29,7 @@ export default function Treatment() {
     const [isLoading, setLoading] = useState<boolean>(true)
     const [treatments, setTreatments] = useState<Treatment[]>([])
     const [selectedTreatment, setSelectedTreatment] = useState<Treatment>({ _id: "", name: "", description: "" })
+    const [treatmentModal, setTreatmentModal] = useState(false)
     const [createTreatmentModal, setCreateTreatmentModal] = useState(false)
     const [updateTreatmentModal, setUpdateTreatmentModal] = useState(false)
 
@@ -43,7 +47,7 @@ export default function Treatment() {
             setLoading(true)
             const res = await fetch(
                 `${api_url}/api/v1/private/treatments`,
-                { method: "GET", credentials: 'include' })
+                { method: "GET" })
             const result = await res.json()
             if (result) {
                 setTreatments(result)
@@ -119,37 +123,90 @@ export default function Treatment() {
     }
 
     return (
-        <div className="flex flex-col px-5 py-5 h-full gap-4 lg:px-10 xl:px-32">
-            <div className="text-xs">&gt; <Link href="/admin/dashboard" className="text-blue-700">Home</Link> &gt; <Link href="/admin/treatments" className="text-blue-700">Treatments</Link></div>
-            <div className="flex justify-between items-center">
-                <h1 className="text-blue-700 font-semibold text-3xl md:text-4xl lg:text-5xl">Treatments List</h1>
-                <div className="flex items-center gap-2 border p-1 rounded-lg border-blue-700 lg:hover:cursor-pointer lg:hover:scale-110 ">
-                    <Image src={add} alt="" className="size-6 lg:hover:cursor-pointer lg:hover:scale-110" />
-                    <span className="text-blue-700 font-semibold my-auto text-xs lg:text-sm">Add Treatment</span>
+        <div className="flex flex-col h-full bg-slate-800">
+            <div className="h-[8%] w-full px-5 py-2  rounded-b-lg lg:hidden">
+                <div className="flex  gap-2 items-center justify-start">
+
+                    <div className="text-lg font-semibold text-nowrap text-white">Holy Memorial Hospital</div>
                 </div>
-
             </div>
-
-            <div className="grid grid-cols-1 gap-4 text-white md:grid-cols-2 md:gap-4 xl:gap-6 xl:grid-cols-3 mt-5">
-                <div className="flex flex-col bg-blue-600 w-full rounded-md p-4 space-y-4">
-                    <div className="flex justify-between">
-                        <div className="flex gap-2 items-center">
-                            <Image src={treatmentIcon} alt="" className="size-7" />
-                            <p className="text-xl font-semibold">Cardiology</p>
+            <div className="h-[92%] p-2 lg:h-full">
+                <div className="relative flex flex-col h-full gap-2 px-3 py-3  rounded-md bg-white overflow-hidden lg:px-5 lg:py-5">
+                    <div className="space-y-2">
+                        <h1 className="text-slate-800 text-lg font-semibold lg:text-2xl">Manage Treatments</h1>
+                        <div className="flex gap-2">
+                            <SearchBar
+                                placeHolder="Search Treatments"
+                                searchAction={console.log}
+                                searchBoxStyling="flex h-8"
+                                textBoxStyling="w-full py-1 px-3 text-xs focus:outline-none border border-r-0 rounded-l-full border-slate-700"
+                                searchButtonStyling="flex border border-slate-800 bg-slate-800 rounded-r-full items-center justify-center w-12"
+                            />
+                            <button className="text-white text-xs bg-slate-800 rounded-md w-fit px-1">Add Treatment</button>
                         </div>
 
-                        <div className="flex gap-4 justify-between items-center">
-                            <Image src={edit} alt="" className="size-6 lg:hover:cursor-pointer lg:hover:scale-110" />
-                            <Image src={bin} alt="" className="size-6 lg:hover:cursor-pointer lg:hover:scale-110" />
+                        <div className="flex text-sm justify-between items-center">
+
+                            <span>Treatments</span>
+
+                            <span className="p-2">Option</span>
                         </div>
-
-
+                        <hr className="border-slate-800" />
                     </div>
-                    <p className="text-xs text-justify">Focuses on diagnosing and treating heart and blood vessel disorders, including heart attacks, arrhythmias, and hypertension. Cardiologists often perform diagnostic tests like ECGs and echocardiograms. Interventional cardiology may include procedures like angioplasty or stenting.</p>
+
+                    <div className="flex flex-col overflow-auto gap-2">
+                        {treatments.map((treatment) =>
+                            <div key={treatment._id} className="flex justify-between py-1 px-2 border rounded-lg bg-slate-800 text-sm items-center">
+                                <div className="flex gap-2">
+                                    <div className="flex flex-col justify-between gap-2 text-white">
+                                        <div className="flex gap-2 items-center">
+                                            <Image src={treatmentIcon} alt="" className=" size-8 " />
+                                            <span className="font-semibold text-lg">{treatment.name}</span>
+                                        </div>
+                                        <p className="text-xs text-white leading-1 text-justify">{treatment.description}</p>
+                                    </div>
+                                    <button className="text-xs text-white border border-white font-semibold px-4 w-fit py-1 h-fit bg-slate-800 rounded-md" onClick={() => setTreatmentModal(prev => !prev)}>Edit</button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {treatmentModal && <TreatmentDetailModal discard={setTreatmentModal} />}
 
                 </div>
             </div>
         </div>)
+    {/* // <div className="flex flex-col px-5 py-5 h-full gap-4 lg:px-10 xl:px-32">
+    //     <div className="text-xs">&gt; <Link href="/admin/dashboard" className="text-blue-700">Home</Link> &gt; <Link href="/admin/treatments" className="text-blue-700">Treatments</Link></div>
+    //     <div className="flex justify-between items-center">
+    //         <h1 className="text-blue-700 font-semibold text-3xl md:text-4xl lg:text-5xl">Treatments List</h1>
+    //         <div className="flex items-center gap-2 border p-1 rounded-lg border-blue-700 lg:hover:cursor-pointer lg:hover:scale-110 ">
+    //             <Image src={add} alt="" className="size-6 lg:hover:cursor-pointer lg:hover:scale-110" />
+    //             <span className="text-blue-700 font-semibold my-auto text-xs lg:text-sm">Add Treatment</span>
+    //         </div>
+
+    //     </div>
+
+    //     <div className="grid grid-cols-1 gap-4 text-white md:grid-cols-2 md:gap-4 xl:gap-6 xl:grid-cols-3 mt-5">
+    //         <div className="flex flex-col bg-blue-600 w-full rounded-md p-4 space-y-4">
+    //             <div className="flex justify-between">
+    //                 <div className="flex gap-2 items-center">
+    //                     <Image src={treatmentIcon} alt="" className="size-7" />
+    //                     <p className="text-xl font-semibold">Cardiology</p>
+    //                 </div>
+
+    //                 <div className="flex gap-4 justify-between items-center">
+    //                     <Image src={edit} alt="" className="size-6 lg:hover:cursor-pointer lg:hover:scale-110" />
+    //                     <Image src={bin} alt="" className="size-6 lg:hover:cursor-pointer lg:hover:scale-110" />
+    //                 </div>
+
+
+    //             </div>
+    //             <p className="text-xs text-justify">Focuses on diagnosing and treating heart and blood vessel disorders, including heart attacks, arrhythmias, and hypertension. Cardiologists often perform diagnostic tests like ECGs and echocardiograms. Interventional cardiology may include procedures like angioplasty or stenting.</p>
+
+    //         </div>
+    //     </div>
+    // </div>) */}
 
     {/* <div className="flex flex-col px-40 py-5 h-full space-y-5">
 

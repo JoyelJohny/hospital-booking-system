@@ -14,11 +14,11 @@ export default function Doctors() {
         <div className="flex flex-col gap-2 px-5 py-5 lg:px-10 xl:px-32">
             <div className="text-xs pb-2">&gt; <Link href="/" className="text-blue-700">Home</Link> &gt; <Link href="/doctors" className="text-blue-700">Doctors</Link></div>
             <SearchBar searchAction={handleSearchBar} placeHolder="Search for Doctors" />
-            <div className="flex justify-between">
-                <h1 className="text-3xl font-semibold ">Our Doctors</h1>
+            <div className="flex justify-between items-center">
+                <h1 className="text-2xl font-semibold lg:text-3xl">Our Doctors</h1>
                 <div className="flex gap-2 items-center text-xs lg:hidden">
                     <p>List By</p>
-                    <select value={selectedOption} onChange={(e) => setSelectedOption(e.currentTarget.value)} className="border border-blue-700 px-2 py-1 rounded-full">
+                    <select value={selectedOption} onChange={(e) => setSelectedOption(e.currentTarget.value)} className="border border-blue-700 focus:outline-none p-1 rounded-full">
                         <option value="All">All</option>
                         <option value="cardiology">Cardiology</option>
                         <option value="csdf">csdf</option>
@@ -33,15 +33,15 @@ export default function Doctors() {
                     <p>lsdkjflkasdjlfkjalskd</p>
                 </div>
                 <div className="grid grid-cols-1 w-full gap-4 pt-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    <div className="flex bg-white gap-4 p-2 border border-blue-700 rounded-xl lg:flex-col">
-                        <Image src={doctor} className="size-20 object-cover object-top rounded-full lg:rounded-xl lg:size-60" alt="" />
-                        <div className="flex items-center justify-between gap-10 md:gap-5 lg:flex-col lg:items-start">
-                            <div>
+                    <div className="flex bg-white gap-4 p-2 border border-blue-700 rounded-xl w-full lg:flex-col ">
+                        <Image src={doctor} className="size-12 object-cover object-top rounded-full lg:rounded-xl lg:size-60" alt="" />
+                        <div className=" flex grow items-center justify-between md:gap-5 lg:flex-col lg:items-start ">
+                            <div className="">
                                 <p className="text-xs ">Cardiology</p>
-                                <p className=" text-xl font-semibold">Dr Arun Joseph</p>
+                                <p className=" text-sm font-semibold">Dr Arun Joseph</p>
                                 <p className="text-xs ">arunjoseph123@gmail.com</p>
                             </div>
-                            <button className="flex bg-blue-700 px-2 py-1 rounded-md text-white w-fit lg:mx-auto ">Book <span className="hidden lg:block">&nbsp; an Appointment</span></button>
+                            <button className="bg-blue-700 px-2 py-1 text-xs rounded-md text-white w-fit lg:mx-auto ">Book <span className="hidden lg:block">&nbsp; an Appointment</span></button>
                         </div>
                     </div>
 

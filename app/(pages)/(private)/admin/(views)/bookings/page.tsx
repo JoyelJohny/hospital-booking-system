@@ -8,6 +8,8 @@ import { getTimings } from "@/libs/utils"
 import Loading from "@/app/(components)/LoadingComponent"
 import Message from "@/app/(components)/MessageComponent"
 import Link from "next/link"
+import SearchBar from "@/app/(components)/SearchBarComponent"
+import BookingDetailModal from "./Components/BookingDetailModal"
 
 
 type Bookings = {
@@ -90,16 +92,58 @@ export default function Booking() {
     }
 
     return (
-        <div className="flex flex-col px-5 py-5 h-full gap-4 lg:px-10 xl:px-32">
-            <div className="text-xs">&gt; <Link href="/admin/dashboard" className="text-blue-700">Home</Link> &gt; <Link href="/admin/bookings" className="text-blue-700">Bookings</Link></div>
-            <h1 className="text-blue-700 font-semibold text-4xl">Bookings</h1>
-            <div className="grid grid-cols-2 gap-4 text-white md:grid-cols-3 xl:grid-cols-4">
-                <div className="flex flex-col bg-blue-600 w-full rounded-md p-3 lg:hover:cursor-pointer lg:hover:bg-gradient-to-l lg:hover:from-blue-500 lg:hover:to-blue-700">
-                    <h2 className="text-xs lg:text-sm">HBS12312312</h2>
-                </div>
+        <div className="flex flex-col h-full bg-slate-800">
+            <div className="h-[8%] w-full px-5 py-2  rounded-b-lg lg:hidden">
+                <div className="flex  gap-2 items-center justify-start">
 
+                    <div className="text-lg font-semibold text-nowrap text-white">Holy Memorial Hospital</div>
+                </div>
             </div>
-        </div>)
+            <div className="h-[92%] p-2 lg:h-full">
+                <div className="relative flex flex-col h-full gap-2 px-3 py-3  rounded-md bg-white overflow-hidden lg:px-5 lg:py-5">
+                    <div className="space-y-2">
+                        <h1 className="text-slate-800 text-lg font-semibold lg:text-2xl">Manage Appointments</h1>
+                        <SearchBar
+                            placeHolder="Search Appointments"
+                            searchAction={console.log}
+                            searchBoxStyling="flex h-8"
+                            textBoxStyling="w-full py-1 px-3 text-xs focus:outline-none border border-r-0 rounded-l-full border-slate-700"
+                            searchButtonStyling="flex border border-slate-800 bg-slate-800 rounded-r-full items-center justify-center w-12"
+                        />
+                        <div className="flex text-sm justify-between items-center">
+                            <div className="flex gap-2 items-center">
+                                <span>Appointments</span>
+                            </div>
+
+                            <span className="p-2">Option</span>
+                        </div>
+                        <hr className="border-slate-800" />
+                    </div>
+                    <div className="flex flex-col overflow-auto gap-2">
+                        {bookings.map((booking) =>
+                            <div key={booking._id} className="flex justify-between py-1 px-2 border rounded-lg border-slate-800 text-sm items-center">
+                                <span className="text-xs ">{booking.bookingId}</span>
+                                <button className="text-xs text-white font-semibold px-4 w-fit py-1 h-fit bg-slate-800 rounded-md" onClick={() => setAppointmentModal(prev => !prev)}>View</button>
+                            </div>
+                        )}
+
+
+                    </div>
+                    {appointmentModal && <BookingDetailModal closeModal={setAppointmentModal} />}
+                </div>
+            </div>
+        </div>
+    )
+    // <div className="flex flex-col px-5 py-5 h-full gap-4 lg:px-10 xl:px-32">
+    //     <div className="text-xs">&gt; <Link href="/admin/dashboard" className="text-blue-700">Home</Link> &gt; <Link href="/admin/bookings" className="text-blue-700">Bookings</Link></div>
+    //     <h1 className="text-blue-700 font-semibold text-4xl">Bookings</h1>
+    //     <div className="grid grid-cols-2 gap-4 text-white md:grid-cols-3 xl:grid-cols-4">
+    //         <div className="flex flex-col bg-blue-600 w-full rounded-md p-3 lg:hover:cursor-pointer lg:hover:bg-gradient-to-l lg:hover:from-blue-500 lg:hover:to-blue-700">
+    //             <h2 className="text-xs lg:text-sm">HBS12312312</h2>
+    //         </div>
+
+    //     </div>
+    // </div>)
     {/* <div className="flex flex-col px-40 py-5 space-y-5 h-full  "> */ }
 
     {/* <h1 className="text-[#086788] text-5xl  font-semibold">Bookings</h1>
