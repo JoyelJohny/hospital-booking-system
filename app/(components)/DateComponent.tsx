@@ -1,16 +1,21 @@
 "use client"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 type componentProps = {
-    sendDate?: (d: Date | null) => void;
+    sendDate?: React.Dispatch<React.SetStateAction<Date | null>>
     className?: string;
 }
 
 
 export default function DateComponent({ sendDate }: componentProps) {
     const [date, setDate] = useState<Date | null>(new Date())
+
+    useEffect(() => {
+        sendDate?.(date)
+    }, [])
+
     const getDate = (date: Date | null) => {
         setDate(date)
         sendDate?.(date)

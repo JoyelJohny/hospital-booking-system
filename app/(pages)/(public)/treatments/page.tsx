@@ -43,7 +43,7 @@ export default function Treatment() {
             <div className="grid grid-cols-1 pt-2 pb-10 gap-5 md:grid-cols-2">
 
                 {treatments.map((treatment) =>
-                    <Link key={treatment._id} href={`/treatments/${treatment._id}`} className="flex flex-col bg-blue-700 gap-4 p-4 border border-blue-700 rounded-xl text-white">
+                    <Link key={treatment._id} href={`/treatments/${treatment._id}`} className="flex flex-col bg-blue-700 gap-4 p-4 border border-blue-700 rounded-xl text-white lg:hover:cursor-pointer lg:hover:bg-gradient-to-l lg:hover:from-blue-500 lg:hover:to-blue-700">
                         <div className="flex gap-2 items-center lg:gap-8">
                             <Image src={cardiology} alt="" className="size-7 lg:size-16" />
                             <p className="text-xl font-semibold lg:text-2xl">{treatment.name}</p>

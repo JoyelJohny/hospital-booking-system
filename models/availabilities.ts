@@ -1,7 +1,13 @@
 import mongoose from "mongoose";
 import Doctor from "./doctor"
+import Treatment from './treatments'
 
 const availabilitySchema = new mongoose.Schema({
+    treatmentId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: Treatment,
+        required: true,
+    },
     doctorId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: Doctor,

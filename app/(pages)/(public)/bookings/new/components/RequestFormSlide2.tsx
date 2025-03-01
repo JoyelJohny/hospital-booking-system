@@ -28,6 +28,38 @@ export default function RequestFormSlide2({ prevModal, currentModal, nextModal }
                     <p className="font-semibold">Other Available Dates</p>
                 </div>
                 <div className="grid grid-cols-1 gap-2 overflow-y-scroll pb-8">
+
+                    <div className="flex p-1 gap-2 border border-blue-700 rounded-md items-center">
+                        <Image src={doctor} alt="" className="object-cover object-top rounded-full size-16" />
+                        <div className="flex flex-grow flex-col p-1  justify-between">
+                            <div className="flex flex-col justify-between gap-1">
+                                <p className="font-semibold text-sm">Dr Arun Joseph</p>
+                                <p className="font-semibold text-xs">Date <span className="font-normal">19-12-2020</span></p>
+                            </div>
+                            <div className="flex justify-between text-xs items-center">
+                                <p className="font-semibold">Timings <span className="font-normal">11:00 AM</span> - <span className="font-normal">12:00 PM</span></p>
+                                <button className="w-fit py-1 px-4 bg-blue-700 rounded-md text-white text-sm">Book</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex p-1 gap-2 border border-blue-700 rounded-md items-center">
+                        <Image src={doctor} alt="" className="object-cover object-top rounded-full size-16" />
+                        <div className="flex flex-grow flex-col p-1  justify-between">
+                            <div className="flex flex-col justify-between gap-1">
+                                <p className="font-semibold text-sm">Dr Arun Joseph</p>
+                                <p className="font-semibold text-xs">Date <span className="font-normal">19-12-2020</span></p>
+                            </div>
+                            <div className="flex justify-between text-xs items-center">
+                                <div className="flex flex-col">
+                                    <p className="font-semibold">Timings</p>
+                                    <div>{`11:00 AM - 12:00 PM`}</div>
+                                </div>
+                                <button className="w-fit py-1 px-4 bg-blue-700 rounded-md text-white text-sm">Book</button>
+                            </div>
+                        </div>
+                    </div>
+
                     <div className="flex p-1 gap-2 border border-blue-700 rounded-md items-center">
                         <Image src={doctor} alt="" className="object-cover object-top rounded-full size-16" />
                         <div className="flex flex-grow flex-col p-1  justify-between">
@@ -80,32 +112,7 @@ export default function RequestFormSlide2({ prevModal, currentModal, nextModal }
                             </div>
                         </div>
                     </div>
-                    <div className="flex p-1 gap-2 border border-blue-700 rounded-md items-center">
-                        <Image src={doctor} alt="" className="object-cover object-top rounded-full size-16" />
-                        <div className="flex flex-grow flex-col p-1  justify-between">
-                            <div className="flex flex-col justify-between gap-1">
-                                <p className="font-semibold text-sm">Dr Arun Joseph</p>
-                                <p className="font-semibold text-xs">Date <span className="font-normal">19-12-2020</span></p>
-                            </div>
-                            <div className="flex justify-between text-xs items-center">
-                                <p className="font-semibold">Timings <span className="font-normal">11:00 AM</span> - <span className="font-normal">12:00 PM</span></p>
-                                <button className="w-fit py-1 px-4 bg-blue-700 rounded-md text-white text-sm">Book</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="flex p-1 gap-2 border border-blue-700 rounded-md items-center">
-                        <Image src={doctor} alt="" className="object-cover object-top rounded-full size-16" />
-                        <div className="flex flex-grow flex-col p-1  justify-between">
-                            <div className="flex flex-col justify-between gap-1">
-                                <p className="font-semibold text-sm">Dr Arun Joseph</p>
-                                <p className="font-semibold text-xs">Date <span className="font-normal">19-12-2020</span></p>
-                            </div>
-                            <div className="flex justify-between text-xs items-center">
-                                <p className="font-semibold">Timings <span className="font-normal">11:00 AM</span> - <span className="font-normal">12:00 PM</span></p>
-                                <button className="w-fit py-1 px-4 bg-blue-700 rounded-md text-white text-sm">Book</button>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
                 {/* <div className="flex flex-col text-xs gap-10">
                     <div className="flex  gap-4 items-center">
