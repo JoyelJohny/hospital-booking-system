@@ -78,9 +78,6 @@ export default function Availability() {
         }
     }
 
-    const getDate = (date: Date | null) => {
-        setDate(date)
-    }
 
     return (<>
         <div className="flex flex-col px-24 py-10 h-full">
@@ -101,7 +98,7 @@ export default function Availability() {
                     <div className="p-6 rounded-xl justify-between">
                         <div className="flex gap-3">
                             <p className="p-2 text-slate-600">Pick a Date</p>
-                            <DateComponent sendDate={getDate} />
+                            <DateComponent sendDate={setDate} />
                         </div>
                     </div>
 

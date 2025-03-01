@@ -73,6 +73,7 @@ export default function Doctors() {
                     {treatments.map((treatment) => <button className={`w-fit lg:hover:underline ${selectedListByValue == treatment.name ? 'lg:underline' : ''}`} key={treatment._id} onClick={() => setSelectedListByValue(`${treatment.name}`)}>{treatment.name}</button>)}
                 </div>
                 <div className="grid grid-cols-1 w-full gap-4 pt-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+
                     {doctors.filter(doctor => selectedListByValue ? doctor.specialization == selectedListByValue : true).map((doctor) =>
                         <div key={doctor._id} className="flex bg-white gap-4 p-2 border border-blue-700 rounded-xl w-full lg:flex-col ">
                             <Image src={doctorImage} className="size-12 object-cover object-top rounded-full lg:rounded-xl lg:size-60" alt="" />
@@ -82,7 +83,7 @@ export default function Doctors() {
                                     <p className=" text-sm font-semibold">{doctor.name}</p>
                                     <p className="text-xs ">{doctor.contact}</p>
                                 </div>
-                                <button className="bg-blue-700 px-2 py-1 text-xs rounded-md text-white w-fit lg:mx-auto ">Book <span className="hidden lg:block">&nbsp; an Appointment</span></button>
+                                <button className="bg-blue-700 px-2 py-1 text-xs rounded-md text-white w-fit lg:flex lg:mx-auto ">Book <span className="hidden lg:block">&nbsp; an Appointment</span></button>
                             </div>
                         </div>
                     )}
